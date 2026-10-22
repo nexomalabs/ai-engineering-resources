@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": {
+    "contents": [
+      {
+        "uri": "docs://openai/function-calling",
+        "mimeType": "text/markdown",
+        "text": "# Function Calling\n\nFunction calling allows you to..."
+      }
+    ]
+  }
+}

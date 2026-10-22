@@ -1,0 +1,121 @@
+# Applied AI Engineering, Volume IV, Chapter 5
+# Section 5.4, Kubernetes for AI
+# Copied from the book by scripts/export_listings.py. Report errors as errata.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-api-service
+  namespace: production
+  labels:
+    app: ai-api-service
+    version: v1.4.2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ai-api-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 # Zero-downtime rolling update
+  template:
+    metadata:
+      labels:
+        app: ai-api-service
+        version: v1.4.2
+    spec:
+      # Security context: non-root, read-only filesystem
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        fsGroup: 10001
+        readOnlyRootFilesystem: true
+      containers:
+        - name: ai-api
+          image: registry.example.com/ai-api-service:v1.4.2
+          ports:
+            - containerPort: 8000
+          # Resource limits are mandatory for AI services
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          # Inject configuration from ConfigMap
+          envFrom:
+            - configMapRef:
+                name: ai-api-config
+          # Inject secrets from Secret (not ConfigMap)
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-credentials
+                  key: api-key
+          # Liveness probe: restart pod if unresponsive
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            failureThreshold: 3
+          # Readiness probe: stop sending traffic if not ready
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          # Writable temp directory (read-only root FS)
+          volumeMounts:
+            - name: tmp-dir
+              mountPath: /tmp
+      volumes:
+        - name: tmp-dir
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-api-service
+  namespace: production
+spec:
+  selector:
+    app: ai-api-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-api-service-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-api-service
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 70

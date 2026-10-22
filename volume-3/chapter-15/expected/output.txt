@@ -1,0 +1,32 @@
+Parts 3-4: research and calculation in parallel, then synthesis
+  alpha (researcher) received task A
+  [SIMULATED DROP] result alpha → orchestrator corr=A
+  beta (analyst) received task B
+  [MONITOR] alpha appears to have failed
+  orchestrator: alpha is down; reassigning A to beta
+  orchestrator: no result for A; resending to beta (retry 1/3)
+  [SIMULATED DROP] task orchestrator → beta corr=A
+  orchestrator: no result for A; resending to beta (retry 2/3)
+  beta (analyst) received task A
+  gamma (synthesizer) received task S
+
+Synthesis: Python was created by Guido van Rossum, first released in 1991. | Years since release: 33
+
+Part 5: alpha has crashed; its next task must go elsewhere
+  orchestrator: alpha is down; reassigning C to beta
+  beta (analyst) received task C
+
+Follow-up result: The Eiffel Tower is 330 meters tall including the broadcast antenna.
+
+Retries: 2; reassigned: ['A', 'C']
+
+=== MESSAGE LOG (delivered messages) ===
+orchestrator → alpha | task | corr=A
+orchestrator → beta | task | corr=B
+beta → orchestrator | result | corr=B
+orchestrator → beta | task | corr=A
+beta → orchestrator | result | corr=A
+orchestrator → gamma | task | corr=S
+gamma → orchestrator | result | corr=S
+orchestrator → beta | task | corr=C
+beta → orchestrator | result | corr=C

@@ -1,0 +1,16 @@
+[CONTEXT SCOPE DECLARATION]
+For this task, you have access to:
+1. [Context type 1 — label]
+2. [Context type 2 — label]
+
+You do NOT have access to:
+- [Excluded information type 1]
+- [Excluded information type 2]
+
+If information required to complete the task is not in the provided context, state:
+"[Specific placeholder for missing information]"
+
+[CONTEXT BLOCKS]
+<[label]>
+[content]
+</[label]>

@@ -1,0 +1,16 @@
+Before solving this resource allocation problem directly, identify a classic problem
+from mathematics, engineering, or economics that has the same structure.
+
+Analogy identification: Portfolio optimization in finance has the same structure:
+- Finite capital (budget) must be allocated across multiple assets (channels)
+- Each asset has uncertain, potentially correlated returns
+- Diversification reduces risk; concentration maximizes expected return
+- Marginal return decreases as investment increases in any single asset
+
+Apply the portfolio optimization framework to the marketing allocation problem:
+
+Step 1: Estimate expected return (CAC efficiency) for each channel
+Step 2: Estimate variance/uncertainty for each channel
+Step 3: Apply portfolio logic: allocate proportionally to Sharpe-equivalent metric
+Step 4: Maintain minimum allocation to each channel for data collection
+Step 5: Rebalance monthly as returns data accumulates

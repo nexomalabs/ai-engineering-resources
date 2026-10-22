@@ -3,16 +3,22 @@
 Lab code, starter files, and reference solutions for the *Applied AI Engineering*
 series, published by Nexoma Labs LLC.
 
-This repository holds runnable labs only. It does not contain the book text.
+This repository holds the runnable labs, every code listing of twelve lines or
+more from the books, and the model answers to the review questions. It does not
+contain the rest of the book text.
 
 ## Series
 
 | Volume | Title | Labs |
 |:------:|-------|:----:|
 | I | AI and LLM Fundamentals | [`volume-1/`](volume-1/) — available now |
-| II | Prompt Engineering | coming with the volume's release |
-| III | Context and Agents | coming with the volume's release |
-| IV | Production Systems | coming with the volume's release |
+| II | Prompt Engineering | [`volume-2/`](volume-2/) — labs 17–20 now, the rest to follow |
+| III | Context and Agents | [`volume-3/`](volume-3/) — 13 of 19 labs now, the rest to follow |
+| IV | Production Systems | [`volume-4/`](volume-4/) — 8 labs now, the rest to follow |
+
+Each volume's `README.md` lists every lab in the book and marks which are here
+yet. A lab not yet here has its complete code in the chapter's Hands-on Lab
+section.
 
 ## Running a lab
 
@@ -38,8 +44,10 @@ limit can break package installs in deep folders.
 ## Structure
 
 ```text
-volume-1/
+volume-1/              — the same layout for volume-2/, volume-3/, volume-4/
 ├── README.md          — lab index: chapter, type, time, API cost, status
+├── ANSWERS.md         — model answers to the review questions, as in Appendix B
+├── listings/          — the book's code listings, by chapter, with an index of what each needs
 ├── shared/             — nexoma_labs package used by every lab (client, cost ledger, fixtures)
 └── chapter-01/ … chapter-10/
     ├── README.md        — setup, run, expected output, failure table, API cost
@@ -50,13 +58,20 @@ volume-1/
     └── fixtures/             — recorded model responses (chapters 8-10)
 ```
 
-Chapters 1 and 2 are paper exercises: `README.md` only, no code.
+`listings/` and `ANSWERS.md` are generated from the manuscript, so report a
+mistake in either as an erratum. Listings are printed code, some of it fragments
+that build on an earlier listing, so CI lints and tests the labs, not the
+listings.
+
+In Volume I, chapters 1 and 2 are paper exercises: `README.md` only, no code.
+Volume II–IV labs so far need no API key at all, so they have no `fixtures/`.
+Some Volume IV labs name a script other than `src/lab.py`; each README says which.
 
 ## License
 
 Code in this repository is licensed under the [MIT License](LICENSE). The book
-text itself is © 2027 Nexoma Labs LLC, all rights reserved — see the volume's
-copyright page.
+text, including `ANSWERS.md`, is © 2027 Nexoma Labs LLC, all rights reserved —
+see the volume's copyright page.
 
 ## Errata and issues
 

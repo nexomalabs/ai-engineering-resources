@@ -1,0 +1,22 @@
+[project]
+name = "aiae-vol3-lab07"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume III, Lab 7: Extractive Context Compression"
+requires-python = ">=3.12"
+dependencies = ["sentence-transformers>=3.0", "torch>=2.2", "numpy>=1.26"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+# PyTorch from its CPU-only index: the default Linux wheel bundles CUDA and is several
+# gigabytes. macOS wheels on PyPI are CPU-only already.
+[tool.uv.sources]
+torch = [{ index = "pytorch-cpu", marker = "sys_platform != 'darwin'" }]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

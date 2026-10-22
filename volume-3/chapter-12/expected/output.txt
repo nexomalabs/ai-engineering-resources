@@ -1,0 +1,47 @@
+Goal: Write a research summary on transformer architectures.
+
+  t1 [web_search] Find the original transformer paper and its key ideas  depends on -
+  t2 [web_search] Find recent work on efficient attention  depends on -
+  t3 [read_file] Read the team's notes on attention mechanisms  depends on -
+  t4 [summarize] Summarize the findings into a research summary  depends on ['t1', 't2', 't3']
+
+Validation: ["Task 't4' references unknown tool 'summarize'."]
+  fixed t4: 'summarize' -> 'write_file'
+Revalidation: no errors
+
+Recovery actions:
+  t2: retry 1 after 'Search timeout after 30 s'
+  t3: revised after 'Invalid path: no file name given'
+
+Task status:
+  t1  completed  Search results for: Find the original transformer paper and its key ideas
+  t2  completed  Search results for: Find recent work on efficient attention
+  t3  completed  Notes: attention cost grows with the square of sequence length
+  t4  completed  Wrote summary.md from 3 source(s)
+
+Completed 4/4 tasks, 2 retries, 0 replan(s)
+
+============================================================
+
+Goal: Write a research summary on transformer architectures.
+
+  t1 [web_search] Find the original transformer paper and its key ideas  depends on -
+  t2 [web_search] Find recent work on efficient attention  depends on -
+  t3 [read_file] Read the team's notes on attention mechanisms  depends on -
+  t4 [summarize] Summarize the findings into a research summary  depends on ['t1', 't2', 't3']
+
+Validation: ["Task 't4' references unknown tool 'summarize'."]
+  fixed t4: 'summarize' -> 'write_file'
+Revalidation: no errors
+
+Recovery actions:
+  t3: replanned after 'The notes repository is empty' (logic_error)
+
+Task status:
+  t1  completed  Search results for: Find the original transformer paper and its key ideas
+  t2  completed  Search results for: Find recent work on efficient attention
+  t3  failed     The notes repository is empty
+  t4  skipped    
+  r1  completed  Wrote summary.md from 2 source(s)
+
+Completed 3/5 tasks, 0 retries, 1 replan(s)

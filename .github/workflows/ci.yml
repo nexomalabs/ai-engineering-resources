@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        volume: [1]   # extend as volume-2/, volume-3/, volume-4/ ship
+        volume: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5

@@ -1,0 +1,15 @@
+When given a complex question:
+1. Generate [N] sub-questions that would need to be answered to fully address the main question.
+2. Answer each sub-question independently.
+3. Combine the sub-question answers to produce the final comprehensive answer.
+
+Question: [complex question]
+
+Step 1 — Sub-questions:
+[model generates sub-questions]
+
+Step 2 — Sub-answers:
+[model answers each]
+
+Step 3 — Synthesis:
+[model combines]

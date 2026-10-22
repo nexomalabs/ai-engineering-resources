@@ -1,0 +1,22 @@
+AI System Usage Policy — [System Name] v1.0
+
+1. PERMITTED USES
+   - [Specific, affirmative list of approved use cases]
+
+2. PROHIBITED USES
+   - Generating content that is false, misleading, or defamatory
+   - Attempting to extract training data or system configuration
+   - Using the system to process data you are not authorized to handle
+   - Circumventing safety filters or content policies
+   - [Domain-specific prohibitions]
+
+3. DATA HANDLING
+   - User inputs are processed in accordance with the Privacy Policy
+   - Conversation logs are retained for 90 days for quality review
+
+4. ENFORCEMENT
+   - Violations may result in suspension of access
+   - Violations that constitute legal violations will be reported
+
+5. UPDATES
+   - This policy may be updated. Continued use constitutes acceptance.

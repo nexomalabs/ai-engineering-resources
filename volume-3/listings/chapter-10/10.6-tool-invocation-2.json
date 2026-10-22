@@ -1,0 +1,13 @@
+{
+  "jsonrpc": "2.0",
+  "id": 7,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "[{\"id\":\"C001\",\"name\":\"Acme Corp\",\"tier\":\"enterprise\"}]"
+      }
+    ],
+    "isError": false
+  }
+}

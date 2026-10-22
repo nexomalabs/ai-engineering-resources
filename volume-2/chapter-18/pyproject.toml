@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol2-lab18"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume II, Lab 18: Design and Implement a Prompt Library"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

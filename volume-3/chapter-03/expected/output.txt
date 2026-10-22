@@ -1,0 +1,18 @@
+=== MEMORY RECALL FOR QUERY ===
+'What Python library handles JWT and how do I verify a token?'
+
+--- WORKING MEMORY (recent conversation) ---
+ASSISTANT: JWT authentication uses signed tokens. The server issues a JWT containing user claims, signed with a secret key. The client stores the token and sends it in the Authorization header. The server verifies the signature without needing session state.
+USER: What library should I use in Python for JWT?
+ASSISTANT: For Python, I recommend the `python-jose` or `PyJWT` library. PyJWT is widely used and straightforward: `import jwt; token = jwt.encode(payload, secret, algorithm='HS256')`.
+USER: How do I refresh tokens?
+ASSISTANT: Issue a short-lived access token (15 minutes) and a long-lived refresh token (7 days). When the access token expires, the client calls /auth/refresh with the refresh token to get a new access token.
+
+--- EPISODIC MEMORY (past responses) ---
+  [0.33] For Python, I recommend the `python-jose` or `PyJWT` library. PyJWT is widely used and straightforwa...
+  [0.252] Issue a short-lived access token (15 minutes) and a long-lived refresh token (7 days). When the acce...
+
+--- SEMANTIC MEMORY (facts) ---
+  [0.272] [user] Alex prefers Python over JavaScript for server-side code
+  [0.258] [kb] JWT tokens consist of three base64-encoded parts separated by dots
+  [0.167] [kb] Python uses indentation to define code blocks

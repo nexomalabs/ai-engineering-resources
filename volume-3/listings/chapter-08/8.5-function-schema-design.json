@@ -1,0 +1,23 @@
+{
+  "type": "function",
+  "function": {
+    "name": "get_weather",
+    "description": "Get the current weather for a specified city. Returns temperature in Celsius, humidity percentage, wind speed in km/h, and a short condition description.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string",
+          "description": "The city name to get weather for, e.g. 'Paris', 'New York', 'Tokyo'."
+        },
+        "units": {
+          "type": "string",
+          "enum": ["celsius", "fahrenheit"],
+          "description": "Temperature unit. Defaults to celsius.",
+          "default": "celsius"
+        }
+      },
+      "required": ["city"]
+    }
+  }
+}

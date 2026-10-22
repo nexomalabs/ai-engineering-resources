@@ -1,0 +1,26 @@
+{
+  "prompt_id": "customer-support/intent-classification",
+  "display_name": "Customer Support Intent Classifier",
+  "version": "2.3.1",
+  "status": "stable",
+  "owner": "support-ai-team",
+  "created_at": "2024-03-15T09:00:00Z",
+  "updated_at": "2024-11-02T14:23:00Z",
+  "description": "Classifies incoming customer support messages into one of 12 intent categories with confidence scoring.",
+  "tags": [
+    "classification",
+    "customer-support",
+    "intent",
+    "structured-output",
+    "json-output"
+  ],
+  "task_type": "classification",
+  "input_type": "text",
+  "output_type": "json",
+  "models_tested": ["gpt-6.1-sol", "claude-sonnet-5-5", "gemini-1.5-pro"],
+  "avg_token_cost": 340,
+  "p95_latency_ms": 1200,
+  "test_coverage": 0.97,
+  "dependencies": [],
+  "deprecated_by": null
+}

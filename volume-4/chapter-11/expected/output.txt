@@ -1,0 +1,10 @@
+
+=== model_card.md ===
+Pass rate: 100% (8/8 sections)
+All required sections present.
+
+=== system_card.md ===
+Pass rate: 100% (7/7 sections)
+All required sections present.
+
+Overall: PASS

@@ -1,0 +1,12 @@
+<document title="Q2 Financial Report" date="2026-06-30">
+Total revenue: $4.2M (+18% YoY)
+Operating expenses: $3.1M
+Net income: $1.1M
+</document>
+
+<instruction>
+Using only the data in the document above, answer the user's question.
+Do not use any external knowledge.
+</instruction>
+
+User: What was the revenue growth year-over-year?

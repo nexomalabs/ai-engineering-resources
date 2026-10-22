@@ -1,0 +1,16 @@
+{
+  "resources": [
+    {
+      "uri": "docs://openai/function-calling",
+      "name": "OpenAI Function Calling Guide",
+      "description": "Official documentation for the OpenAI function calling API",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "db://schema/tables",
+      "name": "Database Schema",
+      "description": "List of all tables and their column definitions",
+      "mimeType": "application/json"
+    }
+  ]
+}

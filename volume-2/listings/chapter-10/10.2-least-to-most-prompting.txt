@@ -1,0 +1,16 @@
+DECOMPOSITION PROMPT:
+
+The main question is: [complex question]
+
+To answer this question, what simpler sub-questions must be answered first?
+List them in the order they should be solved, from simplest to most complex.
+
+---
+
+SOLVING PROMPT (applied iteratively):
+
+Sub-questions already answered:
+[Q1]: [Answer to Q1]
+[Q2]: [Answer to Q2]
+
+Now answer: [Q3]

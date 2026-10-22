@@ -1,0 +1,11 @@
+
+Query                                             BM25    Dense   Hybrid
+-------------------------------------------------------------------------
+how does BM25 work for information retrieva       0.50     0.50     0.50
+semantic search using vector embeddings           1.00     1.00     1.00
+machine learning models trained on data           0.75     1.00     1.00
+language understanding NLP                        0.50     0.50     0.50
+-------------------------------------------------------------------------
+Mean Recall@5                                     0.69     0.75     0.75
+
+Hybrid retrieval matches the better single method.

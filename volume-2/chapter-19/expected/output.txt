@@ -1,0 +1,35 @@
+Mode: fixture
+
+=== REVIEW BOARD: ranked findings ===
+  1. line 2 [critical] SQL injection through customer_email
+     raised by: security=critical, red_team=critical
+  2. line 6 [major] Division by zero when orders is empty
+     raised by: engineer=major, red_team=minor  <- severity disputed
+  3. line 3 [minor] SELECT * returns every column, including any added later
+     raised by: red_team=minor  <- one reviewer only
+  4. line 9 [minor] percent is not validated
+     raised by: engineer=minor  <- one reviewer only
+
+=== Recall against the planted defects ===
+  engineer       found 2/3 planted defects  missed lines: [2]  unplanted findings on lines: -
+  security       found 1/3 planted defects  missed lines: [6, 9]  unplanted findings on lines: -
+  red_team       found 2/3 planted defects  missed lines: [9]  unplanted findings on lines: [3]
+  board (all 3)  found 3/3 planted defects  missed lines: -  unplanted findings on lines: [3]
+  single prompt  found 2/3 planted defects  missed lines: [9]  unplanted findings on lines: -
+
+  Model calls: review board = 3, single prompt = 1, critique board = 3
+
+=== CRITIQUE BOARD: should the discount feature exist? ===
+  customer_representative  BUILD WITH CONDITIONS
+      condition:  The customer sees and accepts the offer; nothing is applied silently
+      assumption: Unhappy customers value an instant discount
+  financial_analyst        BUILD WITH CONDITIONS
+      condition:  Cap discounts at 15%
+      condition:  Set a daily budget per customer
+      evidence:   apply_discount() has no upper bound (line 9)
+      assumption: A discount costs less than losing the customer
+  risk_manager             DO NOT BUILD
+      evidence:   The chatbot decides who is unhappy from text the customer writes
+      assumption: Customers will learn to sound unhappy once word spreads
+  Board record: no majority vote is taken.
+  Verdicts differ: BUILD WITH CONDITIONS (customer_representative, financial_analyst); DO NOT BUILD (risk_manager)

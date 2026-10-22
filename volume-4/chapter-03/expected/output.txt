@@ -1,0 +1,22 @@
+=== Enterprise Document Review Workflow Demo ===
+
+[TRANSITION] draft → submitted | actor=alice@company.com role=submitter
+[NOTIFY] → alice@company.com    | Document Submitted
+[TRANSITION] submitted → ai_reviewing | actor=ai-system role=system
+[TRANSITION] ai_reviewing → pending_review | actor=ai-system role=system
+[NOTIFY] → reviewer-001         | Review Required
+[TRANSITION] pending_review → pending_approval | actor=reviewer-001 role=reviewer
+[NOTIFY] → approver-001         | Approval Required
+[TRANSITION] pending_approval → approved | actor=approver-001 role=approver
+[NOTIFY] → alice@company.com    | Document Approved
+
+=== Final State: APPROVED ===
+AI Summary: Document 'Q3 Budget Amendment — Engineering' analyzed. Content is 73 characters. Identified as standard operational document with low regulatory risk.
+Risk Score: 0.12
+
+Transition History:
+  06:38:04 | draft                → submitted            | alice@company.com (submitter)
+  06:38:04 | submitted            → ai_reviewing         | ai-system (system)
+  06:38:04 | ai_reviewing         → pending_review       | ai-system (system)
+  06:38:05 | pending_review       → pending_approval     | reviewer-001 (reviewer)
+  06:38:05 | pending_approval     → approved             | approver-001 (approver)

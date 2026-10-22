@@ -1,0 +1,27 @@
+======================================================================
+CONTEXT COMPRESSION LAB
+======================================================================
+
+Query: What are the main evaluation metrics for information retrieval systems?
+Target token budget: 400
+Original context tokens: ~831
+
+Compressing...
+
+── Results ──────────────────────────────────────────────────────
+Original tokens:    831
+Compressed tokens:  400
+Compression ratio:  51.9%
+Sentences kept:     21 / 44
+
+── Top 3 Most Relevant Sentences (score) ────────────────────────
+  [0.700] Evaluation campaigns like TREC, BEIR, and MS MARCO provide standardized datasets...
+  [0.592] TREC (Text Retrieval Conference), organized by NIST since 1992, provides standar...
+  [0.580] Information retrieval (IR) is the science of searching for documents, informatio...
+
+── Compressed Context ───────────────────────────────────────────
+Information retrieval (IR) is the science of searching for documents, information within documents, and metadata about documents, as well as searching relational databases and the World Wide Web. IR systems handle large collections of primarily unstructured text documents. The history of information retrieval dates to the 1950s, when early systems classified documents manually. Evaluation is central to IR research. TREC (Text Retrieval Conference), organized by NIST since 1992, provides standardized benchmarks and evaluation tracks. Precision measures the fraction of retrieved documents that are relevant. A search engine that returns only highly relevant results has high precision. Recall measures the fraction of all relevant documents that were retrieved. Systems optimized for recall retrieve more broadly at the cost of including irrelevant results. Normalized Discounted Cumulative Gain (NDCG) handles graded relevance judgments where documents may be highly relevant, partially relevant, or irrelevant. NDCG normalizes DCG by the ideal ranking. The document retrieval process begins with an offline indexing phase. Query processing involves parsing the user's query, applying the same normalization steps used during indexing, and executing the retrieval function. The dot product between query and document vectors measures their semantic relevance. Hybrid retrieval systems combine sparse (BM25) and dense retrieval. Reranking is a second-stage process that applies a more expensive but accurate cross-encoder model to rerank the top candidates from first-stage retrieval. Cross-encoders see both query and document simultaneously, enabling fine-grained relevance judgments. Methods include pseudo-relevance feedback, thesaurus expansion, and LLM-based expansion. Other important IR topics include faceted search, which allows filtering by attributes; learning to rank (LTR), which uses machine learning to optimize the ranking function; and diversity in ranking, which ensures results cover different aspects of the query. Evaluation campaigns like TREC, BEIR, and MS MARCO provide standardized datasets for comparing retrieval systems. The BEIR benchmark covers 18 datasets across nine task types, in domains including scientific, financial, and medical text.
+
+── Key Metric Terms Preserved ───────────────────────────────────
+  Found: ['precision', 'recall', 'NDCG']
+  Missing: ['MRR', 'F1']

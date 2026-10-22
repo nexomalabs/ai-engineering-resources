@@ -1,0 +1,39 @@
+
+============================================================
+MCP SERVER DEMO — Stdio Transport Simulation
+============================================================
+
+[1] Initialize
+    Server: {'name': 'lab-mcp-server', 'version': '1.0.0'}
+    Capabilities: ['resources', 'tools']
+
+[2] resources/list
+    docs://mcp/overview — MCP Overview Documentation
+    docs://mcp/tools — MCP Tools Guide
+    db://users — Users Table
+    db://products — Products Table
+
+[3] resources/read — docs://mcp/overview
+    [text/markdown] # Model Context Protocol (MCP)  MCP is a standard protocol for connecting AI models to external data sources and tools. ...
+
+[4] tools/list
+    query_database — Query the in-memory database. Supports 'users' and 'products...
+    execute_python — Execute a Python code snippet in a restricted environment. O...
+    lookup_documentation — Look up MCP documentation by topic. Returns the documentatio...
+
+[5] tools/call — query_database(table=users)
+    isError: False
+    Returned 2 record(s) from users
+
+[6] tools/call — execute_python
+    isError: False
+    Output:  Sum 1..10 = 55
+
+[7] tools/call — execute_python (security test: import os)
+    isError: True
+    Output:  Error: Forbidden operation: 'import' is not allowed.
+
+[8] tools/call — lookup_documentation(topic=tools)
+    Preview: # MCP Tools  Tools are the action primitives of MCP. A tool has: - name: snake_case identifier - des...
+
+✓ MCP server demo complete.

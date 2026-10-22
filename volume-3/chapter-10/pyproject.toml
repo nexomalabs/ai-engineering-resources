@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol3-lab10"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume III, Lab 10: MCP-Compatible Server"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,18 @@
+{
+  "jsonrpc": "2.0",
+  "id": 15,
+  "method": "sampling/createMessage",
+  "params": {
+    "messages": [
+      {
+        "role": "user",
+        "content": {
+          "type": "text",
+          "text": "Summarize this document in 3 sentences."
+        }
+      }
+    ],
+    "maxTokens": 200,
+    "systemPrompt": "You are a precise technical summarizer."
+  }
+}

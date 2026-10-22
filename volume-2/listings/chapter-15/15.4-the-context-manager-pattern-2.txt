@@ -1,0 +1,19 @@
+For this analysis, you have access to:
+1. The Q4 2024 financial report (provided below)
+2. The company's stated strategic objectives (provided below)
+
+You do NOT have access to:
+- Any financial data from 2023 or earlier
+- Competitor information
+- Market data not mentioned in the report
+
+If information needed for your analysis is absent, state:
+"[DATA REQUIRED: specify what is missing]"
+
+<q4_report>
+[financial report content]
+</q4_report>
+
+<strategic_objectives>
+[objectives content]
+</strategic_objectives>

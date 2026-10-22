@@ -1,0 +1,20 @@
+{
+  "prompts": [
+    {
+      "name": "code_review",
+      "description": "Generate a thorough code review for the provided code snippet.",
+      "arguments": [
+        {
+          "name": "code",
+          "description": "The code to review",
+          "required": true
+        },
+        {
+          "name": "language",
+          "description": "Programming language",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

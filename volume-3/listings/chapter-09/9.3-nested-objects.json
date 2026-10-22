@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "properties": {
+    "street": { "type": "string" },
+    "city": { "type": "string" },
+    "country": {
+      "type": "string",
+      "description": "ISO 3166-1 alpha-2 country code"
+    },
+    "zip": { "type": "string", "pattern": "^[0-9]{5}(-[0-9]{4})?$" }
+  },
+  "required": ["street", "city", "country"]
+}

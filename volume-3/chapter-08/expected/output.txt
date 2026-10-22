@@ -1,0 +1,105 @@
+
+============================================================
+SCENARIO: Weather Query — Paris
+============================================================
+
+→ Tool Call: get_weather({'city': 'Paris'})
+← Result:    {
+  "temp": 18,
+  "condition": "Partly cloudy",
+  "humidity": 65,
+  "units": "celsius",
+  "city": "Paris"
+}
+
+============================================================
+SCENARIO: Parallel Weather Comparison
+============================================================
+
+→ Tool Call: get_weather({'city': 'London', 'units': 'celsius'})
+← Result:    {
+  "temp": 14,
+  "condition": "Overcast",
+  "humidity": 82,
+  "units": "celsius",
+  "city": "London"
+}
+
+→ Tool Call: get_weather({'city': 'Tokyo', 'units': 'celsius'})
+← Result:    {
+  "temp": 24,
+  "condition": "Clear",
+  "humidity": 55,
+  "units": "celsius",
+  "city": "Tokyo"
+}
+
+→ Tool Call: get_weather({'city': 'New York', 'units': 'fahrenheit'})
+← Result:    {
+  "temp": 68.0,
+  "condition": "Sunny",
+  "humidity": 48,
+  "units": "fahrenheit",
+  "city": "New York"
+}
+
+============================================================
+SCENARIO: Database Search
+============================================================
+
+→ Tool Call: search_database({'query': 'neural network transformer', 'limit': 3})
+← Result:    {
+  "results": [
+    {
+      "id": 1,
+      "name": "Neural Network Fundamentals",
+      "type": "course",
+      "rating": 4.8
+    },
+    {
+      "id": 3,
+      "name": "Transformer Architecture",
+      "type": "article",
+      "rating": 4.9
+    }
+  ],
+  "total_found": 2,
+  "query": "neural network transformer"
+}
+
+============================================================
+SCENARIO: Cost Calculation
+============================================================
+
+→ Tool Call: calculate_cost({'items': [{'name': 'Pro License', 'quantity': 5, 'unit_price': 49.99}, {'name': 'Support Plan', 'quantity': 1, 'unit_price': 199.0}]})
+← Result:    {
+  "line_items": [
+    {
+      "name": "Pro License",
+      "quantity": 5,
+      "unit_price": 49.99,
+      "total": 249.95
+    },
+    {
+      "name": "Support Plan",
+      "quantity": 1,
+      "unit_price": 199.0,
+      "total": 199.0
+    }
+  ],
+  "subtotal": 448.95,
+  "tax_8pct": 35.92,
+  "grand_total": 484.87,
+  "currency": "USD"
+}
+
+============================================================
+SCENARIO: Error Handling — Unknown City
+============================================================
+
+→ Tool Call: get_weather({'city': 'Atlantis'})
+← Result:    {
+  "error": "City 'Atlantis' not found in weather database."
+}
+
+✓ All tool calling scenarios completed successfully.

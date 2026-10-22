@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "name": "execute_sql",
+      "description": "Execute a SELECT SQL query against the database. Returns rows as a JSON array.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string", "description": "SQL SELECT query" },
+          "limit": { "type": "integer", "default": 100 }
+        },
+        "required": ["query"]
+      }
+    }
+  ]
+}

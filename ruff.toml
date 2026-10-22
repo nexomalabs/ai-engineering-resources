@@ -13,6 +13,13 @@
 line-length = 100
 target-version = "py312"
 
+# listings/ holds the books' code listings exactly as printed, exported from the
+# manuscript by scripts/export_listings.py. Many are fragments that build on an
+# earlier listing, so they cannot pass a linter on their own, and reformatting
+# them would make the copy differ from the page. They are reference text, not
+# lab code; the labs are what CI holds to this rule set.
+extend-exclude = ["volume-*/listings"]
+
 [lint]
 select = ["E", "F", "I"]
 
@@ -24,4 +31,10 @@ docstring-code-format = true
 # immediately below — `d_k` for the scaled-attention divisor, `n` for the
 # gradient denominator. Unused is the intended state until the reader fills
 # it in, so F841 is noise here rather than a finding.
-"*/src/lab.py" = ["F841"]
+"*/src/*.py" = ["F841"]
+# Volume II-IV lab code mirrors the listings printed in the book, whose example data
+# (mock model responses, ticket text, prompt templates) runs past 100 characters.
+# Those strings stay whole so the repository matches the page.
+"volume-2/**/*.py" = ["E501"]
+"volume-3/**/*.py" = ["E501"]
+"volume-4/**/*.py" = ["E501"]

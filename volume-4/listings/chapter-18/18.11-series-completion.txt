@@ -1,0 +1,38 @@
+NEXOAI CAPSTONE EVALUATION RUBRIC
+Total: 100 points
+
+VOLUME I INTEGRATION (20 points)
+──────────────────────────────────
+[ ] Architecture diagram correctly reflects AI system components (5)
+[ ] Model selection logic demonstrates understanding of capability/cost trade-offs (5)
+[ ] Context window management strategy is technically justified (5)
+[ ] Token estimation and optimization shows tokenization understanding (5)
+
+VOLUME II INTEGRATION (20 points)
+──────────────────────────────────
+[ ] Prompt Registry contains at least 3 complete templates with variables (5)
+[ ] Templates demonstrate multiple prompt engineering techniques (5)
+[ ] Prompt versioning and approval workflow documented (5)
+[ ] A/B testing plan for prompt evaluation included (5)
+
+VOLUME III INTEGRATION (20 points)
+───────────────────────────────────
+[ ] RAG Service design includes chunking, embedding, and re-ranking strategy (7)
+[ ] Memory architecture addresses all four memory types (5)
+[ ] Agent Runtime demonstrates planning, tool use, and error recovery (8)
+
+VOLUME IV INTEGRATION (25 points)
+───────────────────────────────────
+[ ] Security architecture addresses OWASP Top 10 for AI (5)
+[ ] Compliance monitoring covers NIST AI RMF all four functions (5)
+[ ] Monitoring includes all four layers with alerting runbooks (5)
+[ ] Cost optimization implements at least two strategies with estimated savings (5)
+[ ] Scalability design supports 10x traffic spike without SLA violation (5)
+
+DOCUMENTATION AND ENGINEERING (15 points)
+──────────────────────────────────────────
+[ ] Final Design Document covers all 6 required sections (5)
+[ ] At least 4 integration tests implemented and passing (5)
+[ ] Architecture decisions are justified with explicit trade-off analysis (5)
+
+TOTAL: ___/100

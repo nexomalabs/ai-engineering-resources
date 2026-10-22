@@ -1,0 +1,20 @@
+Write a product comparison using exactly this template. Replace bracketed content only.
+
+COMPARISON: [Product A Name] vs. [Product B Name]
+
+OVERVIEW
+[Product A Name]: [2-sentence description]
+[Product B Name]: [2-sentence description]
+
+KEY DIFFERENCES
+| Feature | [Product A Name] | [Product B Name] |
+|---------|------------------|------------------|
+| [Feature 1] | [A value] | [B value] |
+| [Feature 2] | [A value] | [B value] |
+| [Feature 3] | [A value] | [B value] |
+
+RECOMMENDATION
+Best for [use case A]: [Product A Name]
+Best for [use case B]: [Product B Name]
+
+VERDICT: [One sentence overall recommendation]

@@ -1,0 +1,15 @@
+// BAD: Too generic, gives no guidance
+{"type": "object", "description": "Filter parameters"}
+
+// GOOD: Precise schema with documented properties
+{
+  "type": "object",
+  "description": "Filter parameters for product search",
+  "properties": {
+    "category":   {"type": "string", "enum": ["electronics", "clothing", "books"]},
+    "max_price":  {"type": "number",  "minimum": 0, "description": "Maximum price in USD"},
+    "in_stock":   {"type": "boolean", "description": "Return only in-stock items"},
+    "sort_by":    {"type": "string",  "enum": ["price_asc", "price_desc", "rating", "newest"]}
+  },
+  "required": []
+}

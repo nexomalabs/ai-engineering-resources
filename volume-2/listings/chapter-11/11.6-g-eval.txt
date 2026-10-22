@@ -1,0 +1,13 @@
+Evaluation task: Assess the coherence of the following news article summary.
+Coherence: The summary should be well-structured and present ideas in a logical order.
+
+Article: {article}
+Summary: {summary}
+
+Evaluation steps:
+1. Read the summary and identify the main claim.
+2. Check whether supporting points logically follow the main claim.
+3. Verify there are no contradictions between consecutive sentences.
+4. Assess whether the summary can be read without the original article and still be understood.
+
+Based on these evaluation steps, rate the coherence of the summary on a scale of 1–5.

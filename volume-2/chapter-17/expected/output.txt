@@ -1,0 +1,95 @@
+[Library] Registered: task-dispatcher@1.0.0
+[Library] Registered: quality-gate@1.0.0
+[Library] Registered: error-recovery@1.0.0
+
+============================================================
+TEST CASE 1: Billing Dispute
+
+[Stage 1 – Dispatch]
+{
+  "category": "billing_dispute",
+  "priority": "high",
+  "confidence": 0.91,
+  "routing_queue": "billing_team",
+  "flags": []
+}
+
+[Stage 2 – Quality Gate]
+{
+  "scores": {
+    "accuracy": {
+      "score": 4,
+      "justification": "Response addresses the billing discrepancy correctly."
+    },
+    "clarity": {
+      "score": 5,
+      "justification": "Clear and concise language used throughout."
+    },
+    "completeness": {
+      "score": 3,
+      "justification": "Missing information about refund timeline."
+    }
+  },
+  "weighted_total": 0.8,
+  "pass": true,
+  "top_improvement": "Include expected refund processing time in the response."
+}
+
+============================================================
+TEST CASE 2: Shipment Tracking
+
+[Stage 1 – Dispatch]
+{
+  "category": "shipment_tracking",
+  "priority": "high",
+  "confidence": 0.88,
+  "routing_queue": "logistics_team",
+  "flags": [
+    "sla_breach"
+  ]
+}
+
+[Stage 2 – Quality Gate]
+{
+  "scores": {
+    "accuracy": {
+      "score": 5,
+      "justification": "Gives the current location and a delivery estimate."
+    },
+    "clarity": {
+      "score": 5,
+      "justification": "Short and specific."
+    },
+    "completeness": {
+      "score": 2,
+      "justification": "Does not say what happens if today's delivery is missed."
+    }
+  },
+  "weighted_total": 0.82,
+  "pass": true,
+  "top_improvement": "State the next step if the package does not arrive today."
+}
+
+============================================================
+TEST CASE 3: Ambiguous Input
+
+[Stage 1 – Dispatch]
+{
+  "category": "general_inquiry",
+  "priority": "low",
+  "confidence": 0.42,
+  "routing_queue": "general_queue",
+  "flags": [
+    "ambiguous_request"
+  ]
+}
+
+[Stage 3 – Recovery Triggered]
+{
+  "recovery_action": "request_clarification",
+  "clarifying_questions": [
+    "Which part of your account is affected: billing, deliveries, or sign-in?",
+    "What happened, and when did you first notice it?"
+  ],
+  "confidence_after_clarification": 0.85
+}

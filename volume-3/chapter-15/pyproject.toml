@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol3-lab15"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume III, Lab 15: Async Agent Communication System"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

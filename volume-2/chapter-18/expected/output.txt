@@ -1,0 +1,51 @@
+[Library] Registered: legal/document-classification@1.2.0
+[Library] Registered: legal/clause-extraction@1.0.3
+[Library] Registered: legal/risk-scoring@2.0.1
+[Library] Registered: legal/document-summarization@1.1.0
+[Library] Registered: legal/plain-language-translation@1.0.0
+
+============================================================
+ALL PROMPTS IN LIBRARY:
+  legal/document-classification@1.2.0 — Legal Document Type Classifier
+  legal/clause-extraction@1.0.3 — Legal Clause Extractor
+  legal/risk-scoring@2.0.1 — Contract Risk Scorer
+  legal/document-summarization@1.1.0 — Legal Document Summarizer
+  legal/plain-language-translation@1.0.0 — Legal Plain Language Translator
+
+============================================================
+SEARCH: tag='domain:legal', task_type='classification'
+  Found: legal/document-classification — Legal Document Type Classifier
+
+============================================================
+EXECUTE: document-classification
+  Result: {
+  "document_type": "service_agreement",
+  "parties": [
+    "Acme Corp",
+    "TechVendor Ltd"
+  ],
+  "governing_law": "New York",
+  "confidence": 0.93
+}
+
+============================================================
+SCHEMA TEST: document-classification
+  Test passed: True
+
+============================================================
+VERSION LISTING: legal/document-classification
+[Library] Updated: legal/document-classification@1.3.0
+  1.2.0 — stable (updated: 2026-10-14)
+  1.3.0 — stable (updated: 2026-10-14)
+
+============================================================
+DEPRECATION: document-classification@1.2.0
+[Library] Deprecated: legal/document-classification@1.2.0
+Attempting to get deprecated version:
+[Library] WARNING: 'legal/document-classification@1.2.0' is deprecated. Sunset: 2027-06-01. Replaced by: legal/document-classification@1.3.0
+
+============================================================
+CHANGELOG: legal/document-classification
+  [REGISTER] v1.2.0 by legal-ai-team: Initial registration: Legal Document Type Classifier
+  [UPDATE] v1.3.0 by legal-ai-team: MINOR: Added partnership_agreement document type.
+  [DEPRECATE] v1.2.0 by governance: Deprecated. Sunset: 2027-06-01. Replaced by: legal/document-classification@1.3.0

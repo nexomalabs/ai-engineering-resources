@@ -1,0 +1,40 @@
+Part 1 — Schema
+  tables: ['episodic', 'procedural', 'semantic']
+
+Part 2 — Episodic records
+  sess-1: 3 records
+  sess-2: 2 records
+  sess-3: 2 records
+
+Part 3 — Semantic facts
+  user:bob prefers_language = Python
+  user:bob project_type = REST API built with FastAPI
+  user:bob experience_level = learning async programming
+  user:bob prefers_explanations = short, with a code example
+  tool:code_review capability = flags blocking calls in async code
+
+Part 4 — Procedural memory
+  PROCEDURE (code_review): 1. Read the code. 2. Check for blocking calls in async functions. 3. Check error handling. 4. Suggest improvements with examples.
+  MEMORY: Bob asked for a code review of his endpoint.
+  MEMORY: Reviewed the endpoint: a blocking database call stalls the event loop.
+
+Part 5 — Hybrid retrieval: 'async Python FastAPI'
+  recency_weight=0.3:
+    [sess-2] Bob asked how to write async endpoints in FastAPI.
+    [sess-2] Surfaced Session 1: Bob is learning async Python.
+    [sess-1] Explained Python's async and await keywords with an asyncio example.
+  recency_weight=0.8:
+    [sess-3] Reviewed the endpoint: a blocking database call stalls the event loop.
+    [sess-3] Bob asked for a code review of his endpoint.
+    [sess-2] Bob asked how to write async endpoints in FastAPI.
+  At 0.3, keyword relevance dominates, so the older sessions about async Python and
+  FastAPI surface. At 0.8, recency dominates, so the recent code review surfaces
+  although it shares no keywords with the query.
+
+Part 6 — Forgetting
+  deleted 4 record(s) older than 3 days with importance below 0.7
+  kept [sess-2] importance 0.7: Bob asked how to write async endpoints in FastAPI.
+  kept [sess-3] importance 0.6: Bob asked for a code review of his endpoint.
+  kept [sess-3] importance 0.9: Reviewed the endpoint: a blocking database call stalls the event loop.
+
+Database written to memory_lab.db

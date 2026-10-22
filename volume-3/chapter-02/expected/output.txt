@@ -1,0 +1,35 @@
+=== TOKEN UTILIZATION REPORT ===
+{
+  "model": "gpt-6.1-sol",
+  "token_budget": 200,
+  "tokens_used": 184,
+  "utilization_pct": 92.0,
+  "blocks_total": 6,
+  "blocks_included": 5,
+  "blocks_excluded": 1,
+  "excluded": [
+    {
+      "name": "retrieved_doc_2",
+      "tokens": 66,
+      "priority": 4
+    }
+  ]
+}
+
+=== FINAL MESSAGES ===
+
+[SYSTEM]
+## SYSTEM ROLE
+You are a senior financial analyst. Answer all questions with data-driven precision.
+
+## COMPLIANCE RULES
+COMPLIANCE RULES:
+1. Do not provide specific investment advice.
+2. Always recommend consulting a licensed advisor.
+3. Cite sources when providing market data.
+
+## RETRIEVED DOC 1
+MARKET REPORT (Q2): The Northwind 500 index closed the quarter at 5,480. Year-to-date return: 12.4%....
+
+[USER]
+What is the current policy interest rate and how does it affect bond yields?

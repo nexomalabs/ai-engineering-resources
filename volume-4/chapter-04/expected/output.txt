@@ -1,0 +1,29 @@
+
+=== ACTION LOG ===
+  06:41:05 | 6963b4bc | file_received                  | agreement_2024.txt
+  06:41:05 | dfd762e7 | file_received                  | invoice_00123.txt
+  06:41:05 | d4ea3b57 | file_received                  | q3_report.txt
+  06:41:05 | d4ea3b57 | classified                     | type=report confidence=0.99
+  06:41:05 | dfd762e7 | classified                     | type=invoice confidence=0.99
+  06:41:05 | d4ea3b57 | routed                         | → report handler
+  06:41:05 | dfd762e7 | routed                         | → invoice handler
+  06:41:05 | dfd762e7 | invoice_processed              | Created payment record. Confidence: 0.99
+  06:41:05 | dfd762e7 | pipeline_complete              | type=invoice
+  06:41:06 | d4ea3b57 | report_archived                | Archived to reports store. Confidence: 0.99
+  06:41:06 | d4ea3b57 | pipeline_complete              | type=report
+  06:41:06 | 7ebcba0a | file_received                  | email_thread.txt
+  06:41:06 | bca369b9 | file_received                  | unknown_doc.txt
+  06:41:07 | 6963b4bc | classified                     | type=contract confidence=0.9
+  06:41:07 | 6963b4bc | routed                         | → contract handler
+  06:41:07 | 6963b4bc | contract_processed             | Extracted terms. Confidence: 0.9
+  06:41:07 | 6963b4bc | pipeline_complete              | type=contract
+  06:41:09 | bca369b9 | classified                     | type=unknown confidence=0.5
+  06:41:09 | bca369b9 | routed                         | → unknown handler
+  06:41:09 | bca369b9 | routed_to_review               | Low confidence or unknown type: 0.5
+  06:41:09 | bca369b9 | pipeline_complete              | type=unknown
+  06:41:12 | 7ebcba0a | classified                     | type=correspondence confidence=0.9
+  06:41:12 | 7ebcba0a | routed                         | → correspondence handler
+  06:41:12 | 7ebcba0a | routed_to_review               | Low confidence or unknown type: 0.9
+  06:41:12 | 7ebcba0a | pipeline_complete              | type=correspondence
+
+Total actions logged: 25

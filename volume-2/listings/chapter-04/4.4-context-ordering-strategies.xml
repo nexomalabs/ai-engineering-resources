@@ -1,0 +1,20 @@
+<context>
+
+<most_relevant_document relevance_score="0.94">
+Policy HR-2024-012: Remote Work Eligibility
+Effective Date: January 1, 2024
+[Full document content]
+</most_relevant_document>
+
+<supporting_document relevance_score="0.71">
+Policy HR-2023-008: Work Location Classification
+Effective Date: March 15, 2023
+[Summary of key points only — 3 bullet points]
+</supporting_document>
+
+<reference_document relevance_score="0.43">
+FAQ: Common Remote Work Questions
+[Key Q&A pairs relevant to this query]
+</reference_document>
+
+</context>

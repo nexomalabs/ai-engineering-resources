@@ -1,0 +1,14 @@
+
+Starting simulation: 35.0s, 2.0 req/s, initial workers: 2
+  ↑ Scale UP: 2 → 4 workers (queue_depth=6)
+  ↑ Scale UP: 4 → 6 workers (queue_depth=6)
+  ↓ Scale DOWN: 6 → 5 workers (queue_depth=0)
+
+Simulation Complete
+Requests completed:  83
+Queue remaining:     0
+Peak workers:        6
+Workers at end:      5
+Avg processing:      1.56s
+p95 latency:         2.53s
+Avg queue wait:      0.78s

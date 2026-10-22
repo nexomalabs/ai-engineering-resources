@@ -1,0 +1,12 @@
+Problem to solve: [Novel problem]
+
+Before solving directly, identify an analogous problem from a well-understood domain
+that shares the same structure.
+
+Analogy: [Problem domain] :: [Novel problem]
+
+How is the novel problem structurally similar to the familiar domain?
+
+What is the solution approach in the familiar domain?
+
+Apply that same structural approach to the novel problem:

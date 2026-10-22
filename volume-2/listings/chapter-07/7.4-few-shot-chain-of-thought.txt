@@ -1,0 +1,13 @@
+Q: A factory produces 480 units per day. The factory operates 5 days a week.
+If 3% of all units are defective, how many defective units are produced in a 4-week period?
+
+A: Let's work through this step by step.
+Step 1: Weekly production = 480 units/day × 5 days = 2,400 units per week
+Step 2: 4-week production = 2,400 × 4 = 9,600 units total
+Step 3: Defective units = 9,600 × 0.03 = 288 units
+Answer: 288 defective units are produced in 4 weeks.
+
+---
+
+Q: [Target question here]
+A: Let's work through this step by step.

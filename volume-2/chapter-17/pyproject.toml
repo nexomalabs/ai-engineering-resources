@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol2-lab17"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume II, Lab 17: Build a Three-Pattern Prompt Framework"
+requires-python = ">=3.12"
+dependencies = ["jinja2>=3.1"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,46 @@
+
+============================================================
+  COMPLIANCE AUDIT REPORT
+  System:  CustomerSupportBot v2.1.0
+  Date:    2026-10-14
+  Score:   74.0%
+============================================================
+
+Control ID    Category    Title                         Severity    Status
+------------  ----------  ----------------------------  ----------  -------------
+GV-1.1        GOVERN      AI Risk Management Policy     CRITICAL    COMPLIANT
+GV-1.2        GOVERN      AI Risk Register              HIGH        COMPLIANT
+GV-1.3        GOVERN      Designated AI Accountability  HIGH        NON_COMPLIANT
+GV-1.4        GOVERN      AI Incident Response Plan     HIGH        COMPLIANT
+MP-2.1        MAP         System Documentation          CRITICAL    PARTIAL
+MP-2.2        MAP         AI Impact Assessment          CRITICAL    COMPLIANT
+MP-2.3        MAP         Affected Groups Documented    MEDIUM      COMPLIANT
+MS-3.1        MEASURE     Bias Evaluation               CRITICAL    COMPLIANT
+MS-3.2        MEASURE     Performance Benchmarks        HIGH        COMPLIANT
+MS-3.3        MEASURE     Adversarial Testing           HIGH        NON_COMPLIANT
+MG-4.1        MANAGE      Audit Logging                 CRITICAL    PARTIAL
+MG-4.2        MANAGE      Human Oversight               CRITICAL    COMPLIANT
+MG-4.3        MANAGE      Rollback Procedure            HIGH        COMPLIANT
+MG-4.4        MANAGE      Monitoring and Alerting       HIGH        COMPLIANT
+MG-4.5        MANAGE      Data Provenance               HIGH        NON_COMPLIANT
+
+============================================================
+  GAP REPORT — 5 controls require attention
+============================================================
+
+  [HIGH] GV-1.3: Designated AI Accountability
+  Status: NON_COMPLIANT
+
+  [CRITICAL] MP-2.1: System Documentation
+  Status: PARTIAL
+
+  [HIGH] MS-3.3: Adversarial Testing
+  Status: NON_COMPLIANT
+
+  [CRITICAL] MG-4.1: Audit Logging
+  Status: PARTIAL
+
+  [HIGH] MG-4.5: Data Provenance
+  Status: NON_COMPLIANT
+
+Report saved to compliance_report.json

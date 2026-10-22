@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-07-27T14:22:01.332Z",
+  "level": "INFO",
+  "event": "ai_request_complete",
+  "request_id": "req_7f3a9b12",
+  "session_id": "sess_abc123",
+  "model_id": "gpt-6.1-sol",
+  "model_version": "2024-11-20",
+  "prompt_template": "customer_support_v3",
+  "tokens_in": 412,
+  "tokens_out": 187,
+  "latency_ms": 1834,
+  "quality_score": 0.87,
+  "safety_filter": "pass",
+  "topic": "billing_inquiry",
+  "user_tier": "premium"
+}

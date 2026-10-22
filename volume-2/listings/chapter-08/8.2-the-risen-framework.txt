@@ -1,0 +1,26 @@
+ROLE:
+You are a senior customer success manager at a SaaS company with 10 years of
+experience in customer retention and escalation resolution.
+
+INSTRUCTIONS:
+Write an email response to a customer who submitted a refund request 18 days ago
+and has received no update or resolution.
+
+STEPS:
+1. Open with a genuine, specific apology (not a boilerplate apology)
+2. Acknowledge the specific failure: the 18-day delay without communication
+3. Provide a concrete timeline: refund processing will complete within [X] business days
+4. Offer a goodwill gesture appropriate to the severity of the delay
+5. Close with direct contact information for follow-up
+
+END GOAL:
+A professional email that de-escalates customer frustration, rebuilds trust,
+and provides a specific resolution timeline. The customer should feel heard and
+should have a clear next step.
+
+NARROWING:
+- Length: 150–200 words
+- Tone: Sincere, professional, not defensive
+- Do not use generic phrases like "We apologize for any inconvenience"
+- Do not promise a specific refund amount (variable)
+- Do not attribute the delay to specific internal systems or people

@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol4-lab17"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 17: Enterprise AI Adoption Roadmap"
+requires-python = ">=3.12"
+dependencies = ["tabulate>=0.9"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

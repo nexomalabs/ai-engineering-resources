@@ -1,0 +1,12 @@
+[ROLE DECLARATION]
+[UNIVERSAL CONSTRAINTS]
+
+TASK: {{task_instruction}}
+
+INPUT:
+{{input_data}}
+
+OUTPUT FORMAT:
+{{output_schema}}
+
+BEGIN OUTPUT:

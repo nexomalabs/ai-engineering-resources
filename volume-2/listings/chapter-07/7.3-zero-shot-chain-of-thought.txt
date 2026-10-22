@@ -1,0 +1,12 @@
+Prompt:
+If a train travels at 60 mph and needs to cover 225 miles, how many minutes
+will the journey take? Let's think step by step.
+
+Model Output:
+Step 1: Calculate the time in hours.
+Time = Distance ÷ Speed = 225 miles ÷ 60 mph = 3.75 hours
+
+Step 2: Convert hours to minutes.
+3.75 hours × 60 minutes/hour = 225 minutes
+
+Answer: The journey will take 225 minutes.

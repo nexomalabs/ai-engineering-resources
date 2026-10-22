@@ -1,0 +1,18 @@
+REGRESSION TEST REPORT
+======================
+Prompt: sentiment-classifier-v2.1
+Date: 2024-11-15
+Model: gpt-6-luna
+
+Results:
+  Golden Set:     50/50 (100%) ✓
+  Regression:     47/50 (94%) ⚠
+  Edge Cases:     18/25 (72%) ⚠
+  Adversarial:    8/10 (80%) ⚠
+
+REGRESSIONS DETECTED:
+  - TC-087: Expected NEGATIVE, got NEUTRAL [Ticket: "I am disappointed..."]
+  - TC-091: Expected POSITIVE, got NEUTRAL [Review: "Works as described"]
+  - TC-094: Expected CRITICAL, got HIGH [Ticket with indirect urgency signal]
+
+RECOMMENDATION: Do not deploy. Investigate regressions TC-087, TC-091.

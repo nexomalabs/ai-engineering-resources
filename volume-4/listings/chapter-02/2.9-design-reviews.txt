@@ -1,0 +1,14 @@
+Design Review Report — AI Document Analysis Service
+Date: [date]
+Reviewers: [names and roles]
+
+APPROVED WITH CONDITIONS
+
+Findings:
+[BLOCKING] Missing error contract for /analyses/{id} when job_id is unknown.
+[BLOCKING] FMEA omits NotificationService: webhook delivery failure has no mitigation.
+[ADVISORY] Latency budget for PDF text extraction assumes 10 pages; no cap on document size.
+
+Required actions before implementation begins:
+1. Add 404 response schema to API contract.
+2. Add NotificationService failure modes, with a webhook retry policy, to the FMEA.

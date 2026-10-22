@@ -1,0 +1,17 @@
+Goal: Write a brief report on AI advances in 2024.
+
+orchestrator -> researcher: task 1 {'query': 'EU AI Act'}
+orchestrator -> researcher: task 2 {'query': 'Nobel physics 2024'}
+orchestrator -> researcher: task 3 {'query': 'Nobel chemistry 2024'}
+researcher -> orchestrator: result for task 1
+researcher -> orchestrator: result for task 2
+researcher -> orchestrator: result for task 3
+orchestrator -> writer: task 4 write 'AI advances in 2024' from the results of tasks 1-3
+writer -> orchestrator: result for task 4
+
+=== REPORT ===
+AI advances in 2024
+
+- The EU AI Act, the first comprehensive AI law, entered into force on 1 August 2024.
+- The 2024 Nobel Prize in Physics went to John Hopfield and Geoffrey Hinton for foundational work that enables machine learning with artificial neural networks.
+- The 2024 Nobel Prize in Chemistry went to David Baker for computational protein design, and to Demis Hassabis and John Jumper for protein structure prediction.
