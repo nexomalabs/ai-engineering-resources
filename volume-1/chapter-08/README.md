@@ -17,16 +17,16 @@ how much five separate samples *diverge from each other*.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 8 read through §8.2
 - **No API key required by default.** This lab replays recorded model responses.
   Estimated API cost to complete: **$0.00**.
-- To run it against the real API instead, see "Recording Your Own Fixtures" below.
+- To run it against the real API instead, see "Running It Against the Real API" below.
 
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-08
+cd volume-1/chapter-08      # from the repository root
 uv sync
 ```
 
@@ -91,21 +91,39 @@ directly. `test_diversity_rises_overall` checks the trend end-to-end rather than
 step-to-step, because a stricter test would demand perfect monotonicity from only five
 samples — which the expected output itself does not show.
 
-## Recording Your Own Fixtures
+## Running It Against the Real API
 
-The bundled fixtures in `fixtures/chapter-08/` are hand-authored, representative
-responses — not a live API transcript. If you have an `OPENAI_API_KEY`, you can generate
-your own:
+The bundled fixtures are hand-authored, representative responses — not a live API
+transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
+under $0.05.
+
+**Use `live` mode for your first run.** It calls the API and saves nothing, so your
+clone stays exactly as shipped and `uv run pytest` keeps passing.
+
+macOS or Linux:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-NEXOMA_LAB_MODE=record uv run python solution/lab.py
+NEXOMA_LAB_MODE=live uv run --group live python solution/lab.py
 ```
 
-This calls the real API, prints real results, and saves them to `fixtures/chapter-08/` as
-new recordings, keyed by request hash. Your original bundled fixtures are untouched unless
-a request matches one exactly. Re-run with `NEXOMA_LAB_MODE=fixture` afterwards to replay
-what you just recorded.
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/lab.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to replaying fixtures
+```
+
+`--group live` installs the OpenAI SDK, which fixture mode does not need. The banner on
+the first line of output tells you which mode ran. Expect your numbers to differ from
+*Expected Result*: these are fresh samples from the model.
+
+**`record` mode overwrites the bundled fixtures.** Fixtures are keyed by a hash of the
+request, and the solution sends the same requests the bundled files were saved under, so
+`NEXOMA_LAB_MODE=record` replaces them with your responses. Tests that check exact values
+may then fail. Restore the originals with `git checkout -- fixtures/`.
 
 ## If It Does Not Work
 
@@ -114,8 +132,8 @@ what you just recorded.
 | Every row reads 0.000 | `cross_sample_diversity` still returns `0.0` | Complete TODO 1 |
 | Every row shows 1 distinct sample | `generate_samples` returns a single-item list | Complete TODO 2, with a distinct `seed` per call |
 | `FixtureMissing` error | A temperature or seed outside the bundled set | Only `TEMPERATURES` and `seed=0..4` are recorded |
-| `ModuleNotFoundError: openai` | Only needed for `record`/`live` mode | `uv sync --group live`, or stay in fixture mode |
-| `record` mode fails with an auth error | No `OPENAI_API_KEY` set | Export it, or skip recording — fixture mode needs nothing |
+| `ModuleNotFoundError: openai` | `--group live` left off the command | Add `--group live` to `uv run`, or stay in fixture mode |
+| `live` or `record` mode fails with an auth error | No `OPENAI_API_KEY` set in this terminal | Set it as shown above, or stay in fixture mode — it needs nothing |
 
 ## Going Further
 

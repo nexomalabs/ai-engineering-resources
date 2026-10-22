@@ -21,7 +21,9 @@ BERT, all 144 heads.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15. Part B needs PyTorch, which had not published Python 3.15 builds at the
+  time of writing; if `uv sync --group bert` fails, add `--python 3.14` to it and to the
+  `uv run` command.
 - Chapter 6 read through §6.5
 - **Part A: no API key, no network. Estimated API cost: $0.00.**
 - Part B: torch and transformers, and about 440 MB of weights on first run. Also $0.00,
@@ -30,7 +32,7 @@ BERT, all 144 heads.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-06
+cd volume-1/chapter-06      # from the repository root
 uv sync                      # Part A
 uv sync --group bert         # Part B, optional
 ```

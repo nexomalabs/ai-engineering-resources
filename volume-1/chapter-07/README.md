@@ -18,7 +18,7 @@ tokenization costs in real money.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 7 read through §7.3
 - **Part A: no dependencies, no API key, no network. Estimated API cost: $0.00.**
 - Part B: `tiktoken`, which downloads vocabulary files on first use. Also $0.00.
@@ -26,7 +26,7 @@ tokenization costs in real money.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-07
+cd volume-1/chapter-07      # from the repository root
 uv sync                          # Part A needs nothing but Python
 uv sync --group tiktoken         # Part B, optional
 ```

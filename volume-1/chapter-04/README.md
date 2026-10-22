@@ -18,7 +18,7 @@ are correct by checking them numerically.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 4 read through §4.8
 - **No API key required. Estimated API cost: $0.00** — this lab runs entirely locally.
 - No network required. The dataset is generated from a fixed seed.
@@ -26,7 +26,7 @@ are correct by checking them numerically.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-04
+cd volume-1/chapter-04      # from the repository root
 uv sync
 ```
 

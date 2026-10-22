@@ -19,7 +19,7 @@ out *which* headlines it gets wrong and why.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 3 read through §3.12
 - **No API key required. Estimated API cost: $0.00** — this lab runs entirely locally.
 - No network required. The corpus is generated deterministically from a fixed seed.
@@ -27,7 +27,7 @@ out *which* headlines it gets wrong and why.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-03
+cd volume-1/chapter-03      # from the repository root
 uv sync
 ```
 

@@ -9,18 +9,19 @@ This repository holds runnable labs only. It does not contain the book text.
 
 | Volume | Title | Labs |
 |:------:|-------|:----:|
-| I | Foundations | [`volume-1/`](volume-1/) — available now |
+| I | AI and LLM Fundamentals | [`volume-1/`](volume-1/) — available now |
 | II | Prompt Engineering | coming with the volume's release |
 | III | Context and Agents | coming with the volume's release |
 | IV | Production Systems | coming with the volume's release |
 
 ## Running a lab
 
-Requires Python 3.12 and [uv](https://docs.astral.sh/uv/).
+Requires [uv](https://docs.astral.sh/uv/). Each lab pins Python 3.15 in its
+`.python-version` file, and `uv sync` downloads that version for you.
 
 ```bash
-git clone https://github.com/nexomalabs/prompt-engineering-resources.git
-cd prompt-engineering-resources/volume-1/chapter-03
+git clone https://github.com/nexomalabs/ai-engineering-resources.git
+cd ai-engineering-resources/volume-1/chapter-03
 uv sync
 uv run python src/lab.py     # your starting point
 uv run pytest                # verify your work
@@ -30,6 +31,9 @@ Every lab runs from a clean clone with **no API key** — tests replay recorded
 responses by default (`NEXOMA_LAB_MODE=fixture`). See each chapter's own
 `README.md` for that lab's objectives, expected output, and estimated API cost
 if you choose to run it live.
+
+On Windows, clone to a short path such as `C:\labs`: the 260-character path
+limit can break package installs in deep folders.
 
 ## Structure
 
@@ -51,11 +55,11 @@ Chapters 1 and 2 are paper exercises: `README.md` only, no code.
 ## License
 
 Code in this repository is licensed under the [MIT License](LICENSE). The book
-text itself is © 2026 Nexoma Labs LLC, all rights reserved — see the volume's
+text itself is © 2027 Nexoma Labs LLC, all rights reserved — see the volume's
 copyright page.
 
 ## Errata and issues
 
-- **Errata:** https://books.nexomalabs.com/prompt-engineering-series/errata/
+- **Errata:** https://books.nexomalabs.com/applied-ai-engineering/errata/
 - **Issues:** open one on this repository
-- **Email:** books@nexomalabs.com
+- **Email:** errata@nexomalabs.com

@@ -16,7 +16,7 @@ model — scored for accuracy and compared for token cost.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 9 read through §9.2
 - **No API key required by default.** This lab replays recorded model responses.
   Estimated API cost to complete: **$0.00**.
@@ -24,7 +24,7 @@ model — scored for accuracy and compared for token cost.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-09
+cd volume-1/chapter-09      # from the repository root
 uv sync
 ```
 
@@ -91,18 +91,44 @@ they demonstrate the *category* of behaviour (visible answer, large hidden reaso
 cost, higher accuracy on multi-step problems), which is durable even when the model name
 is not.
 
-## Recording Your Own Fixtures
+## Running It Against the Real API
 
-The bundled fixtures are hand-authored, representative responses — not a live transcript.
-With an `OPENAI_API_KEY` and access to a current reasoning model:
+The bundled fixtures are hand-authored, representative responses — not a live API
+transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
+under $0.05.
+
+**Change the reasoning model first.** OpenAI shut down `o1-mini` on 27 October 2025, so
+the reasoning step fails with a `model_not_found` error until you edit
+`MODEL_REASONING` in `solution/lab.py` to a reasoning model your account lists on its
+Models page. The standard-model rows run as supplied.
+
+**Use `live` mode for your first run.** It calls the API and saves nothing, so your
+clone stays exactly as shipped and `uv run pytest` keeps passing.
+
+macOS or Linux:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-NEXOMA_LAB_MODE=record uv run python solution/lab.py
+NEXOMA_LAB_MODE=live uv run --group live python solution/lab.py
 ```
 
-You will need to update `MODEL_REASONING` in `solution/lab.py` to whatever reasoning
-model your account currently has access to before recording.
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/lab.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to replaying fixtures
+```
+
+`--group live` installs the OpenAI SDK, which fixture mode does not need. The banner on
+the first line of output tells you which mode ran. Expect your numbers to differ from
+*Expected Result*: these are fresh samples from the model.
+
+**`record` mode overwrites the bundled fixtures.** Fixtures are keyed by a hash of the
+request, and the solution sends the same requests the bundled files were saved under, so
+`NEXOMA_LAB_MODE=record` replaces them with your responses. Tests that check exact values
+may then fail. Restore the originals with `git checkout -- fixtures/`.
 
 ## If It Does Not Work
 
@@ -111,7 +137,10 @@ model your account currently has access to before recording.
 | Every condition reports 0/3 | `check_accuracy` still returns `False` | Complete TODO 1 |
 | `FixtureMissing` error | Problem text or mode does not match a bundled fixture exactly | Use the three `PROBLEMS` as given; do not edit their text |
 | `check_accuracy` reports a false positive | Matching on a digit substring that also appears elsewhere | See `test_partial_digit_overlap_is_not_a_false_positive` for the boundary case |
-| `record` mode: `NotImplementedError` | The starter's `call_reasoning` has no live path | Use `solution/lab.py` for recording, not `src/lab.py` |
+| `live` or `record` mode: `NotImplementedError` | The starter's `call_reasoning` has no live path | Run `solution/lab.py` against the real API, not `src/lab.py` |
+| `model_not_found` on the reasoning rows | `MODEL_REASONING` is still `o1-mini`, which OpenAI shut down | Set it to a current reasoning model, as above |
+| `ModuleNotFoundError: openai` | `--group live` left off the command | Add `--group live` to `uv run`, or stay in fixture mode |
+| `live` or `record` mode fails with an auth error | No `OPENAI_API_KEY` set in this terminal | Set it as shown above, or stay in fixture mode — it needs nothing |
 
 ## Going Further
 

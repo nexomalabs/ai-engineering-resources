@@ -21,7 +21,7 @@ actually fixed what the weak one broke.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15
 - Chapter 10 read through §10.9
 - **No API key required by default.** This lab replays recorded model responses.
   Estimated API cost to complete: **$0.00**.
@@ -29,7 +29,7 @@ actually fixed what the weak one broke.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-10
+cd volume-1/chapter-10      # from the repository root
 uv sync
 ```
 
@@ -87,15 +87,39 @@ weak/strong strings, independent of the fixtures — so a future fixture change 
 silently break the checker itself. `TestAllFiveExercisesDemonstrateTheirFix` is the
 end-to-end claim: all five, against the bundled recordings.
 
-## Recording Your Own Fixtures
+## Running It Against the Real API
 
-The bundled fixtures are hand-authored, representative responses — not a live
-transcript. With an `OPENAI_API_KEY`:
+The bundled fixtures are hand-authored, representative responses — not a live API
+transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
+under $0.05.
+
+**Use `live` mode for your first run.** It calls the API and saves nothing, so your
+clone stays exactly as shipped and `uv run pytest` keeps passing.
+
+macOS or Linux:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-NEXOMA_LAB_MODE=record uv run python solution/lab.py
+NEXOMA_LAB_MODE=live uv run --group live python solution/lab.py
 ```
+
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/lab.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to replaying fixtures
+```
+
+`--group live` installs the OpenAI SDK, which fixture mode does not need. The banner on
+the first line of output tells you which mode ran. Expect your numbers to differ from
+*Expected Result*: these are fresh samples from the model.
+
+**`record` mode overwrites the bundled fixtures.** Fixtures are keyed by a hash of the
+request, and the solution sends the same requests the bundled files were saved under, so
+`NEXOMA_LAB_MODE=record` replaces them with your responses. Tests that check exact values
+may then fail. Restore the originals with `git checkout -- fixtures/`.
 
 ## If It Does Not Work
 
@@ -105,6 +129,8 @@ NEXOMA_LAB_MODE=record uv run python solution/lab.py
 | Exercise 1 sentence count looks wrong | Splitting on every `.`, breaking on `$4.2M` | Use `sentence_count()`, not `text.split(".")` |
 | Exercise 2/5 "fix demonstrated" is `False` even though output looks right | `demonstrates_fix` requires the **weak** response to fail too | Check both sides, not just the strong response |
 | `FixtureMissing` error | Prompt text edited — even whitespace changes the fixture key | Use the constants exactly as given |
+| `ModuleNotFoundError: openai` | `--group live` left off the command | Add `--group live` to `uv run`, or stay in fixture mode |
+| `live` or `record` mode fails with an auth error | No `OPENAI_API_KEY` set in this terminal | Set it as shown above, or stay in fixture mode — it needs nothing |
 
 ## Going Further
 

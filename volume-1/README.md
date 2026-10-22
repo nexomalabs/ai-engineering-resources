@@ -1,11 +1,10 @@
 # Volume I — Laboratories
 
-*Applied AI Engineering · Volume I: Foundations*
+*Applied AI Engineering · Volume I: AI and LLM Fundamentals*
 
 Every lab runs from a clean checkout and is tested in CI on every push.
-See [`.npf/LAB_PROJECT_STANDARD.md`](../../../.npf/LAB_PROJECT_STANDARD.md).
 
-**Python 3.12.** Install [uv](https://docs.astral.sh/uv/), then from any lab directory:
+**Python 3.15.** Install [uv](https://docs.astral.sh/uv/), then from any lab directory:
 
 ```bash
 uv sync
@@ -34,10 +33,6 @@ uv run pytest                # verify your work
 locally with no model calls.
 
 Legend — ✅ complete and passing CI · ⬜ not built yet.
-
-Rows follow the **current manuscript**, which has 10 chapters. The v2.0.0 blueprint
-([`.npf/blueprints/volume-1.md`](../../../.npf/blueprints/volume-1.md)) grows Volume I to
-15 chapters; those labs are specified there but their chapters are not written yet.
 
 ---
 

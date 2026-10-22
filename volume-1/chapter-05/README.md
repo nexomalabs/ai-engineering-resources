@@ -20,7 +20,9 @@ a real photograph.
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.15. Part B needs PyTorch, which had not published Python 3.15 builds at the
+  time of writing; if `uv sync --group resnet` fails, add `--python 3.14` to it and to the
+  `uv run` command.
 - Chapter 5 read through §5.2
 - **Part A: no API key, no network. Estimated API cost: $0.00.**
 - Part B: PyTorch, and about 100 MB of weights downloaded on first run. Still $0.00 —
@@ -29,7 +31,7 @@ a real photograph.
 ## Setup
 
 ```bash
-cd volumes/volume-1/labs/chapter-05
+cd volume-1/chapter-05      # from the repository root
 uv sync                        # Part A
 uv sync --group resnet         # Part B, only if you want it — torch is large
 ```
