@@ -8,75 +8,75 @@ Problem P1: Train meeting problem
 Expected answer contains: 3:13 PM
 ------------------------------------------------------------------------
 
-[1] gpt-4o-mini | direct answer
-    The trains will meet at approximately 2:39 PM.
-    correct=False  tokens=110
+[1] gpt-5.4-mini | direct answer
+    2:30 PM
+    correct=False  tokens=101
 
-[2] gpt-4o-mini | chain-of-thought
-    Let me work through this step by step.
+[2] gpt-5.4-mini | chain-of-thought
+    Let’s work it out step by step.
 
-Train A departs Chicago at 9:00 AM at 60 mph.
-Train B departs New York at 10:00 AM at 80 mph.
-By 10:00 AM, Train A has a...
-    correct=True  tokens=233
+1. **Head start for the Chicago train**  
+   The first train leaves at **9:00 AM** and travels for 1 hour before the second tra...
+    correct=True  tokens=440
 
-[3] o1-mini | reasoning
-    Setting up the problem: Train A travels alone from 9:00 to 10:00 AM, covering 60 miles. At 10:00 AM the remaining gap is 790 - 60 = 730 miles, closing at 60 + 8...
-    correct=True  reasoning_tokens=984  total_tokens=1207
+[3] gpt-6-luna | reasoning
+    At 10:00 AM, the first train has traveled 60 miles, leaving 730 miles between them. Their combined speed is 140 mph, so they meet about 5 hours and 13 minutes l...
+    correct=True  reasoning_tokens=128  total_tokens=267
 
 ------------------------------------------------------------------------
 Problem P2: Compound probability
 Expected answer contains: 2/15
 ------------------------------------------------------------------------
 
-[1] gpt-4o-mini | direct answer
-    The probability is 4/25.
-    correct=False  tokens=78
+[1] gpt-5.4-mini | direct answer
+    \(\frac{2}{15}\)
+    correct=True  tokens=67
 
-[2] gpt-4o-mini | chain-of-thought
-    Let me work through this step by step.
+[2] gpt-5.4-mini | chain-of-thought
+    There are 10 balls total: 4 red and 6 blue.
 
-P(first ball red) = 4/10.
-Without replacement, P(second ball red | first red) = 3/9.
-P(both red) = 4/10 * 3/9 = 12/90.
-S...
-    correct=False  tokens=133
+We want the probability of drawing 2 red balls without replacement:
 
-[3] o1-mini | reasoning
-    P(both red) without replacement = C(4,2) / C(10,2) = 6 / 45 = 2/15. Cross-checking with sequential probability: (4/10) * (3/9) = 12/90 = 2/15. Both methods agre...
-    correct=True  reasoning_tokens=438  total_tokens=544
+- Probability first ball is red: \( \frac{4}{1...
+    correct=True  tokens=177
+
+[3] gpt-6-luna | reasoning
+    \[
+\frac{4}{10}\times\frac{3}{9}=\frac{12}{90}=\boxed{\frac{2}{15}}
+\]...
+    correct=True  reasoning_tokens=31  total_tokens=121
 
 ------------------------------------------------------------------------
 Problem P3: Work rate problem
 Expected answer contains: 4.80 days
 ------------------------------------------------------------------------
 
-[1] gpt-4o-mini | direct answer
-    Working together, it will take 10.00 days.
-    correct=False  tokens=84
+[1] gpt-5.4-mini | direct answer
+    4.80 days
+    correct=True  tokens=65
 
-[2] gpt-4o-mini | chain-of-thought
-    Let me work through this step by step.
+[2] gpt-5.4-mini | chain-of-thought
+    Alice’s work rate is \( \frac{1}{12} \) project per day, and Bob’s work rate is \( \frac{1}{8} \) project per day.
 
-Alice's rate: 1/12 of the project per day.
-Bob's rate: 1/8 of the project per day.
-Combined rate: 1/12 + 1/8 = 2/24 + 3/...
-    correct=True  tokens=150
+Together, their combined rate is:
 
-[3] o1-mini | reasoning
-    Combined work rate = 1/12 + 1/8. Common denominator 24: 2/24 + 3/24 = 5/24 of the project per day together. Time required = 1 / (5/24) = 24/5 = 4.8 days exactly...
-    correct=True  reasoning_tokens=528  total_tokens=651
+\[
+\frac{...
+    correct=True  tokens=204
+
+[3] gpt-6-luna | reasoning
+    Together, their work rate is \(\frac{1}{12}+\frac{1}{8}=\frac{5}{24}\) of the project per day. So they’ll finish in \(\frac{24}{5}=\boxed{4.80\text{ days}}\)....
+    correct=True  reasoning_tokens=42  total_tokens=160
 
 ========================================================================
 Accuracy over 3 problems:
-  direct     0/3
-  cot        2/3
+  direct     2/3
+  cot        3/3
   reasoning  3/3
 
-The direct condition gives an immediate, confident, wrong answer on every
-problem here — it never shows work, so it never catches its own mistakes.
-Chain-of-thought recovers most of them by making the model produce
-intermediate steps it can be checked against, but a step can still contain
-an arithmetic slip that CoT prompting alone does not catch. The reasoning
-model gets every problem right, at the cost of far more tokens and latency
-spent on hidden reasoning before the visible answer.
+The direct condition answers instantly and shows no work, so nothing
+catches a wrong step: in the bundled run it misses the train problem,
+the one that needs a head-start step before the arithmetic.
+Chain-of-thought recovers it by making the model write out intermediate
+steps. The reasoning model gets every problem right too, but it spends
+hidden reasoning tokens first: you pay for them and never see them.

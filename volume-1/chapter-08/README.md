@@ -55,23 +55,30 @@ Full output is in `expected/output.txt`:
 
   temp  distinct    cross-sample diversity
 ------------------------------------------
-   0.0         1                     0.000
-   0.3         5                     0.312
-   0.7         5                     0.803
-   1.0         5                     0.892
-   1.4         5                     0.876
+   0.0         2                     0.125
+   0.3         5                     0.225
+   0.7         5                     0.249
+   1.0         5                     0.544
+   1.4         5                     0.562
 ------------------------------------------
 
-At temperature 0.0, all 5 samples are identical.
+At temperature 0.0, 4 of 5 samples are identical.
 At temperature 1.4, 5 of 5 samples are distinct.
 
-Cross-sample diversity rises from 0.000 at T=0.0 to 0.876 at T=1.4.
+Cross-sample diversity rises from 0.125 at T=0.0 to 0.562 at T=1.4.
 ```
 
-**Read the trend, not the last row.** Diversity rises sharply from 0.0 to 1.0, then dips
-very slightly at 1.4. That dip is not an error — five samples is a small enough number
-that the estimate has real variance, and the README says so rather than smoothing it away.
-The direction across the full range is what the lab is asking you to demonstrate.
+**Look at the first row.** At T=0.0, four samples are word-for-word identical and the
+fifth changes one clause. That is what "closest to deterministic, not guaranteed" means in
+practice: the model almost always takes the same path, but not always.
+
+**Read the trend, not single steps.** Diversity rises across the range, with the biggest
+jump between 0.7 and 1.0. Five samples is a small number, so each estimate has real
+variance; the direction across the full range is what the lab asks you to demonstrate.
+
+**Why gpt-5.4-mini.** This lab needs a model that accepts a temperature. Reasoning models
+such as gpt-6-luna accept only their default (1) and reject any other value with a
+`400 Unsupported value` error, so the lab uses gpt-5.4-mini, a standard model.
 
 **The metric itself is the harder lesson.** An earlier version of this lab measured
 unique-word ratio *within* each single sentence, and that number stayed flat around
@@ -86,16 +93,16 @@ metric computed *across* samples — pairwise Jaccard similarity here — can se
 uv run pytest
 ```
 
-Twelve tests. `test_zero_temperature_is_deterministic` checks the lab's first claim
-directly. `test_diversity_rises_overall` checks the trend end-to-end rather than
-step-to-step, because a stricter test would demand perfect monotonicity from only five
-samples — which the expected output itself does not show.
+Twelve tests. `test_zero_temperature_samples_mostly_agree` checks the lab's first claim:
+most T=0.0 samples match, without demanding that all of them do.
+`test_diversity_rises_overall` checks the trend end-to-end rather than step-to-step,
+because a stricter test would demand perfect monotonicity from only five samples.
 
 ## Running It Against the Real API
 
-The bundled fixtures are hand-authored, representative responses — not a live API
-transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
-under $0.05.
+The bundled fixtures are real responses, recorded from gpt-5.4-mini on 22 October 2026.
+With an `OPENAI_API_KEY` you can run the lab yourself. A full run is 25 short requests
+and costs about one cent.
 
 **Use `live` mode for your first run.** It calls the API and saves nothing, so your
 clone stays exactly as shipped and `uv run pytest` keeps passing.
@@ -137,12 +144,14 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 
 ## Going Further
 
-1. Raise `SAMPLES_PER_TEMPERATURE` to 20 in a `record` run. Does the dip at T=1.4 persist,
-   or was it noise from having only 5 samples?
+1. Raise `SAMPLES_PER_TEMPERATURE` to 20 in a `live` run. How many T=0.0 samples differ
+   from the most common one?
 2. Compute the within-sentence unique-word ratio yourself and confirm it stays flat. This
    is the metric the lab deliberately does not use — verify why for yourself.
-3. Add a sixth temperature above 1.4 (some APIs allow up to 2.0). Does diversity keep
+3. Add a sixth temperature of 2.0, the highest gpt-5.4-mini accepts. Does diversity keep
    rising, or does output quality visibly break down first?
+4. Set `MODEL = "gpt-6-luna"` and run in `live` mode. Read the error, and explain why a
+   reasoning model would fix its own temperature.
 
 ## Files
 
@@ -150,7 +159,7 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 |------|---------|
 | `src/lab.py` | Your starting point — runs against fixtures, with two TODOs |
 | `solution/lab.py` | Complete reference implementation |
-| `fixtures/chapter-08/` | Hand-authored recorded responses, replayed in fixture mode |
+| `fixtures/chapter-08/` | Responses recorded from gpt-5.4-mini, replayed in fixture mode |
 | `tests/test_lab.py` | Runs against `solution/` in CI |
 | `expected/output.txt` | Captured reference output |
 | `pyproject.toml` | Dependencies; `live` group only needed for `record`/`live` mode |

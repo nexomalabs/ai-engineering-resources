@@ -1,0 +1,18 @@
+{
+  "request": {
+    "max_completion_tokens": 2000,
+    "messages": [
+      {
+        "content": "Write a product description for an AI-powered note-taking app.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 161,
+    "content": "**Turn every conversation into clear next steps.**\n\nMeet your AI-powered note-taking app: a smarter way to capture ideas, organize information, and stay focused. Record meetings or jot down thoughts, then let AI create concise summaries, highlight key points, and pull out action items\u2014so nothing important gets lost.\n\nKeep notes easy to find with smart search and simple organization. Spend less time sorting through what you wrote and more time putting it to use.",
+    "prompt_tokens": 18,
+    "total_tokens": 179
+  }
+}

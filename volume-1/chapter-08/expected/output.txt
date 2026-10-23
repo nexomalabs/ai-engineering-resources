@@ -1,24 +1,24 @@
 [OpenAI: replaying recorded fixtures, no API key needed]
 ======================================================================
 Lab 8: Temperature and Output Variation
-Model: gpt-4o-mini
+Model: gpt-5.4-mini
 Prompt: In exactly one sentence, describe the main difference between a generative model and a discriminative model.
 Samples per temperature: 5
 ======================================================================
 
   temp  distinct    cross-sample diversity
 ------------------------------------------
-   0.0         1                     0.000
-   0.3         5                     0.312
-   0.7         5                     0.803
-   1.0         5                     0.892
-   1.4         5                     0.876
+   0.0         2                     0.125
+   0.3         5                     0.225
+   0.7         5                     0.249
+   1.0         5                     0.544
+   1.4         5                     0.562
 ------------------------------------------
 
-At temperature 0.0, all 5 samples are identical.
+At temperature 0.0, 4 of 5 samples are identical.
 At temperature 1.4, 5 of 5 samples are distinct.
 
-Cross-sample diversity rises from 0.000 at T=0.0 to 0.876 at T=1.4. Five samples is a small enough number that
+Cross-sample diversity rises from 0.125 at T=0.0 to 0.562 at T=1.4. Five samples is a small enough number that
 the trend is not perfectly monotonic — that variance is itself real and
 worth noticing, not a flaw in the measurement.
 Temperature does not change what the model knows. It changes how it
@@ -28,30 +28,30 @@ deterministic answer this API offers — not a guarantee of one.
 What running this experiment costs:
 call         in  cached     out        USD
 -----------------------------------------
-T=0.0        24       0      52   0.000035
-T=0.0        24       0      52   0.000035
-T=0.0        24       0      52   0.000035
-T=0.0        24       0      52   0.000035
-T=0.0        24       0      52   0.000035
-T=0.3        24       0      52   0.000035
-T=0.3        24       0      54   0.000036
-T=0.3        24       0      54   0.000036
-T=0.3        24       0      52   0.000035
-T=0.3        24       0      48   0.000032
-T=0.7        24       0      56   0.000037
-T=0.7        24       0      52   0.000035
-T=0.7        24       0      50   0.000034
-T=0.7        24       0      60   0.000040
-T=0.7        24       0      50   0.000034
-T=1.0        24       0      46   0.000031
-T=1.0        24       0      50   0.000034
-T=1.0        24       0      60   0.000040
-T=1.0        24       0      44   0.000030
-T=1.0        24       0      50   0.000034
-T=1.4        24       0      78   0.000050
-T=1.4        24       0      74   0.000048
-T=1.4        24       0      76   0.000049
-T=1.4        24       0      60   0.000040
-T=1.4        24       0      62   0.000041
+T=0.0        24       0      68   0.000324
+T=0.0        24       0      66   0.000315
+T=0.0        24       0      68   0.000324
+T=0.0        24       0      68   0.000324
+T=0.0        24       0      68   0.000324
+T=0.3        24       0      66   0.000315
+T=0.3        24       0      64   0.000306
+T=0.3        24       0      64   0.000306
+T=0.3        24       0      64   0.000306
+T=0.3        24       0      66   0.000315
+T=0.7        24       0      64   0.000306
+T=0.7        24       0      68   0.000324
+T=0.7        24       0      66   0.000315
+T=0.7        24       0      68   0.000324
+T=0.7        24       0      66   0.000315
+T=1.0        24       0      72   0.000342
+T=1.0        24       0      70   0.000333
+T=1.0        24       0      74   0.000351
+T=1.0        24       0      66   0.000315
+T=1.0        24       0      64   0.000306
+T=1.4        24       0      50   0.000243
+T=1.4        24       0      66   0.000315
+T=1.4        24       0      58   0.000279
+T=1.4        24       0      68   0.000324
+T=1.4        24       0      72   0.000342
 -----------------------------------------
-TOTAL                             0.000923
+TOTAL                             0.007893

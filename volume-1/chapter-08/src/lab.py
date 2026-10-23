@@ -18,7 +18,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, mode_banner  # noqa: E402
 
-MODEL = "gpt-4o-mini"
+# A standard (non-reasoning) model: this lab needs one that accepts a
+# temperature. Reasoning models such as gpt-6-luna fix it at 1.
+MODEL = "gpt-5.4-mini"
 PROMPT = (
     "In exactly one sentence, describe the main difference between "
     "a generative model and a discriminative model."
@@ -50,9 +52,9 @@ def generate_samples(client: LabClient, temperature: float, n: int) -> list[str]
     # TODO 2: return a list of n completions. Give each call a distinct seed
     # (0, 1, 2, ...) so they don't collide on a single fixture key.
     #
-    #   return [client.ask(PROMPT, temperature=temperature, max_tokens=100,
+    #   return [client.ask(PROMPT, temperature=temperature, max_completion_tokens=100,
     #                       seed=i).content for i in range(n)]
-    return [client.ask(PROMPT, temperature=temperature, max_tokens=100, seed=0).content]
+    return [client.ask(PROMPT, temperature=temperature, max_completion_tokens=100, seed=0).content]
 
 
 def main() -> int:
@@ -64,7 +66,7 @@ def main() -> int:
         samples = generate_samples(client, temp, SAMPLES_PER_TEMPERATURE)
         print(f"{temp:>6.1f}{len(set(samples)):>10}{cross_sample_diversity(samples):>26.3f}")
     print("-" * 42)
-    print("\nExpect diversity to rise from 0.000 at T=0.0 toward roughly 0.9 by T=1.0.")
+    print("\nExpect diversity to rise from near 0 at T=0.0 to above 0.5 by T=1.0.")
     print("All zeros means TODO 1 is still a stub.")
     return 0
 

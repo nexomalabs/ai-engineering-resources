@@ -87,6 +87,8 @@ class TestExerciseChecks:
         assert good["demonstrates_fix"]
         bad = check_ex1("x", "Only one sentence with $4.2M and $1.1M.")
         assert not bad["demonstrates_fix"]
+        spelled = check_ex1("x", "Revenue was $4.2 million. Net income was $1.1 million. Fine.")
+        assert spelled["demonstrates_fix"]
 
     def test_ex2_requires_weak_to_fail_and_strong_to_pass(self):
         assert check_ex2("prose response", '{"intent": "request"}')["demonstrates_fix"]

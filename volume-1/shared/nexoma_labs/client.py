@@ -47,16 +47,19 @@ class LabClient:
     def complete(
         self,
         messages: list[Message],
-        temperature: float = 0.0,
-        max_tokens: int = 500,
+        temperature: float | None = 0.0,
+        max_completion_tokens: int = 500,
         seed: int | None = None,
     ) -> Completion:
         request = {
             "model": self.model,
             "messages": [m.to_dict() for m in messages],
-            "temperature": temperature,
-            "max_tokens": max_tokens,
+            "max_completion_tokens": max_completion_tokens,
         }
+        if temperature is not None:
+            # None leaves temperature out: reasoning models such as gpt-6-luna
+            # accept only their default and reject the request otherwise.
+            request["temperature"] = temperature
         if seed is not None:
             # A distinct fixture per (prompt, temperature, seed) draw, so five
             # independent samples at one temperature don't collide on one key.
@@ -66,12 +69,8 @@ class LabClient:
             from openai import OpenAI  # imported here: not a fixture-mode dependency
 
             client = OpenAI()
-            resp = client.chat.completions.create(
-                model=req["model"],
-                messages=req["messages"],
-                temperature=req["temperature"],
-                max_tokens=req["max_tokens"],
-            )
+            sent = ("model", "messages", "temperature", "max_completion_tokens")
+            resp = client.chat.completions.create(**{k: req[k] for k in sent if k in req})
             return {
                 "content": resp.choices[0].message.content.strip(),
                 "prompt_tokens": resp.usage.prompt_tokens,

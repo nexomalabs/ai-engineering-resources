@@ -1,0 +1,19 @@
+{
+  "request": {
+    "max_completion_tokens": 500,
+    "messages": [
+      {
+        "content": "Alice can complete a project in 12 days. Bob can complete the same project in 8 days. If they work together, how many days will it take to complete the project? Round to two decimal places.\n\nGive only the final answer with no explanation.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-5.4-mini",
+    "temperature": 0.0
+  },
+  "response": {
+    "completion_tokens": 7,
+    "content": "4.80 days",
+    "prompt_tokens": 58,
+    "total_tokens": 65
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "request": {
+    "max_completion_tokens": 2000,
+    "messages": [
+      {
+        "content": "Classify the intent of the user message.",
+        "role": "system"
+      },
+      {
+        "content": "My invoice from last month has the wrong address and I need it corrected before I can pay.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 57,
+    "content": "Intent: Correct the billing address on an invoice.",
+    "prompt_tokens": 38,
+    "total_tokens": 95
+  }
+}

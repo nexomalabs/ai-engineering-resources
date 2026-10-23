@@ -8,21 +8,23 @@ Calls replay through the shared LabClient (LAB_PROJECT_STANDARD.md section 6):
 no API key needed by default. See "Recording Your Own Fixtures" in the README
 to run this against a real account.
 
-Model names: OpenAI's reasoning-model naming has changed release to release
-(o1-mini, o3-mini, and others). MODEL_REASONING is a placeholder; verify the
-current model family before recording real fixtures.
+Models: MODEL_STANDARD is a standard model that accepts temperature=0.0.
+MODEL_REASONING is gpt-6-luna, a reasoning model that accepts only its default
+temperature, so call_reasoning sends none. Model names change between
+releases; check the current list before recording real fixtures.
 """
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, Message, mode_banner  # noqa: E402
 
-MODEL_STANDARD = "gpt-4o-mini"
-MODEL_REASONING = "o1-mini"
+MODEL_STANDARD = "gpt-5.4-mini"
+MODEL_REASONING = "gpt-6-luna"
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures" / "chapter-09"
 
 PROBLEMS = [
@@ -60,10 +62,17 @@ PROBLEMS = [
 ]
 
 
+def plain_fractions(text: str) -> str:
+    r"""Rewrite LaTeX fractions such as \frac{2}{15} as 2/15. Current models
+    often answer in LaTeX, and a keyword check would otherwise miss them."""
+    return re.sub(r"\\[dt]?frac\{(\d+)\}\{(\d+)\}", r"\1/\2", text)
+
+
 def check_accuracy(response: str, answer: str) -> bool:
     """Simple keyword match: do the answer's digits/punctuation appear in the response?"""
+    text = plain_fractions(response).lower()
     key = "".join(c for c in answer if c.isdigit() or c in "./:")
-    return key in response.lower() or answer.lower() in response.lower()
+    return key in text or answer.lower() in text
 
 
 def call_standard(client: LabClient, problem: str, chain_of_thought: bool):
@@ -72,7 +81,9 @@ def call_standard(client: LabClient, problem: str, chain_of_thought: bool):
         if chain_of_thought
         else "\n\nGive only the final answer with no explanation."
     )
-    return client.complete([Message("user", problem + suffix)], temperature=0.0, max_tokens=500)
+    return client.complete(
+        [Message("user", problem + suffix)], temperature=0.0, max_completion_tokens=500
+    )
 
 
 def call_reasoning(client: LabClient, problem: str) -> dict:
@@ -85,7 +96,6 @@ def call_reasoning(client: LabClient, problem: str) -> dict:
     request = {
         "model": MODEL_REASONING,
         "messages": [{"role": "user", "content": problem}],
-        "max_tokens": 1500,
     }
 
     def call_live(req: dict) -> dict:
@@ -150,13 +160,12 @@ def main() -> int:
     for mode, correct in tally.items():
         print(f"  {mode:<10} {correct}/{len(PROBLEMS)}")
     print()
-    print("The direct condition gives an immediate, confident, wrong answer on every")
-    print("problem here — it never shows work, so it never catches its own mistakes.")
-    print("Chain-of-thought recovers most of them by making the model produce")
-    print("intermediate steps it can be checked against, but a step can still contain")
-    print("an arithmetic slip that CoT prompting alone does not catch. The reasoning")
-    print("model gets every problem right, at the cost of far more tokens and latency")
-    print("spent on hidden reasoning before the visible answer.")
+    print("The direct condition answers instantly and shows no work, so nothing")
+    print("catches a wrong step: in the bundled run it misses the train problem,")
+    print("the one that needs a head-start step before the arithmetic.")
+    print("Chain-of-thought recovers it by making the model write out intermediate")
+    print("steps. The reasoning model gets every problem right too, but it spends")
+    print("hidden reasoning tokens first: you pay for them and never see them.")
     return 0
 
 

@@ -19,7 +19,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, mode_banner  # noqa: E402
 from nexoma_labs.costs import CostLedger, Price  # noqa: E402
 
-MODEL = "gpt-4o-mini"
+# A standard (non-reasoning) model: this lab needs one that accepts a
+# temperature. Reasoning models such as gpt-6-luna fix it at 1.
+MODEL = "gpt-5.4-mini"
 PROMPT = (
     "In exactly one sentence, describe the main difference between "
     "a generative model and a discriminative model."
@@ -53,7 +55,7 @@ def generate_samples(client: LabClient, temperature: float, n: int) -> list[str]
     they don't collide on a single fixture key — five real API calls would
     give five different samples too."""
     return [
-        client.ask(PROMPT, temperature=temperature, max_tokens=100, seed=i).content
+        client.ask(PROMPT, temperature=temperature, max_completion_tokens=100, seed=i).content
         for i in range(n)
     ]
 
@@ -61,6 +63,13 @@ def generate_samples(client: LabClient, temperature: float, n: int) -> list[str]
 def distinct_count(samples: list[str]) -> int:
     """How many distinct strings appear among the samples."""
     return len(set(samples))
+
+
+def most_common_count(samples: list[str]) -> int:
+    """How many samples share the single most common string."""
+    from collections import Counter
+
+    return Counter(samples).most_common(1)[0][1]
 
 
 def run_experiment(client: LabClient) -> dict[float, list[str]]:
@@ -88,8 +97,8 @@ def main() -> int:
         print(f"{temp:>6.1f}{distinct:>10}{diversity[temp]:>26.3f}")
     print("-" * 42)
 
-    print(f"\nAt temperature 0.0, all {SAMPLES_PER_TEMPERATURE} samples are ", end="")
-    print("identical." if distinct_count(results[0.0]) == 1 else "NOT identical.")
+    agree = most_common_count(results[0.0])
+    print(f"\nAt temperature 0.0, {agree} of {SAMPLES_PER_TEMPERATURE} samples are identical.")
     print(
         f"At temperature {TEMPERATURES[-1]}, {distinct_count(results[TEMPERATURES[-1]])} "
         f"of {SAMPLES_PER_TEMPERATURE} samples are distinct."
@@ -108,7 +117,7 @@ def main() -> int:
 
     print()
     print("What running this experiment costs:")
-    price = Price(input_per_mtok=0.15, output_per_mtok=0.60)  # gpt-4o-mini list rates
+    price = Price(input_per_mtok=0.75, output_per_mtok=4.50)  # gpt-5.4-mini list rates
     ledger = CostLedger(price)
     for temp, samples in results.items():
         for s in samples:

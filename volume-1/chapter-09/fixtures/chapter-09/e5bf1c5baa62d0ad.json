@@ -1,0 +1,18 @@
+{
+  "request": {
+    "messages": [
+      {
+        "content": "Alice can complete a project in 12 days. Bob can complete the same project in 8 days. If they work together, how many days will it take to complete the project? Round to two decimal places.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 111,
+    "content": "Together, their work rate is \\(\\frac{1}{12}+\\frac{1}{8}=\\frac{5}{24}\\) of the project per day. So they\u2019ll finish in \\(\\frac{24}{5}=\\boxed{4.80\\text{ days}}\\).",
+    "prompt_tokens": 49,
+    "reasoning_tokens": 42,
+    "total_tokens": 160
+  }
+}

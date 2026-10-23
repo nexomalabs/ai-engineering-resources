@@ -19,7 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, Message, mode_banner  # noqa: E402
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-6-luna"
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures" / "chapter-10"
 
 
@@ -31,7 +31,7 @@ def call(client: LabClient, system: str, user: str = "") -> str:
         if not user
         else [Message("system", system), Message("user", user)]
     )
-    return client.complete(messages, temperature=0.0, max_tokens=600).content
+    return client.complete(messages, temperature=None, max_completion_tokens=2000).content
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -68,8 +68,17 @@ def sentence_count(text: str) -> int:
     return len([p for p in parts if p.strip()])
 
 
+def mentions_millions(text: str, amount: str) -> bool:
+    """True if `text` states $<amount>M in short ($4.2M) or long ($4.2 million) form."""
+    return f"${amount}M" in text or f"${amount} million" in text
+
+
 def check_ex1(weak: str, strong: str) -> dict:
-    strong_ok = sentence_count(strong) == 3 and "$4.2M" in strong and "$1.1M" in strong
+    strong_ok = (
+        sentence_count(strong) == 3
+        and mentions_millions(strong, "4.2")
+        and mentions_millions(strong, "1.1")
+    )
     return {
         "weak_sentences": sentence_count(weak),
         "strong_sentences": sentence_count(strong),

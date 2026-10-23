@@ -9,8 +9,8 @@ model — scored for accuracy and compared for token cost.
 ## Learning Outcomes
 
 - Explain why a direct answer to a multi-step problem fails silently.
-- Explain what chain-of-thought prompting changes, and what it does not fix.
-- Explain why a reasoning model's token count and latency are far higher.
+- Explain what chain-of-thought prompting changes, and what it costs.
+- Explain where a reasoning model's hidden tokens go, and why you pay for them.
 - Build a simple automated accuracy check and know its limits.
 - State the actual cost/accuracy trade-off between the three approaches, in numbers.
 
@@ -49,26 +49,30 @@ Full output is in `expected/output.txt`. The summary:
 
 ```text
 Accuracy over 3 problems:
-  direct     0/3
-  cot        2/3
+  direct     2/3
+  cot        3/3
   reasoning  3/3
 ```
 
-**Direct fails on all three, every time.** Asked for "only the final answer, no
-explanation," the model produces a confident, specific, wrong number — 2:39 PM instead of
-3:13 PM, 4/25 instead of 2/15, 10.00 days instead of 4.80. It never shows work, so there
-is nothing to check it against, and no way for it to catch its own mistake.
+**Direct fails where a step is hidden.** Asked for "only the final answer," gpt-5.4-mini
+gets the probability and work-rate problems right, but answers the train problem with a
+confident 2:30 PM instead of 3:13 PM. That is the problem with a trap in it: the first
+train's one-hour head start. With no work shown, nothing catches the skipped step.
 
-**Chain-of-thought recovers two of three — not three.** On the probability problem, the
-model reasons through the right method (4/10 × 3/9 = 12/90) and then simplifies the
-fraction wrong, landing on 2/19 instead of 2/15. This is the honest failure mode CoT does
-not fix: it makes the *method* checkable, not the arithmetic. A correct-looking derivation
-can still end on a wrong number.
+**Chain-of-thought fixes it, visibly.** Writing out its steps, the same model accounts for
+the head start and reaches 3:13 PM. You can read every step, and you pay for every one:
+440 tokens on P1, against 101 for the direct answer.
 
-**The reasoning model gets all three right**, but at real cost. On problem P1, the visible
-answer is under 100 words — the fixture records **1,032 hidden reasoning tokens** behind
-it, more than ten times the length of the answer itself. That is the trade-off: fewer
-wrong answers, several times the tokens, and correspondingly higher latency and cost.
+**The reasoning model gets all three right without being asked to show work**, but it
+thinks before it answers. On P1, gpt-6-luna spent **128 hidden reasoning tokens** behind a
+33-word answer. You are billed for those tokens and never see them. On this problem set it
+used fewer tokens in total than chain-of-thought (267 against 440 on P1), but the two
+models are priced differently, so compare prices per token before deciding which is
+cheaper.
+
+**The accuracy check reads LaTeX.** Current models often write fractions as
+`\frac{2}{15}`. `plain_fractions()` rewrites them as `2/15` first, otherwise a correct
+answer would be scored wrong. Automated checks need maintaining as model output changes.
 
 ## Verifying Your Work
 
@@ -76,31 +80,24 @@ wrong answers, several times the tokens, and correspondingly higher latency and 
 uv run pytest
 ```
 
-Thirteen tests. `test_direct_answers_are_all_wrong` and
+Fourteen tests. `test_direct_answer_misses_the_train_problem` and
 `test_reasoning_model_gets_everything_right` check the lab's two clean claims directly.
-`test_chain_of_thought_beats_direct_but_is_not_perfect` asserts CoT's accuracy is strictly
-between 0 and 3 — if it ever hits a perfect 3/3, this lab has stopped demonstrating what a
-step can still get wrong.
+`test_chain_of_thought_beats_direct` checks that writing out the steps scores higher than
+answering directly.
 
 ## A Note on Model Names
 
-`o1-mini` is used as a placeholder for "the current reasoning model." OpenAI's
-reasoning-model lineup has changed release to release, and by the time you read this it
-may again. The bundled fixtures do not depend on which specific model produced them —
-they demonstrate the *category* of behaviour (visible answer, large hidden reasoning
-cost, higher accuracy on multi-step problems), which is durable even when the model name
-is not.
+The lab uses **gpt-5.4-mini** as the standard model and **gpt-6-luna** as the reasoning
+model. gpt-6-luna accepts only its default temperature, so `call_reasoning` sends none.
+Model lineups change between releases. If either model is retired, set `MODEL_STANDARD` to
+a current model that accepts `temperature=0.0`, and `MODEL_REASONING` to a current
+reasoning model, then record new fixtures.
 
 ## Running It Against the Real API
 
-The bundled fixtures are hand-authored, representative responses — not a live API
-transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
-under $0.05.
-
-**Change the reasoning model first.** OpenAI shut down `o1-mini` on 27 October 2025, so
-the reasoning step fails with a `model_not_found` error until you edit
-`MODEL_REASONING` in `solution/lab.py` to a reasoning model your account lists on its
-Models page. The standard-model rows run as supplied.
+The bundled fixtures are real responses, recorded from gpt-5.4-mini and gpt-6-luna on
+22 October 2026. With an `OPENAI_API_KEY` you can run the lab yourself. A full run is nine
+requests and costs well under $0.05.
 
 **Use `live` mode for your first run.** It calls the API and saves nothing, so your
 clone stays exactly as shipped and `uv run pytest` keeps passing.
@@ -138,7 +135,7 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 | `FixtureMissing` error | Problem text or mode does not match a bundled fixture exactly | Use the three `PROBLEMS` as given; do not edit their text |
 | `check_accuracy` reports a false positive | Matching on a digit substring that also appears elsewhere | See `test_partial_digit_overlap_is_not_a_false_positive` for the boundary case |
 | `live` or `record` mode: `NotImplementedError` | The starter's `call_reasoning` has no live path | Run `solution/lab.py` against the real API, not `src/lab.py` |
-| `model_not_found` on the reasoning rows | `MODEL_REASONING` is still `o1-mini`, which OpenAI shut down | Set it to a current reasoning model, as above |
+| `400 Unsupported value: 'temperature'` | `MODEL_STANDARD` is set to a reasoning model | Use a standard model that accepts a temperature, such as gpt-5.4-mini |
 | `ModuleNotFoundError: openai` | `--group live` left off the command | Add `--group live` to `uv run`, or stay in fixture mode |
 | `live` or `record` mode fails with an auth error | No `OPENAI_API_KEY` set in this terminal | Set it as shown above, or stay in fixture mode — it needs nothing |
 
@@ -159,7 +156,7 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 |------|---------|
 | `src/lab.py` | Your starting point — runs against fixtures, with one TODO |
 | `solution/lab.py` | Complete reference implementation |
-| `fixtures/chapter-09/` | Hand-authored recorded responses, replayed in fixture mode |
+| `fixtures/chapter-09/` | Responses recorded from gpt-5.4-mini and gpt-6-luna, replayed in fixture mode |
 | `tests/test_lab.py` | Runs against `solution/` in CI |
 | `expected/output.txt` | Captured reference output |
 | `pyproject.toml` | Dependencies; `live` group only needed for `record`/`live` mode |

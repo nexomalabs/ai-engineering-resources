@@ -1,0 +1,18 @@
+{
+  "request": {
+    "messages": [
+      {
+        "content": "A bag contains 4 red balls and 6 blue balls. You draw two balls without replacement. What is the probability that both balls are red? Express your answer as a fraction in lowest terms.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 75,
+    "content": "\\[\n\\frac{4}{10}\\times\\frac{3}{9}=\\frac{12}{90}=\\boxed{\\frac{2}{15}}\n\\]",
+    "prompt_tokens": 46,
+    "reasoning_tokens": 31,
+    "total_tokens": 121
+  }
+}

@@ -55,18 +55,30 @@ Full output is in `expected/output.txt`. Summary: **5/5**.
 
 | Exercise | Failure mode | Weak result | Strong result |
 |---|---|---|---|
-| 1 — Summarization | Ambiguity | 2 loose sentences, no figures anchored to structure | Exactly 3 sentences, each figure in its assigned slot |
-| 2 — Intent classification | Format | Prose explanation, not parseable | `{"intent": "request", "confidence": "high", "topic": "invoice correction"}` |
-| 3 — Document Q&A | Hallucination | Invents "Standard plan, $12.99/month" — a plan that does not exist | Correctly reports "Professional, $20/month" from the document |
-| 4 — Product description | Constraint violation | 76 words, has a headline it was told to omit | 38 words, no headline, ends on the call to action |
-| 5 — Meeting notes | Missing structure | A bulleted list — not valid JSON, drops attendees and decisions entirely | Valid JSON, all 3 attendees, all 3 action items, decisions included |
+| 1 — Summarization | Ambiguity | 3 sentences in an order the model chose for itself | Exactly 3 sentences, each figure in its assigned slot |
+| 2 — Intent classification | Format | `Intent: Correct the billing address on an invoice.` — prose, not parseable | `{"intent":"request","confidence":"high","topic":"Correcting the address on an invoice"}` |
+| 3 — Document Q&A | Hallucination | Guesses the question is about OpenAI and describes ChatGPT plans | Correctly reports "Professional, $20 per month" from the document |
+| 4 — Product description | Constraint violation | 73 words, with a headline it was never asked for | 26 words, no headline, ends on the call to action |
+| 5 — Meeting notes | Missing structure | A bulleted list of the three action items — not JSON, no attendees or decisions | Valid JSON, all 3 attendees, all 3 decisions, all 3 action items |
 
 **Exercise 3 is the one to read closely.** "Nexoma Cloud Storage" is fictional — invented
-for this exercise — so there is no real answer for an ungrounded model to happen to
-recall. The weak prompt's confident, specific, wrong answer (a "Standard" plan at "$12.99"
-that does not exist anywhere in the source material) is not a one-off glitch. It is what
-happens by default when a model is asked a factual question with nothing to ground it:
-it produces something plausible-shaped rather than admitting it does not know.
+for this exercise — so there is no real answer for an ungrounded model to recall. Given
+nothing to ground it, gpt-6-luna did not admit it lacked the information. It guessed what
+you probably meant ("If you mean OpenAI...") and answered a question about a different
+product. A newer model fails more politely than an older one, but it still fills the gap
+with its own assumptions. The strong prompt removes the gap by supplying the document and
+saying what to do when the answer is not in it.
+
+**Exercise 1 looks like a draw, and that is the point.** The weak summary is reasonable:
+three sentences with the right figures. But its structure is the model's choice, and a
+different run may choose differently. The strong prompt fixes which figure goes in which
+sentence, so every run is checkable against the same specification. The check accepts
+`$4.2M` or `$4.2 million`, since the strong prompt did not specify a number format.
+
+**Why gpt-6-luna, and why 2,000 tokens.** gpt-6-luna is a reasoning model: it accepts only
+its default temperature, so `call()` sends none, and its hidden reasoning tokens count
+against `max_completion_tokens`. A limit of a few hundred tokens can be used up by
+reasoning before any visible answer is written, so the lab allows 2,000.
 
 **Exercise 1 also taught something during authoring.** A naive sentence counter that
 splits on every `.` character counts **8** sentences in the strong response, not 3 —
@@ -89,9 +101,9 @@ end-to-end claim: all five, against the bundled recordings.
 
 ## Running It Against the Real API
 
-The bundled fixtures are hand-authored, representative responses — not a live API
-transcript. With an `OPENAI_API_KEY` you can run the lab for real. A full run costs well
-under $0.05.
+The bundled fixtures are real responses, recorded from gpt-6-luna on 22 October 2026.
+With an `OPENAI_API_KEY` you can run the lab yourself. A full run is ten requests and costs
+well under $0.05.
 
 **Use `live` mode for your first run.** It calls the API and saves nothing, so your
 clone stays exactly as shipped and `uv run pytest` keeps passing.
@@ -134,12 +146,12 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 
 ## Going Further
 
-1. Write a stricter Exercise 3 check that also verifies the response does *not* contain
-   fabricated numbers (`$12.99`, `250 GB`) even when the correct numbers are also present.
+1. Write a stricter Exercise 3 check that also fails a response that talks about products
+   not in the document, as the weak run did when it described ChatGPT plans.
 2. Add a sixth exercise for a failure mode of your own choosing — refusal, verbosity, or
    inconsistent formatting across repeated calls — and write its checker.
-3. Run Exercise 1's weak prompt five times in `record` mode at temperature 0.7. Does the
-   length and structure vary run to run? That variance is the ambiguity failure showing up
+3. Run Exercise 1's weak prompt five times in `live` mode. Does the length and structure
+   vary run to run? That variance is the ambiguity failure showing up
    a second way — not just wrong once, but *inconsistent* every time.
 
 ## Files
@@ -148,7 +160,7 @@ may then fail. Restore the originals with `git checkout -- fixtures/`.
 |------|---------|
 | `src/lab.py` | Your starting point — runs against fixtures, with five TODOs |
 | `solution/lab.py` | Complete reference implementation |
-| `fixtures/chapter-10/` | Hand-authored recorded responses, replayed in fixture mode |
+| `fixtures/chapter-10/` | Responses recorded from gpt-6-luna, replayed in fixture mode |
 | `tests/test_lab.py` | Runs against `solution/` in CI |
 | `expected/output.txt` | Captured reference output |
 | `pyproject.toml` | Dependencies; `live` group only needed for `record`/`live` mode |

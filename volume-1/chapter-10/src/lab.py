@@ -20,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, Message, mode_banner  # noqa: E402
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-6-luna"
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures" / "chapter-10"
 
 
@@ -30,7 +30,7 @@ def call(client: LabClient, system: str, user: str = "") -> str:
         if not user
         else [Message("system", system), Message("user", user)]
     )
-    return client.complete(messages, temperature=0.0, max_tokens=600).content
+    return client.complete(messages, temperature=None, max_completion_tokens=2000).content
 
 
 def sentence_count(text: str) -> int:
@@ -75,7 +75,8 @@ EX1_STRONG = (
 def check_ex1(weak: str, strong: str) -> dict:
     # TODO 1: the strong prompt asked for exactly 3 sentences. Check that
     # sentence_count(strong) == 3 and that it kept the real figures ($4.2M,
-    # $1.1M). Set demonstrates_fix to that result.
+    # $1.1M). The model may write "$4.2 million" instead; accept both forms.
+    # Set demonstrates_fix to that result.
     return {"demonstrates_fix": False}
 
 

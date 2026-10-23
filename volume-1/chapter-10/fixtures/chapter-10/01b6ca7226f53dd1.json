@@ -1,0 +1,18 @@
+{
+  "request": {
+    "max_completion_tokens": 2000,
+    "messages": [
+      {
+        "content": "Write a product description for an AI-powered note-taking app.\n\nRequirements:\n- Maximum 40 words. Count carefully. Do not exceed 40 words.\n- Lead with the primary benefit.\n- Include one specific feature.\n- End with a call to action.\n- Do not include a headline \u2014 start directly with the description text.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 198,
+    "content": "Stay focused on the conversation while AI captures every detail. Get searchable transcripts and concise summaries automatically, then find key decisions in seconds. Try it today.",
+    "prompt_tokens": 71,
+    "total_tokens": 269
+  }
+}

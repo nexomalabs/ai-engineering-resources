@@ -11,14 +11,15 @@ reports 0/3. Complete the one TODO.
 
 from __future__ import annotations
 
+import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "shared"))
 from nexoma_labs.client import LabClient, Message, mode_banner  # noqa: E402
 
-MODEL_STANDARD = "gpt-4o-mini"
-MODEL_REASONING = "o1-mini"
+MODEL_STANDARD = "gpt-5.4-mini"
+MODEL_REASONING = "gpt-6-luna"
 FIXTURES_DIR = Path(__file__).resolve().parent.parent / "fixtures" / "chapter-09"
 
 PROBLEMS = [
@@ -53,14 +54,20 @@ PROBLEMS = [
 ]
 
 
+def plain_fractions(text: str) -> str:
+    r"""Rewrite LaTeX fractions such as \frac{2}{15} as 2/15. Current models
+    often answer in LaTeX, and a keyword check would otherwise miss them."""
+    return re.sub(r"\\[dt]?frac\{(\d+)\}\{(\d+)\}", r"\1/\2", text)
+
+
 def check_accuracy(response: str, answer: str) -> bool:
     """Does the answer's digits/punctuation appear anywhere in the response?"""
+    text = plain_fractions(response).lower()
     # TODO 1: strip `answer` down to digits and ./: characters, then check
-    # whether that substring (or the full lowercased answer) appears in the
-    # lowercased response.
+    # whether that substring (or the full lowercased answer) appears in `text`.
     #
     #   key = "".join(c for c in answer if c.isdigit() or c in "./:")
-    #   return key in response.lower() or answer.lower() in response.lower()
+    #   return key in text or answer.lower() in text
     return False
 
 
@@ -70,14 +77,15 @@ def call_standard(client: LabClient, problem: str, chain_of_thought: bool):
         if chain_of_thought
         else "\n\nGive only the final answer with no explanation."
     )
-    return client.complete([Message("user", problem + suffix)], temperature=0.0, max_tokens=500)
+    return client.complete(
+        [Message("user", problem + suffix)], temperature=0.0, max_completion_tokens=500
+    )
 
 
 def call_reasoning(client: LabClient, problem: str) -> dict:
     request = {
         "model": MODEL_REASONING,
         "messages": [{"role": "user", "content": problem}],
-        "max_tokens": 1500,
     }
 
     def call_live(req: dict) -> dict:
@@ -105,7 +113,7 @@ def main() -> int:
     print(f"\nAccuracy over {len(PROBLEMS)} problems:")
     for mode, correct in tally.items():
         print(f"  {mode:<10} {correct}/{len(PROBLEMS)}")
-    print("\nExpect direct=0/3, cot=2/3, reasoning=3/3 once TODO 1 is complete.")
+    print("\nExpect direct=2/3, cot=3/3, reasoning=3/3 once TODO 1 is complete.")
     return 0
 
 
