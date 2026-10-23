@@ -12,7 +12,8 @@ client = OpenAI()  # reads OPENAI_API_KEY from the environment
 def check_factual_consistency(claim: str, source: str) -> dict:
     """Use an LLM to check if a claim is supported by a source."""
     response = client.chat.completions.create(
-        model="gpt-6.1-sol",
+        model="gpt-6-sol",
+        reasoning_effort="none",
         messages=[{
             "role": "user",
             "content": f"""Does the following claim accurately reflect the information in the source text?

@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 300,
+    "messages": [
+      {
+        "content": "\nQ: A bakery makes 240 cookies per hour. If they operate for 6.5 hours and sell 80% of their output, how many cookies are sold?\n\nA: Let's work through this step by step.\nStep 1: Total cookies produced = 240 cookies/hour \u00d7 6.5 hours = 1,560 cookies\nStep 2: Cookies sold = 1,560 \u00d7 0.80 = 1,248 cookies\nAnswer: 1,248 cookies are sold.\n\nQ: A project team of 5 people can complete a task in 12 days. How long will it take 8 people to complete the same task, assuming equal productivity?\n\nA: Let's work through this step by step.\nStep 1: Total person-days required = 5 people \u00d7 12 days = 60 person-days\nStep 2: Time for 8 people = 60 person-days \u00f7 8 people = 7.5 days\nAnswer: 8 people will complete the task in 7.5 days.\n\nQ: A company has 240 employees. If 15% receive a promotion, and 8% of those promoted also get a salary increase, how many employees get both a promotion and a salary increase?\n\nA: Let's work through this step by step.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "Step 1: Employees promoted = 240 \u00d7 0.15 = 36  \nStep 2: Promoted employees who also get a salary increase = 36 \u00d7 0.08 = 2.88  \n\nAnswer: **2.88 employees** mathematically, or about **3 employees** in practice.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727731,
+    "id": "chatcmpl-Ec0fLfgyHI1dFxL1rQOsvATBVoxph",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 68,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 272,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 340
+    }
+  }
+}

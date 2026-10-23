@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 400,
+    "messages": [
+      {
+        "content": "You are an AI assistant. Help customers with their questions.\n        Be helpful and nice. Don't be rude. Don't be too long. Don't use technical words.\n        Don't be confusing. Be clear. Always answer the question. Don't say I don't know.\n        Be friendly but professional. Don't use bullet points too much. Be accurate.\n        Don't make mistakes. Be helpful.",
+        "role": "system"
+      },
+      {
+        "content": "I've been charged $49.99 twice for the same subscription. What do I do?",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "I\u2019m sorry you were charged twice. First, check whether both $49.99 charges have **posted**\u2014one may still be a temporary pending charge.\n\nIf both have posted, contact the subscription\u2019s support team and ask for a refund of the duplicate charge. Include the charge dates, amounts, and any receipt or transaction IDs, but **don\u2019t send your full card number**. If you subscribed through Apple or Google, request the refund through their purchase support instead.\n\nIf you don\u2019t recognize one of the charges, contact your bank or card provider right away.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792728034,
+    "id": "chatcmpl-Ec0kEa7Dlvk8c1YmDps8zreXvESSv",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 117,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 103,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 220
+    }
+  }
+}

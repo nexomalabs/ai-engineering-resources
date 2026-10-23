@@ -1,0 +1,27 @@
+
+============================================================
+TEST REPORT: Prompt v1 (baseline)
+============================================================
+Overall: 10/14 (71%)
+  Golden: 3/5
+  Regression: 2/3
+  Edge: 3/4
+  Adversarial: 2/2
+
+FAILURES (4):
+  [G01] Expected 'HIGH' got 'MEDIUM'
+  [G04] Expected 'HIGH' got 'MEDIUM'
+  [R01] Expected 'MEDIUM' got 'LOW'
+  [E03] Expected 'CRITICAL' got 'HIGH'
+
+============================================================
+TEST REPORT: Prompt v2 (improved)
+============================================================
+Overall: 13/14 (93%)
+  Golden: 5/5
+  Regression: 2/3
+  Edge: 4/4
+  Adversarial: 2/2
+
+FAILURES (1):
+  [R01] Expected 'MEDIUM' got 'LOW'

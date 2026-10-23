@@ -293,12 +293,14 @@ def run_react_agent(
     for step in range(max_steps):
         response = client.chat.completions.create(
             model="gpt-6-luna",
+            reasoning_effort="none",
             messages=messages,
             temperature=0.0,
-            max_tokens=600,
-            stop=["Observation:"],
+            max_completion_tokens=600,
         )
-        text = response.choices[0].message.content.strip()
+        # Current models reject a `stop` parameter, so cut the turn at "Observation:"
+        # here: the observation must come from the tool, never from the model.
+        text = response.choices[0].message.content.split("Observation:")[0].strip()
         trace.steps.append(text)
         messages.append({"role": "assistant", "content": text})
         trace.total_steps = step + 1

@@ -131,6 +131,7 @@ def run_multi_step_pipeline(query: str, verbose: bool = True) -> str:
 
         response = client.chat.completions.create(
             model="gpt-6-luna",
+            reasoning_effort="none",
             messages=messages,
             tools=TOOLS,
             tool_choice="auto",

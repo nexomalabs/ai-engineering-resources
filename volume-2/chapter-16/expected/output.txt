@@ -1,0 +1,46 @@
+
+============================================================
+PROMPT: Customer Support Bot (Multiple Anti-Patterns)
+Anti-patterns present: Vague Role, Over-Instruction, Negation Abuse, Conflicting Persona
+
+--- ORIGINAL PROMPT OUTPUT ---
+I’m sorry you were charged twice. First, check whether both $49.99 charges have **posted**—one may still be a temporary pending charge.
+
+If both have posted, contact the subscription’s support team and ask for a refund of the duplicate charge. Include the charge dates, amounts, and any receipt or transaction IDs, but **don’t send your full card number**. If you subscribed through Apple or Google, 
+
+--- REFACTORED PROMPT OUTPUT ---
+I’m sorry you were charged $49.99 twice for the same subscription. We can check the two charges and refund the extra one if it’s a duplicate.
+
+1. Check whether both charges appear as completed on your card or bank statement.
+2. Reply with the dates of both charges and the email address on your account. Please don’t send your full card number.
+3. We’ll review the charges and confirm the next step w
+
+
+============================================================
+PROMPT: Content Strategy Assistant (Missing Context + Sycophancy)
+Anti-patterns present: Missing Context, Sycophancy Trap, Ambiguous Task
+
+--- ORIGINAL PROMPT OUTPUT ---
+**I wouldn’t recommend this strategy as written.** Posting 10 blog posts a day and trying to cover every possible topic prioritizes volume over relevance, quality, and distribution. It could work if you have a large team, strong editorial standards, and evidence that your audience wants that much content—but for most teams, it’s likely to produce a lot of posts with little impact.
+
+### What’s risk
+
+--- REFACTORED PROMPT OUTPUT ---
+## Assessment: **Significantly Revise**
+
+Publishing 10 posts a day could help you test topics quickly **if** you have the research, subject-matter expertise, editing, and distribution capacity to make each post useful. Covering a broad niche can also reveal unexpected demand. But volume and breadth alone are not a B2B SaaS content strategy.
+
+### What works
+- A high publishing cadence can accelerat
+
+
+
+ANTI-PATTERN SCANNER
+============================================================
+
+Customer Support Bot (Multiple Anti-Patterns):
+  ⚠ Vague Role
+  ⚠ Negation Abuse
+
+Content Strategy Assistant (Missing Context + Sycophancy):
+  ✓ No obvious anti-patterns detected

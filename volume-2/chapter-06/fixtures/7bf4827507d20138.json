@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 10,
+    "messages": [
+      {
+        "content": "You are a sentiment classifier. Respond with only: POSITIVE, NEGATIVE, or NEUTRAL",
+        "role": "system"
+      },
+      {
+        "content": "\nTicket: \"I've been waiting 6 weeks for a refund. This is outrageous.\"\nSentiment: NEGATIVE\n\nTicket: \"Your team resolved my issue in under an hour. Impressive!\"\nSentiment: POSITIVE\n\nTicket: \"Package arrived. No damage. Took the expected 5 days.\"\nSentiment: NEUTRAL\n\nTicket: \"This is the third time I've had to call about the same problem.\"\nSentiment: NEGATIVE\n\nTicket: \"Everything was fine. Nothing outstanding, just standard service.\"\nSentiment: NEUTRAL\n\nTicket: \"The technician arrived early and fixed everything on the first visit.\"\nSentiment: POSITIVE\n\nTicket: \"My order arrived on time and matches the description.\"\nSentiment:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "NEUTRAL",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727697,
+    "id": "chatcmpl-Ec0enaBUuJSJiMJz0Rx8Rbnuxdref",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 6,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 180,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 186
+    }
+  }
+}

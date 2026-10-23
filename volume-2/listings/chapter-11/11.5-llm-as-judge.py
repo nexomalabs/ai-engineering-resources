@@ -24,7 +24,8 @@ Return JSON: {
 
 def llm_judge(customer_query: str, response: str, context: str = "") -> dict:
     r = client.chat.completions.create(
-        model="gpt-6.1-sol",
+        model="gpt-6-sol",
+        reasoning_effort="none",
         messages=[
             {"role": "system", "content": JUDGE_SYSTEM},
             {"role": "user", "content": f"""Evaluate this response:

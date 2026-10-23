@@ -1,0 +1,18 @@
+Initial: Score=0.42
+  Instruction: Classify the urgency of this support ticket as CRITICAL, HIGH, MEDIUM, or LOW....
+
+Round 1: Score=0.50
+  Instruction: Classify each support ticket by the urgency of the issue described, not by the customer’s tone. Outp...
+
+Round 2: Score=0.50
+  Instruction: Classify the support ticket’s urgency based on the impact and time sensitivity of the issue, not the...
+
+Round 3: Score=0.58
+  Instruction: Classify the support ticket’s **actual impact and time sensitivity**, not the customer’s tone, as ex...
+
+Round 4: Score=0.67
+  Instruction: Classify the support ticket by its actual impact and time sensitivity, not the customer’s tone or us...
+
+
+Best instruction (score=0.67):
+Classify the support ticket by its actual impact and time sensitivity, not the customer’s tone or use of words like “urgent.” Use CRITICAL for an active security breach, immediate safety risk, or widespread outage that stops business operations; HIGH for a significant service failure, account-access problem, or billing issue requiring prompt action but without critical impact; MEDIUM for a nonblocking problem or request that needs resolution; and LOW for an informational question, preference, or minor inconvenience. Choose the highest level supported by the ticket’s facts, and output only CRITICAL, HIGH, MEDIUM, or LOW.

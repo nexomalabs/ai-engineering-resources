@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 10,
+    "messages": [
+      {
+        "content": "You are a support ticket urgency classifier for a SaaS company.\n\nUrgency levels:\n- CRITICAL: Security incidents, service down affecting revenue, data loss\n- HIGH: Account locked, billing errors, repeated failures, extended outage\n- MEDIUM: Feature not working as expected, general account requests\n- LOW: Informational questions, feature requests, general feedback\n\nClassify the following ticket with one word only: CRITICAL, HIGH, MEDIUM, or LOW.",
+        "role": "system"
+      },
+      {
+        "content": "Ticket: URGENT: Production database corrupted\nUrgency:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "CRITICAL",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727942,
+    "id": "chatcmpl-Ec0ik0CKatnApbKSji8FEEEHY15s6",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 5,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 118,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 123
+    }
+  }
+}

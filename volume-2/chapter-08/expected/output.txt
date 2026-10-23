@@ -1,0 +1,85 @@
+RISEN-STRUCTURED PROMPT:
+============================================================
+ROLE:
+You are a senior technical writer specializing in developer documentation for REST APIs
+
+INSTRUCTIONS:
+Write the documentation for the authentication endpoint described below
+
+STEPS:
+
+1. Start with a one-sentence description of what the endpoint does
+
+2. Document all required and optional parameters with types and descriptions
+
+3. Show an example request using curl
+
+4. Show the success response structure
+
+5. List the common error codes and their meanings
+
+
+END GOAL:
+A complete, developer-f...
+
+GENERATED DOCUMENTATION:
+============================================================
+# POST /api/v2/auth/token
+
+Exchange your application credentials for a Bearer access token.
+
+Send a JSON request body with the following parameters:
+
+| Name | Type | Required | Description |
+|---|---|---|---|
+| `client_id` | string | Yes | Your application’s client identifier. |
+| `client_secret` | string | Yes | Your application’s secret key. |
+| `grant_type` | string | Yes | Must be `client_credentials`. |
+| `scope` | string | No | Space-separated list of requested permissions. Defaults to `read`. |
+| `expires_in` | integer | No | Requested token lifetime in seconds. Defaults to `3600`; maximum `86400`. |
+
+## Example request
+
+Replace the URL and credentials with your API host and application credentials:
+
+```bash
+curl --request POST 'https://api.example.com/api/v2/auth/token' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "client_id": "your-client-id",
+    "client_secret": "your-client-secret",
+    "grant_type": "client_credentials",
+    "scope": "read",
+    "expires_in": 3600
+  }'
+```
+
+## Success response
+
+A successful request returns HTTP `200` with a JSON body:
+
+```json
+{
+  "access_token": "eyJhbGc...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "scope": "read"
+}
+```
+
+`access_token` is the token to use for authenticated requests. `token_type` identifies it as a Bearer token; `expires_in` is its lifetime in seconds; and `scope` lists its permissions.
+
+## Common errors
+
+| HTTP status | Meaning |
+|---|---|
+| `400` | Invalid request, such as a missing or invalid parameter. |
+| `401` | Invalid credentials. |
+| `429` | Rate limit exceeded. |
+
+
+JSON PROMPT STORE TEST:
+============================================================
+Input: 'The service was excellent and exceeded all expecta...' → POSITIVE
+Input: 'Product arrived damaged. Completely unacceptable....' → NEGATIVE
+Input: 'Order was delivered on time. Nothing special....' → NEUTRAL

@@ -1,0 +1,33 @@
+CHAIN-OF-THOUGHT COMPARISON
+============================================================
+
+PROBLEM: A car averages 32 miles per gallon on the highway. If gas costs $3.45 per gallon and a trip covers 280 miles, what is the total fuel cost?
+Correct answer: 30.19
+
+Standard prompt: The car uses \(280 \div 32 = 8.75\) gallons of gas.
+
+At $3.45 per gallon, the fuel cost is \(8.75 \t...
+Zero-shot CoT (last 100 chars): ...8.75\) gallons.
+
+Total cost: \(8.75 \times \$3.45 = \boxed{\$30.19}\) (rounded to the nearest cent).
+Few-shot CoT (last 100 chars): ... gallons  
+Step 2: Fuel cost = 8.75 × $3.45 = **$30.19**
+
+Answer: The total fuel cost is **$30.19**.
+Self-consistency (3 samples): 30.19 (from 3/3 chains)
+----------------------------------------
+
+PROBLEM: A company has 240 employees. If 15% receive a promotion, and 8% of those promoted also get a salary increase, how many employees get both a promotion and a salary increase?
+Correct answer: 2.88
+
+Standard prompt: 15% of 240 employees is 36. Of those, 8% is \(0.08 \times 36 = 2.88\).
+
+So, **about 3 employees** ge...
+Zero-shot CoT (last 100 chars): ... fractional result, so the exact whole-number count can’t be determined from the information given.)
+Few-shot CoT (last 100 chars): ...36 × 0.08 = 2.88  
+
+Answer: **2.88 employees** mathematically, or about **3 employees** in practice.
+Self-consistency (3 samples): 3 (from 2/3 chains)
+----------------------------------------
+
+All tests complete.

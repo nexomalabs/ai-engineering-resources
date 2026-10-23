@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 200,
+    "messages": [
+      {
+        "content": "You are a helpful customer service agent. Answer questions based only on the provided company information.",
+        "role": "system"
+      },
+      {
+        "content": "<company_info>\n\nOur company was founded in 1987 by Thomas Wellesley in Chicago, Illinois.\nWe began as a small machine shop with 12 employees. Today we employ over 3,000 people\nacross 8 locations in North America and Europe. Our CEO, Jennifer Park, joined in 2019.\nWe have won the Manufacturing Excellence Award 4 times.\n\nReturn Policy: All products may be returned within 30 days of purchase with original receipt.\nItems must be in original, unused condition. Final sale items are non-returnable.\nElectronics have a 15-day return window. Hazardous materials cannot be returned.\n\nWarranty information: Standard warranty is 1 year parts and labor. Extended warranties\nare available for 2 or 3 years at additional cost. Warranty does not cover physical damage,\nwater damage, or modifications.\n\nOur quarterly newsletter features employee spotlights, community initiatives,\nand upcoming product launches. Subscribe at newsletter.company.com. Past issues\nare archived going back to 2015.\n\nShipping Policy: Standard shipping 5-7 business days. Expedited 2-3 days.\nOvernight available for orders placed before 2pm EST. Free standard shipping\non orders over $75. International shipping available to 45 countries.\n\n</company_info>\n\nCustomer question: Can I return a laptop I bought 20 days ago? It's been opened and used.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.1
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "Laptops are electronics, so they have a 15-day return window. Since you bought it 20 days ago, it\u2019s outside that window and likely can\u2019t be returned. In general, returns also require the item to be unused and in its original condition, with the original receipt.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727605,
+    "id": "chatcmpl-Ec0dJ12apMwR4QljNtkb2b9NgN7JA",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 61,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 309,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 370
+    }
+  }
+}

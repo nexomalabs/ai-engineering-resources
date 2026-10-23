@@ -38,6 +38,7 @@ def real_judge(item: EvaluationItem, client) -> EvaluationScore:
     """Real LLM-as-Judge implementation using OpenAI."""
     response = client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[
             {"role": "system", "content": JUDGE_SYSTEM_PROMPT},
             {"role": "user", "content": build_judge_prompt(item)},

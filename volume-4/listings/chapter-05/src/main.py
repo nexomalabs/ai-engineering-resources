@@ -93,11 +93,12 @@ async def analyze(
     try:
         response = await client.chat.completions.create(
             model=settings.model_name,
+            reasoning_effort="none",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": request.text},
             ],
-            max_tokens=settings.max_tokens,
+            max_completion_tokens=settings.max_tokens,
         )
     except RateLimitError:
         raise HTTPException(

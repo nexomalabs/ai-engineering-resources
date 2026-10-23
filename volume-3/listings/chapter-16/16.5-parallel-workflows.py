@@ -23,12 +23,13 @@ async def analyze_sentiment(text: str) -> AnalysisResult:
     try:
         response = await async_client.chat.completions.create(
             model="gpt-6-luna",
+            reasoning_effort="none",
             messages=[
                 {"role": "system", "content": "You are a sentiment analyst. Return JSON: {sentiment, score, key_phrases}"},
                 {"role": "user", "content": f"Analyze sentiment:\n{text}"},
             ],
             temperature=0.0,
-            max_tokens=200,
+            max_completion_tokens=200,
         )
         import json, re
         raw = response.choices[0].message.content
@@ -44,12 +45,13 @@ async def extract_entities(text: str) -> AnalysisResult:
     try:
         response = await async_client.chat.completions.create(
             model="gpt-6-luna",
+            reasoning_effort="none",
             messages=[
                 {"role": "system", "content": "Extract named entities. Return JSON: {people, organizations, locations, dates}"},
                 {"role": "user", "content": f"Extract entities:\n{text}"},
             ],
             temperature=0.0,
-            max_tokens=300,
+            max_completion_tokens=300,
         )
         import json, re
         raw = response.choices[0].message.content

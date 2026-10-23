@@ -1,0 +1,46 @@
+RUNNING FULL ANATOMY-STRUCTURED PROMPT
+============================================================
+**Revenue Trend**  
+Revenue rose from $142.3 million in Q1 to $171.2 million in Q3, then declined 3.4% sequentially to $165.4 million in Q4. FY2024 revenue totaled $637.6 million; without FY2023 data, year-over-year growth cannot be assessed.
+
+**Margin Analysis**  
+Gross margin improved from 34.2% in Q1 to 36.1% in Q3, then fell 2.2 percentage points to 33.9% in Q4 [FLAG: notable sequential margin compression]. Operating expenses increased from $38.4 million to $52.3 million over the year, while estimated operating margin declined from 7.2% in Q3 to 2.3% in Q4, based on the reported gross margin and operating expenses.
+
+**Key Risks**
+- Q4 revenue declined sequentially after two quarters of growth.
+- Q4 gross-margin compression reduced gross profit despite revenue remaining above Q1 levels.
+- Operating expenses rose 36.2% from Q1 to Q4, outpacing revenue growth of 16.2% over the same period.
+- Headcount increased from 890 in Q1 to 1,240 in Q4, adding potential pressure to the expense base.
+
+**Summary**  
+Meridian generated $637.6 million in FY2024 revenue, but Q4 revenue contraction, gross-margin compression, and rising operating expenses weakened estimated operating profitability.
+
+
+ABLATION TEST: No System Prompt
+============================================================
+## Meridian Technologies — FY2024 financial analysis
+
+**FY2024 revenue was $637.6 million.** Revenue rose through Q3 before declining 3.4% quarter over quarter in Q4. Gross margin also fell in Q4, while operating expenses continued to increase, putting pressure on operating profitability.
+
+| Metric | Q1 | Q2 | Q3 | Q4 | FY2024 |
+|---|---:|---:|---:|---:|---:|
+| Revenue ($m) | 142.3 | 158.7 | 171.2 | 165.4 | **637.6** |
+| Gross margin | 34.2% | 35.8% | 36.1% | 33.9% | **35.0%** |
+| Gross profit ($m, calculated) | 48.7 | 56.8 | 61.8 | 56.1 | **223.4** |
+| Operating expenses ($m) | 38.4 | 41.2 | 48.7 | 52.3 | **180.6** |
+| Gross profit less operating expenses ($m) | 10.3 | 15.6 | 13.1 | 3.8 | **42.8** |
+
+*FY gross margin is calculated from total gross profit divided by total revenue. Figures are rounded.*
+
+### Key takeaways
+
+- **Growth slowed late in the year.** Revenue increased 11.5% in Q2 and 7.9% in Q3, then fell 3.4% in Q4. Q4 revenue was still 16.2% above Q1, but the data does not support a year-over-year growth comparison.
+- **Q4 profitability tightened sharply.** Gross margin declined from 36.1% in Q3 to 33.9% in Q4. At the same time, operating expenses rose by $3.6 million, reducing gross profit less operating expenses from $13.1 million to $3.8 million.
+- **Costs grew faster than revenue across the period.** From Q1 to Q4, revenue increased 16.2%, while operating expenses increased 36.2%. Operating expenses rose from 27.0% to 31.6% of revenue.
+- **Headcount expansion warrants attention.** Q4 headcount of 1,240 was 350 higher than Q1, a 39.3% increase. The figures do not establish how much of the expense increase was attributable to hiring, but the expansion makes productivity and cost discipline important areas to assess.
+
+**Overall:** Meridian generated positive gross profit less operating expenses in every quarter, but Q4 showed a marked deterioration in that measure. The immediate questions are whether the Q4 revenue decline and margin compression were temporary, and whether the expanded cost base can be supported by renewed
+
+
+COMPARISON COMPLETE
+Note structural differences, tone differences, and rule adherence differences above.

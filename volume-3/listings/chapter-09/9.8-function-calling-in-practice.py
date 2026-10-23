@@ -17,6 +17,7 @@ def extract_structured_data(text: str, schema: dict, client: OpenAI) -> dict:
     }
     response = client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[
             {
                 "role": "system",

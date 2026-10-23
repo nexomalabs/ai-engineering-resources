@@ -1,0 +1,126 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "messages": [
+      {
+        "content": "You are a job posting data extraction specialist.\n\nExtract all available information from job postings into the specified JSON schema.\nFor missing fields, use null (not \"N/A\" or empty string).\nFor salary ranges, extract as integers (dollars only, no symbols).",
+        "role": "system"
+      },
+      {
+        "content": "Extract from this job posting:\n\nJunior Data Analyst. Remote-first company. $55k-$70k. Recent grads welcome.\n    Skills: Excel, SQL, Tableau, Python basics.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "response_format": {
+      "json_schema": {
+        "name": "job_posting",
+        "schema": {
+          "additionalProperties": false,
+          "properties": {
+            "company": {
+              "type": "string"
+            },
+            "is_remote": {
+              "type": "boolean"
+            },
+            "job_title": {
+              "type": "string"
+            },
+            "location": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "required_years_experience": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "salary_max": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "salary_min": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "skills": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "job_title",
+            "company",
+            "location",
+            "salary_min",
+            "salary_max",
+            "required_years_experience",
+            "is_remote",
+            "skills"
+          ],
+          "type": "object"
+        },
+        "strict": true
+      },
+      "type": "json_schema"
+    },
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\"job_title\":\"Junior Data Analyst\",\"company\":\"Remote-first company\",\"location\":null,\"salary_min\":55000,\"salary_max\":70000,\"required_years_experience\":null,\"is_remote\":true,\"skills\":[\"Excel\",\"SQL\",\"Tableau\",\"Python basics\"]}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727772,
+    "id": "chatcmpl-Ec0g0xVRiYNlTTnN3kYpoNMK6tt7C",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 64,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 197,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 261
+    }
+  }
+}

@@ -29,12 +29,13 @@ def llm_call(prompt: str, system: str = "You are a helpful assistant.") -> str:
     """Single LLM inference call with error handling."""
     response = client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[
             {"role": "system", "content": system},
             {"role": "user", "content": prompt},
         ],
         temperature=0.0,
-        max_tokens=512,
+        max_completion_tokens=512,
     )
     return response.choices[0].message.content.strip()
 

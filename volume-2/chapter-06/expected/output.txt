@@ -1,0 +1,23 @@
+LABEL BALANCE EXPERIMENT
+============================================================
+
+Ticket: 'My order arrived on time and matches the description.'
+  Imbalanced examples → POSITIVE
+  Balanced examples   → NEUTRAL
+
+Ticket: 'I can't believe how bad this experience has been.'
+  Imbalanced examples → NEGATIVE
+  Balanced examples   → NEGATIVE
+
+Ticket: 'Really happy with the quick response from your team.'
+  Imbalanced examples → POSITIVE
+  Balanced examples   → POSITIVE
+
+
+DYNAMIC FEW-SHOT SELECTION
+Test input: 'The product quality is terrible, but the customer service was very helpful'
+
+Dynamically selected examples:
+  Input: 'Worst customer service I've ever experienced' → NEGATIVE
+  Input: 'Great quality for the price' → POSITIVE
+  Input: 'Delivery was faster than expected' → POSITIVE

@@ -1,0 +1,32 @@
+JOB POSTING EXTRACTION WITH SCHEMA ENFORCEMENT
+============================================================
+
+Posting 1: Senior Python Developer at TechCorp. San Francisco, CA or remote.
+    $130,000–$...
+  Title: Senior Python Developer
+  Company: TechCorp
+  Location: San Francisco, CA or remote
+  Salary: $130000–$160000
+  Remote: True
+  Skills (7): Python, Django, PostgreSQL, Docker, AWS...
+
+Posting 2: Marketing Manager position. New York office only. Salary negotiable.
+    Experie...
+  Title: Marketing Manager
+  Company: 
+  Location: New York
+  Salary: $None–$None
+  Remote: False
+  Skills (4): SEO, content marketing, HubSpot, Google Analytics
+
+Posting 3: Junior Data Analyst. Remote-first company. $55k-$70k. Recent grads welcome.
+    ...
+  Title: Junior Data Analyst
+  Company: Remote-first company
+  Location: None
+  Salary: $55000–$70000
+  Remote: True
+  Skills (4): Excel, SQL, Tableau, Python basics
+
+
+Success rate: 3/3 (100%)

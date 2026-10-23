@@ -1,0 +1,57 @@
+
+============================================================
+ROLE: LEVEL 1 — Generic
+============================================================
+**Adding ibuprofen to warfarin is generally best avoided.** The main concern is a substantially increased risk of bleeding, especially gastrointestinal bleeding. Ibuprofen can damage the stomach lining and impair platelet function, while warfarin reduces clotting. A stable INR of 2.4 does **not** eliminate this risk; serious bleeding can occur even when the INR remains in range. The proposed scheduled dose (400 mg three times daily) and the patient’s age add to the concern.
+
+For knee osteoarthritis, the prescriber should consider alternatives first, such as physical therapy, exercise, weight management if appropriate, and **topical diclofenac** for localized knee pain. Acetaminophen may be an option, but regular or higher-dose use can also raise the INR, so it should be discussed with the anticoagulation clinician.
+
+If oral ibuprofen is judged necessary, use the **lowest effective dose for the shortest possible time**, review other bleeding risks and medicines (including aspirin and other NSAIDs), and arrange closer INR follow-up. INR monitoring is useful but **does not fully protect against NSAID-related bleeding**. The patient should seek urgent care for black stools, vomiting blood, unusual or persistent bleeding, or symptoms such as marked weakness or dizziness.
+
+============================================================
+ROLE: LEVEL 2 — Specialized Expert
+============================================================
+**I would recommend against routine ibuprofen 400 mg three times daily in this patient.** Warfarin plus an oral NSAID substantially increases bleeding risk, particularly gastrointestinal bleeding. A stable INR of 2.4 does **not** make the combination safe: ibuprofen can cause GI injury and impair platelet function even when the INR remains in range. The patient’s age adds to the concern.
+
+For knee osteoarthritis, I would discuss alternatives with the prescriber, such as **topical diclofenac** (less systemic exposure than oral ibuprofen), physical therapy/exercise, or an intra-articular corticosteroid injection if appropriate. Acetaminophen may be an option for short-term pain relief, but regular or higher-dose use can **raise the INR**, so it also warrants monitoring.
+
+If oral ibuprofen is judged unavoidable, use the **lowest effective dose for the shortest possible time**, review other bleeding risks (including aspirin, antiplatelets, other NSAIDs, prior ulcer or GI bleed, and kidney disease), and consider gastroprotection when appropriate. Arrange an **earlier INR check after starting and after stopping** ibuprofen, while recognizing that INR monitoring cannot detect or prevent all NSAID-related bleeding. Counsel the patient to seek prompt care for black stools, vomiting blood, unusual bruising or bleeding, severe headache, or weakness.
+
+============================================================
+ROLE: LEVEL 3 — Full Persona
+============================================================
+### 1. Mechanism of interaction
+Ibuprofen increases bleeding risk with warfarin through **platelet inhibition** and **injury to the gastrointestinal (GI) lining**. This risk can rise **even if the INR remains 2.4**: INR measures warfarin’s anticoagulant effect, not ibuprofen’s effects on platelets or the stomach. Ibuprofen may also affect warfarin response in some patients, so an INR change is possible but is not the main concern.
+
+### 2. Clinical risk assessment
+For this 67-year-old, adding **ibuprofen 400 mg three times daily** creates a clinically important risk of GI and other bleeding despite a stable, therapeutic INR. Observational evidence generally finds **roughly a twofold increase in GI bleeding** when an NSAID is used with warfarin versus warfarin alone; the exact risk for this patient depends on factors such as prior ulcer or bleeding, kidney function, and other medicines. A normal follow-up INR would **not** rule out increased bleeding risk.
+
+### 3. Management options
+**Avoid routine oral ibuprofen if possible.** For knee osteoarthritis, consider topical diclofenac, physical therapy/exercise, and other non-drug measures. Acetaminophen may be an option, but repeated doses—particularly **2 g/day or more for several days**—can raise INR and require monitoring.
+
+If an oral NSAID is judged necessary after weighing alternatives, use the **lowest effective dose for the shortest duration**. A proton-pump inhibitor may reduce upper-GI bleeding risk, but it does not eliminate bleeding risk elsewhere.
+
+### 4. Monitoring recommendations
+If ibuprofen is started, arrange an **INR check within about 3–5 days** and again if use continues or the dose changes. Ask the patient to seek prompt care for black stools, vomiting blood, unusual bruising, persistent nosebleeds, severe headache, or weakness. Review kidney function and any other medicines that increase bleeding risk.
+
+**Recommended decision:** Do not start scheduled ibuprofen 400 mg three times daily without first discussing a safer knee-pain plan with the prescriber and anticoagulation clinic.
+
+
+============================================================
+VOCABULARY ANALYSIS
+============================================================
+
+LEVEL 1 — Generic
+  Medical terms used (5): INR, warfarin, NSAID, platelet, bleeding
+  Word count: 189
+  Has uncertainty language: False
+
+LEVEL 2 — Specialized Expert
+  Medical terms used (6): INR, warfarin, NSAID, platelet, bleeding, GI
+  Word count: 193
+  Has uncertainty language: False
+
+LEVEL 3 — Full Persona
+  Medical terms used (7): INR, warfarin, NSAID, anticoagulant, platelet, bleeding, GI
+  Word count: 305
+  Has uncertainty language: False

@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 200,
+    "messages": [
+      {
+        "content": "You are a professional e-commerce copywriter specializing in consumer electronics.\n\nYour task: Write a concise product summary for an Amazon listing.\n\nRequirements:\n- Exactly 2 sentences\n- First sentence: Lead with the primary benefit for the customer\n- Second sentence: Include 3 specific technical features\n- Tone: Confident, clear, consumer-friendly\n- Do NOT use superlatives (best, amazing, incredible)\n\nProduct details:\n\nThe ThermoBreeze X7 is a portable personal cooling device powered by thermoelectric\ntechnology. It uses a Peltier module to actively cool air by up to 10 degrees Celsius\nbelow ambient temperature. The device weighs 340 grams, operates on USB-C power,\nand includes three fan speed settings. Battery life on the internal 5000mAh pack\nis approximately 6 hours at medium setting.\n\n\nWrite only the 2-sentence summary. No preamble.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.9
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "Stay comfortable on the go with personal cooling that actively chills air up to 10\u00b0C below ambient temperature. The ThermoBreeze X7 uses a Peltier module, offers three fan speeds, and runs for approximately 6 hours at medium speed on its 5000mAh battery.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727534,
+    "id": "chatcmpl-Ec0cAleF2qoDE7bn83w1UJiTtHKan",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 62,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 190,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 252
+    }
+  }
+}

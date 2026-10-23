@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 600,
+    "messages": [
+      {
+        "content": "ROLE:\nYou are a senior technical writer specializing in developer documentation for REST APIs\n\nINSTRUCTIONS:\nWrite the documentation for the authentication endpoint described below\n\nSTEPS:\n\n1. Start with a one-sentence description of what the endpoint does\n\n2. Document all required and optional parameters with types and descriptions\n\n3. Show an example request using curl\n\n4. Show the success response structure\n\n5. List the common error codes and their meanings\n\n\nEND GOAL:\nA complete, developer-friendly endpoint documentation section that a developer with no prior knowledge of this API can use to successfully authenticate\n\nNARROWING:\n\n- Use Markdown formatting\n\n- All code examples must be complete and runnable\n\n- Parameter table must include: Name, Type, Required, Description\n\n- Maximum length: 400 words\n\n\nEndpoint to document:\n\nPOST /api/v2/auth/token\n\nDescription: Exchange credentials for an access token\n\nRequired parameters:\n- client_id (string): Your application's client identifier\n- client_secret (string): Your application's secret key\n- grant_type (string): Must be \"client_credentials\"\n\nOptional parameters:\n- scope (string): Space-separated list of requested permissions. Default: \"read\"\n- expires_in (integer): Token TTL in seconds. Default: 3600. Max: 86400\n\nSuccess response (200):\n{\n  \"access_token\": \"eyJhbGc...\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 3600,\n  \"scope\": \"read\"\n}\n\nError codes: 400 (invalid request), 401 (invalid credentials), 429 (rate limit exceeded)\n",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.1
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "# POST /api/v2/auth/token\n\nExchange your application credentials for a Bearer access token.\n\nSend a JSON request body with the following parameters:\n\n| Name | Type | Required | Description |\n|---|---|---|---|\n| `client_id` | string | Yes | Your application\u2019s client identifier. |\n| `client_secret` | string | Yes | Your application\u2019s secret key. |\n| `grant_type` | string | Yes | Must be `client_credentials`. |\n| `scope` | string | No | Space-separated list of requested permissions. Defaults to `read`. |\n| `expires_in` | integer | No | Requested token lifetime in seconds. Defaults to `3600`; maximum `86400`. |\n\n## Example request\n\nReplace the URL and credentials with your API host and application credentials:\n\n```bash\ncurl --request POST 'https://api.example.com/api/v2/auth/token' \\\n  --header 'Content-Type: application/json' \\\n  --data '{\n    \"client_id\": \"your-client-id\",\n    \"client_secret\": \"your-client-secret\",\n    \"grant_type\": \"client_credentials\",\n    \"scope\": \"read\",\n    \"expires_in\": 3600\n  }'\n```\n\n## Success response\n\nA successful request returns HTTP `200` with a JSON body:\n\n```json\n{\n  \"access_token\": \"eyJhbGc...\",\n  \"token_type\": \"Bearer\",\n  \"expires_in\": 3600,\n  \"scope\": \"read\"\n}\n```\n\n`access_token` is the token to use for authenticated requests. `token_type` identifies it as a Bearer token; `expires_in` is its lifetime in seconds; and `scope` lists its permissions.\n\n## Common errors\n\n| HTTP status | Meaning |\n|---|---|\n| `400` | Invalid request, such as a missing or invalid parameter. |\n| `401` | Invalid credentials. |\n| `429` | Rate limit exceeded. |",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727751,
+    "id": "chatcmpl-Ec0ffS4uPX85Q8kfL8inkVa6jD5ds",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 408,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 329,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 737
+    }
+  }
+}

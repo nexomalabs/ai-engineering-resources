@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 15,
+    "messages": [
+      {
+        "content": "Classify the support ticket by its actual impact and time sensitivity, not the customer\u2019s tone or use of words like \u201curgent.\u201d Use CRITICAL for an active security breach, immediate safety risk, or widespread outage that stops business operations; HIGH for a significant service failure, account-access problem, or billing issue requiring prompt action but without critical impact; MEDIUM for a nonblocking problem or request that needs resolution; and LOW for an informational question, preference, or minor inconvenience. Choose the highest level supported by the ticket\u2019s facts, and output only CRITICAL, HIGH, MEDIUM, or LOW.",
+        "role": "system"
+      },
+      {
+        "content": "Ticket: I've been waiting 2 weeks for a refund and nobody responds\nUrgency:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "HIGH",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727911,
+    "id": "chatcmpl-Ec0iFex3xy4FwcggSxPzbR8Bo23mM",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 4,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 148,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 152
+    }
+  }
+}

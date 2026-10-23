@@ -1,0 +1,45 @@
+ROUGE SCORING
+============================================================
+
+Candidate 1: 'Webb's infrared telescope revealed thousands of new young st...'
+  ROUGE-1 F1: 0.585
+  ROUGE-2 F1: 0.317
+  ROUGE-L F1: 0.523
+
+Candidate 2: 'The James Webb Space Telescope took pictures of a nebula....'
+  ROUGE-1 F1: 0.341
+  ROUGE-2 F1: 0.205
+  ROUGE-L F1: 0.341
+
+Candidate 3: 'The James Webb Space Telescope discovered a new galaxy 7,600...'
+  ROUGE-1 F1: 0.305
+  ROUGE-2 F1: 0.140
+  ROUGE-L F1: 0.271
+
+
+LLM JUDGE SCORING
+============================================================
+
+Candidate 1:
+  Faithfulness: 5/5
+  Coverage: 5/5
+  Conciseness: 5/5
+  Overall: 5/5
+  Reasoning: The summary accurately captures the telescope’s infrared imaging, the previously hidden young stars,...
+
+Candidate 2:
+  Faithfulness: 5/5
+  Coverage: 1/5
+  Conciseness: 1/5
+  Overall: 2/5
+  Reasoning: The statement is accurate but too vague. It omits the Carina Nebula’s name, the thousands of newly r...
+
+Candidate 3:
+  Faithfulness: 1/5
+  Coverage: 1/5
+  Conciseness: 3/5
+  Overall: 1/5
+  Reasoning: The summary incorrectly calls the Carina Nebula a new galaxy, invents a count of 50,000 stars, and a...
+
+
+Evaluation complete.

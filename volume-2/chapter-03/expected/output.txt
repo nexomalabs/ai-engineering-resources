@@ -1,0 +1,58 @@
+
+============================================================
+TASK: Task 1: Product Review Analysis
+============================================================
+
+--- ORIGINAL INSTRUCTION OUTPUT ---
+- **Positive:** Fast performance; great keyboard.
+- **Negative:** Gets very hot; battery lasts only about 3 hours.
+- **Overall sentiment:** Negative.
+- **Purchase intent:** Would not buy again.
+
+--- ENGINEERED INSTRUCTION OUTPUT ---
+| Aspect | Sentiment | Claim |
+|---|---|---|
+| Performance | POSITIVE | The laptop is fast. |
+| Heat management | NEGATIVE | The laptop gets really hot. |
+| Battery life | NEGATIVE | The battery lasts only 3 hours. |
+| Keyboard | POSITIVE | The keyboard is great. |
+| Overall purchase experience | NEGATIVE | The reviewer would not buy the laptop again. |
+
+Overall, the review implies that the laptop is not recommended for purchase.
+
+============================================================
+TASK: Task 2: Email Rewrite
+============================================================
+
+--- ORIGINAL INSTRUCTION OUTPUT ---
+Subject: Following Up
+
+Hello,
+
+I’m following up on the topic we discussed last week. When you have a chance, please let me know your thoughts.
+
+Thank you,  
+[Your Name]
+
+--- ENGINEERED INSTRUCTION OUTPUT ---
+Hello,
+
+I’m following up on the matter we discussed last week. Please let me know your thoughts when you have a chance.
+
+Thank you,
+Best regards,
+
+============================================================
+TASK: Task 3: Data Extraction
+============================================================
+
+--- ORIGINAL INSTRUCTION OUTPUT ---
+- Revenue: **$4.2M → $5.8M**
+- Operating costs: **up 12%**
+- Net margin: **15.1% → 18.3%** (up **3.2 percentage points**)
+
+--- ENGINEERED INSTRUCTION OUTPUT ---
+[{"metric":"Revenue","previous":"$4.2M","current":"$5.8M","change":"increased by $1.6M"},{"metric":"Operating costs","previous":null,"current":null,"change":"rose by 12%"},{"metric":"Net margin","previous":"15.1%","current":"18.3%","change":"increased by 3.2 percentage points"}]
+
+
+ALL TASKS COMPLETE

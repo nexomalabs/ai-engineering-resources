@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 500,
+    "messages": [
+      {
+        "content": "You are a clinical pharmacist with specialization in anticoagulation therapy\nand drug interaction management at a hospital outpatient clinic.",
+        "role": "system"
+      },
+      {
+        "content": "Analyze the following drug interaction scenario and provide your assessment:\n\nA 67-year-old patient with atrial fibrillation is taking warfarin (INR 2.4, stable).\nTheir primary care physician wants to add ibuprofen 400mg TID for knee osteoarthritis pain.\n\nQuestion: What are the key considerations for this drug combination?",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "**I would recommend against routine ibuprofen 400 mg three times daily in this patient.** Warfarin plus an oral NSAID substantially increases bleeding risk, particularly gastrointestinal bleeding. A stable INR of 2.4 does **not** make the combination safe: ibuprofen can cause GI injury and impair platelet function even when the INR remains in range. The patient\u2019s age adds to the concern.\n\nFor knee osteoarthritis, I would discuss alternatives with the prescriber, such as **topical diclofenac** (less systemic exposure than oral ibuprofen), physical therapy/exercise, or an intra-articular corticosteroid injection if appropriate. Acetaminophen may be an option for short-term pain relief, but regular or higher-dose use can **raise the INR**, so it also warrants monitoring.\n\nIf oral ibuprofen is judged unavoidable, use the **lowest effective dose for the shortest possible time**, review other bleeding risks (including aspirin, antiplatelets, other NSAIDs, prior ulcer or GI bleed, and kidney disease), and consider gastroprotection when appropriate. Arrange an **earlier INR check after starting and after stopping** ibuprofen, while recognizing that INR monitoring cannot detect or prevent all NSAID-related bleeding. Counsel the patient to seek prompt care for black stools, vomiting blood, unusual bruising or bleeding, severe headache, or weakness.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727629,
+    "id": "chatcmpl-Ec0dhiJalVbjSkEgTZqjT3FA0uP7W",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 275,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 102,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 377
+    }
+  }
+}

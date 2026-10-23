@@ -32,7 +32,7 @@ schema = {
 }
 
 response = client.chat.completions.create(
-    model="gpt-6.1-sol",
+    model="gpt-6-sol",
     messages=[
         {"role": "system", "content": "You are a sentiment analysis expert."},
         {"role": "user", "content": f"Analyze: 'The shipping was fast but the product quality is disappointing.'"}

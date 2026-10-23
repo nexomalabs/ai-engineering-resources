@@ -8,8 +8,9 @@ def safe_llm_call(user_input: str, client) -> dict:
     # LLM call with redacted input
     resp = client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "user", "content": redacted_input}],
-        max_tokens=150,
+        max_completion_tokens=150,
     )
     raw_output = resp.choices[0].message.content or ""
     # Redact output

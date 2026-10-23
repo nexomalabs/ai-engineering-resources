@@ -156,6 +156,7 @@ def ask(name: str, system: str, user: str) -> dict:
     client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
     r = client.chat.completions.create(
         model=MODEL,
+        reasoning_effort="none",
         messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
         response_format={"type": "json_object"},
         temperature=0,

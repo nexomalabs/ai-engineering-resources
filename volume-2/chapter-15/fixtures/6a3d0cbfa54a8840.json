@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 800,
+    "messages": [
+      {
+        "content": "When analyzing a user story, first generate 4 sub-questions\nthat must be answered to fully understand the requirements, then answer each,\nthen synthesize into a complete analysis.\n\nFormat:\nSUB-QUESTIONS:\n1. [Question]\n2. [Question]\n3. [Question]\n4. [Question]\n\nSUB-ANSWERS:\n1. [Answer]\n2. [Answer]\n3. [Answer]\n4. [Answer]\n\nSYNTHESIS:\n[Complete analysis based on sub-answers]\n\nUser story to analyze:\n\nUser story: As a mobile banking app user, I want to receive real-time\nnotifications when transactions occur on my account so that I can\nimmediately detect unauthorized activity.\n",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "SUB-QUESTIONS:\n1. Which account events should trigger a notification?\n2. How quickly should notifications arrive, and through which channels?\n3. What information should each notification include without exposing sensitive data?\n4. What controls and follow-up actions does the user need?\n\nSUB-ANSWERS:\n1. The story says \u201ctransactions,\u201d but the scope needs clarification: should it include pending and posted card purchases, transfers, withdrawals, deposits, reversals, and failed attempts? It also needs a rule for duplicate or changing transaction events.\n2. \u201cReal-time\u201d needs a measurable delivery target. Push notifications are the likely primary channel, but requirements should address offline devices, disabled permissions, delivery failures, and whether another channel is needed.\n3. A useful alert could show the transaction type, amount, time, and a masked account identifier. Lock-screen content should avoid exposing sensitive details; tapping the alert should open the authenticated transaction view.\n4. Users may need to manage notification preferences and quickly report an unrecognized transaction or secure their account. The story should clarify which alerts, if any, cannot be disabled.\n\nSYNTHESIS:\nThe core requirement is to alert a user promptly when a transaction occurs on their account so they can recognize unauthorized activity and act. Before implementation, define the triggering events, a measurable notification-time target, delivery and failure behavior, privacy rules, and the path from an alert to transaction review and fraud reporting.\n\nAcceptance criteria should verify that eligible events generate timely alerts for the correct user, alerts contain enough information to identify the activity without revealing sensitive data, tapping an alert requires authentication before showing details, and duplicate or updated events are handled predictably. They should also cover notification preferences and cases where push delivery is unavailable.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792728003,
+    "id": "chatcmpl-Ec0jjSiEZFF7ct3EQfBqC65HU3b5y",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 352,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 149,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 501
+    }
+  }
+}

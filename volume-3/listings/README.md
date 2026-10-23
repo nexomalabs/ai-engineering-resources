@@ -72,7 +72,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 8.5 | [`8.5-function-schema-design.json`](chapter-08/8.5-function-schema-design.json) | 23 | — | — |
-| 8.6 | [`8.6-tool-invocation-flow.py`](chapter-08/8.6-tool-invocation-flow.py) | 64 | — | on its own |
+| 8.6 | [`8.6-tool-invocation-flow.py`](chapter-08/8.6-tool-invocation-flow.py) | 65 | — | on its own |
 | 8.8 | [`8.8-parallel-tool-calls.py`](chapter-08/8.8-parallel-tool-calls.py) | 31 | — | after `8.6-tool-invocation-flow.py` |
 | 8.9 | [`8.9-tool-error-handling.py`](chapter-08/8.9-tool-error-handling.py) | 19 | — | on its own |
 
@@ -83,9 +83,9 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 9.3 | [`9.3-nested-objects.json`](chapter-09/9.3-nested-objects.json) | 13 | — | — |
 | 9.3 | [`9.3-schema-anti-pattern-overly-generic-types.jsonc`](chapter-09/9.3-schema-anti-pattern-overly-generic-types.jsonc) | 15 | — | — |
 | 9.5 | [`9.5-handling-function-call-results.py`](chapter-09/9.5-handling-function-call-results.py) | 25 | — | on its own |
-| 9.6 | [`9.6-multi-step-function-calls.py`](chapter-09/9.6-multi-step-function-calls.py) | 157 | `openai`, `OPENAI_API_KEY` | on its own |
+| 9.6 | [`9.6-multi-step-function-calls.py`](chapter-09/9.6-multi-step-function-calls.py) | 158 | `openai`, `OPENAI_API_KEY` | on its own |
 | 9.7 | [`9.7-validation-and-type-safety.py`](chapter-09/9.7-validation-and-type-safety.py) | 53 | `pydantic` | after `9.6-multi-step-function-calls.py` |
-| 9.8 | [`9.8-function-calling-in-practice.py`](chapter-09/9.8-function-calling-in-practice.py) | 53 | — | after `9.5-handling-function-call-results.py`, `9.6-multi-step-function-calls.py` |
+| 9.8 | [`9.8-function-calling-in-practice.py`](chapter-09/9.8-function-calling-in-practice.py) | 54 | — | after `9.5-handling-function-call-results.py`, `9.6-multi-step-function-calls.py` |
 
 ## Chapter 10 — Model Context Protocol (MCP)
 
@@ -147,26 +147,26 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| 16.4 | [`16.4-sequential-workflows.py`](chapter-16/16.4-sequential-workflows.py) | 129 | `openai`, `OPENAI_API_KEY` | on its own |
-| 16.5 | [`16.5-parallel-workflows.py`](chapter-16/16.5-parallel-workflows.py) | 85 | `openai` | after `16.4-sequential-workflows.py` |
+| 16.4 | [`16.4-sequential-workflows.py`](chapter-16/16.4-sequential-workflows.py) | 130 | `openai`, `OPENAI_API_KEY` | on its own |
+| 16.5 | [`16.5-parallel-workflows.py`](chapter-16/16.5-parallel-workflows.py) | 87 | `openai` | after `16.4-sequential-workflows.py` |
 | 16.8 | [`16.8-error-handling-in-workflows.py`](chapter-16/16.8-error-handling-in-workflows.py) | 97 | — | after `16.4-sequential-workflows.py` |
 | 16.10 | [`16.10-monitoring-workflows.py`](chapter-16/16.10-monitoring-workflows.py) | 29 | — | on its own |
-| Lab | [`lab-document-processing-workflow.py`](chapter-16/lab-document-processing-workflow.py) | 208 | `openai`, `OPENAI_API_KEY` | on its own |
+| Lab | [`lab-document-processing-workflow.py`](chapter-16/lab-document-processing-workflow.py) | 209 | `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 17 — Agent Evaluation
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| Lab | [`lab-agent-evaluation-suite.py`](chapter-17/lab-agent-evaluation-suite.py) | 350 | `openai`, `OPENAI_API_KEY` | on its own |
+| Lab | [`lab-agent-evaluation-suite.py`](chapter-17/lab-agent-evaluation-suite.py) | 352 | `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 18 — Agent Security
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| Lab | [`lab-agent-security-layer.py`](chapter-18/lab-agent-security-layer.py) | 410 | `openai`, `OPENAI_API_KEY` | on its own |
+| Lab | [`lab-agent-security-layer.py`](chapter-18/lab-agent-security-layer.py) | 411 | `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 19 — Volume III Capstone: Intelligent AI Assistant
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| Lab | [`lab-intelligent-research-assistant-capstone.py`](chapter-19/lab-intelligent-research-assistant-capstone.py) | 582 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |
+| Lab | [`lab-intelligent-research-assistant-capstone.py`](chapter-19/lab-intelligent-research-assistant-capstone.py) | 584 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |

@@ -1,0 +1,14 @@
+[project]
+name = "aiae-vol2-lab10"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume II, Lab 10: Reasoning Strategies: Comparative Implementation"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live and record mode only. Fixture mode, the default, needs no packages and no key.
+live = ["openai>=1.40"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

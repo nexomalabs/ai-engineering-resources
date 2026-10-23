@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 15,
+    "messages": [
+      {
+        "content": "Classify each support ticket by the urgency of the issue described, not by the customer\u2019s tone. Output exactly one label: CRITICAL, HIGH, MEDIUM, or LOW. Use CRITICAL for an active security breach, immediate safety risk, or widespread production outage that stops core operations. Use HIGH for a major service failure, account lockout, payment failure, or serious issue blocking a customer\u2019s work without a practical workaround. Use MEDIUM for a problem that needs support but has limited impact or a workable alternative. Use LOW for informational questions, routine requests, preferences, or minor inconveniences. If details are unclear, choose the lowest urgency supported by the stated facts.",
+        "role": "system"
+      },
+      {
+        "content": "Ticket: I can't log in to my account\nUrgency:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "HIGH",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727867,
+    "id": "chatcmpl-Ec0hX8vRq8P9g23fhZXmcKJWD5LnX",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 4,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 158,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 162
+    }
+  }
+}

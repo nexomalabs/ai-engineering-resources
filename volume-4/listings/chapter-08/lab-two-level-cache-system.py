@@ -12,8 +12,9 @@ def timed_get(cache: SemanticCache, query: str, model: str = "gpt-6-luna") -> di
     # Cache miss — call LLM
     resp = client.chat.completions.create(
         model=model,
+        reasoning_effort="none",
         messages=[{"role": "user", "content": query}],
-        max_tokens=80,
+        max_completion_tokens=80,
     )
     text = resp.choices[0].message.content or ""
     cache.store(query, text)

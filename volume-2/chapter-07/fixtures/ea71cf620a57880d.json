@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 100,
+    "messages": [
+      {
+        "content": "Solve this math problem: A company has 240 employees. If 15% receive a promotion, and 8% of those promoted also get a salary increase, how many employees get both a promotion and a salary increase?\n\nAnswer:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "15% of 240 employees is 36. Of those, 8% is \\(0.08 \\times 36 = 2.88\\).\n\nSo, **about 3 employees** get both a promotion and a salary increase.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727728,
+    "id": "chatcmpl-Ec0fIFJPg2ts155bpl7o8Qf8hNhgA",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 52,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 53,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 105
+    }
+  }
+}

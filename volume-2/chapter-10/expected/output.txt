@@ -1,0 +1,36 @@
+
+============================================================
+PROBLEM: A school has 3 grade levels. Grade 1 has 120 students, Grade 2 has 25% more than...
+Type: compositional_math | Expected: 117
+
+--- Chain-of-Thought ---
++ 150 + 120 = 390\) students. At 3 notebooks each, the school needs \(390 \times 3 = 1{,}170\) notebooks.
+
+With 10 notebooks per pack, \(1{,}170 \div 10 = 117\) packs.
+
+**The school needs 117 packs.**
+
+--- Least-to-Most ---
+l students:** \(120+150+120 = 390\).
+4. **Packs needed:** \(390\times3=1{,}170\) notebooks. Since each pack has 10 notebooks, \(1{,}170\div10=117\) packs.
+
+**The school needs 117 packs of notebooks.**
+
+--- Self-Consistency (3 samples) ---
+Majority answer (from 3 samples): **The school needs 117 packs
+
+============================================================
+PROBLEM: If all Zorbels are Morbles, and some Morbles are Flurbs, can we conclude that so...
+Type: logical_inference | Expected: no
+
+--- Chain-of-Thought ---
+ The Morbles that are Flurbs might not be Zorbels. For example, all Zorbels could be Morbles, while the Flurb Morbles are a separate group. So the premises don’t guarantee that any Zorbels are Flurbs.
+
+--- Least-to-Most ---
+3. No. The Morbles that are Flurbs need not be Zorbels.
+4. Therefore, we cannot conclude that some Zorbels are Flurbs.
+
+**Answer:** No. The two statements do not guarantee that any Zorbels are Flurbs.
+
+--- Self-Consistency (3 samples) ---
+Majority answer (from 3 samples): So we can’t conclude that any Zorbels are Flurbs

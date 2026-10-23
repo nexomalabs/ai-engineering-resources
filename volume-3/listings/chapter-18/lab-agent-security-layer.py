@@ -282,12 +282,13 @@ class SecureAgent:
         try:
             response = client.chat.completions.create(
                 model="gpt-6-luna",
+                reasoning_effort="none",
                 messages=[
                     {"role": "system", "content": self.SYSTEM_PROMPT},
                     {"role": "user", "content": validated_input},
                 ],
                 temperature=0.0,
-                max_tokens=512,
+                max_completion_tokens=512,
             )
             raw_output = response.choices[0].message.content.strip()
         except Exception as e:

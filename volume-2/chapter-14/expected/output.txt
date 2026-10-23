@@ -1,0 +1,21 @@
+ABLATION STUDY: JSON FORMAT FAILURE
+============================================================
+Test input: Hi, I'm Sarah Johnson (sarah@company.com). My account login is broken and I can'...
+
+✓ PASS | Original (failing)
+       → name=Sarah Johnson, priority=critical
+✓ PASS | Add prefill hint
+       → name=Sarah Johnson, priority=critical
+✓ PASS | Add schema
+       → name=Sarah Johnson, priority=high
+✓ PASS | Add output trigger
+       → name=Sarah Johnson, priority=high
+
+
+STRUCTURED LOGGING DEMO
+============================================================
+[869cca9e6e46] parse=True | 1003ms | error=None
+[4de2fa352ce9] parse=True | 934ms | error=None
+[75327cd2542c] parse=True | 948ms | error=None
+
+Failure rate: 0/3 (0%)

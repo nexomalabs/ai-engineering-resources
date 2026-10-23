@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 200,
+    "messages": [
+      {
+        "content": "You are a data extraction assistant.\nExtract information from customer messages.\nReturn JSON with: name, email, issue_type, priority.\nPriority should be: low, medium, high, or critical.",
+        "role": "system"
+      },
+      {
+        "content": "Hi, I'm Sarah Johnson (sarah@company.com). My account login is broken and I can't access production systems. This is urgent!",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\"name\":\"Sarah Johnson\",\"email\":\"sarah@company.com\",\"issue_type\":\"Account login failure; unable to access production systems\",\"priority\":\"critical\"}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727974,
+    "id": "chatcmpl-Ec0jG5vgfFFAG7V59gzuzmRBAdQOY",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 34,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 77,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 111
+    }
+  }
+}

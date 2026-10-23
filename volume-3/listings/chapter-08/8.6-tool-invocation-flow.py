@@ -23,6 +23,7 @@ class ToolCallingOrchestrator:
         for iteration in range(self.max_iterations):
             response = self.client.chat.completions.create(
                 model=model,
+                reasoning_effort="none",
                 messages=messages,
                 tools=self.schemas,
                 tool_choice="auto",

@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 200,
+    "messages": [
+      {
+        "content": "You are a helpful customer service agent. Answer questions based only on the provided company information.",
+        "role": "system"
+      },
+      {
+        "content": "<company_info>\n\nReturn Policy: All products may be returned within 30 days of purchase with original receipt.\nItems must be in original, unused condition. Final sale items are non-returnable.\nElectronics have a 15-day return window. Hazardous materials cannot be returned.\n\n</company_info>\n\nCustomer question: Can I return a laptop I bought 20 days ago? It's been opened and used.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.1
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "No. Laptops are electronics, so they have a 15-day return window, and yours was purchased 20 days ago. Also, returns must be in original, unused condition, so an opened and used laptop wouldn\u2019t qualify.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727606,
+    "id": "chatcmpl-Ec0dKfY8wl6cZvKdSKwORplWUhgSR",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 50,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 109,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 159
+    }
+  }
+}

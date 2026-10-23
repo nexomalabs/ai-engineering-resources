@@ -12,7 +12,7 @@ contain the rest of the book text.
 | Volume | Title | Labs |
 |:------:|-------|:----:|
 | I | AI and LLM Fundamentals | [`volume-1/`](volume-1/) — available now |
-| II | Prompt Engineering | [`volume-2/`](volume-2/) — labs 17–20 now, the rest to follow |
+| II | Prompt Engineering | [`volume-2/`](volume-2/) — available now |
 | III | Context and Agents | [`volume-3/`](volume-3/) — 13 of 19 labs now, the rest to follow |
 | IV | Production Systems | [`volume-4/`](volume-4/) — 8 labs now, the rest to follow |
 
@@ -134,7 +134,7 @@ volume-1/              — the same layout for volume-2/, volume-3/, volume-4/
     ├── solution/lab.py    — reference implementation
     ├── tests/              — runs in CI against the solution
     ├── expected/            — captured reference output
-    └── fixtures/             — recorded model responses (chapters 8-10)
+    └── fixtures/             — recorded model responses (labs that call a model)
 ```
 
 `listings/` and `ANSWERS.md` are generated from the manuscript, so report a
@@ -143,7 +143,9 @@ that build on an earlier listing, so CI lints and tests the labs, not the
 listings.
 
 In Volume I, chapters 1 and 2 are paper exercises: `README.md` only, no code.
-Volume II–IV labs so far need no API key at all, so they have no `fixtures/`.
+Volume II labs 1–16 replay responses recorded from gpt-6-luna and gpt-6-sol, so they
+need no API key either. Volume III and IV labs so far need no model at all, so they have
+no `fixtures/`.
 Some Volume IV labs name a script other than `src/lab.py`; each README says which.
 
 ## License

@@ -15,8 +15,9 @@ async def classify(text: str) -> str:
     """Classify document sentiment."""
     resp = await client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "user", "content": f"Classify as POSITIVE/NEGATIVE/NEUTRAL: {text}"}],
-        max_tokens=10,
+        max_completion_tokens=10,
     )
     return resp.choices[0].message.content or "UNKNOWN"
 
@@ -24,8 +25,9 @@ async def summarize(text: str) -> str:
     """Summarize document in one sentence."""
     resp = await client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "user", "content": f"Summarize in one sentence: {text}"}],
-        max_tokens=60,
+        max_completion_tokens=60,
     )
     return resp.choices[0].message.content or ""
 
@@ -33,8 +35,9 @@ async def extract_keywords(text: str) -> str:
     """Extract top-3 keywords."""
     resp = await client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "user", "content": f"List top 3 keywords, comma-separated: {text}"}],
-        max_tokens=30,
+        max_completion_tokens=30,
     )
     return resp.choices[0].message.content or ""
 

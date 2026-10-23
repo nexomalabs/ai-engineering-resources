@@ -1,0 +1,53 @@
+
+============================================================
+PROMPT TYPE: UNDERSPECIFIED
+============================================================
+
+Run 1:
+The ThermoBreeze X7 is a lightweight, USB-C-powered personal cooler that uses thermoelectric technology to cool airflow up to 10°C below ambient. It weighs 340 g, offers three fan speeds, and runs for about six hours at medium speed on its 5,000 mAh battery.
+
+Run 2:
+The ThermoBreeze X7 is a lightweight, 340-gram personal cooler that uses thermoelectric technology to cool air up to 10°C below ambient temperature. It has three fan speeds, runs on USB-C power, and its built-in 5000mAh battery lasts about six hours at medium speed.
+
+Run 3:
+The ThermoBreeze X7 is a lightweight, USB-C-powered personal cooler that uses thermoelectric technology to cool airflow up to 10°C below ambient. It weighs 340 g, offers three fan speeds, and runs for about six hours at medium speed on its 5000 mAh battery.
+
+Run 4:
+The ThermoBreeze X7 is a lightweight, USB-C-powered personal cooler that uses thermoelectric technology to cool air up to 10°C below ambient. It weighs 340 g, offers three fan speeds, and runs for about six hours at medium speed on its 5000 mAh battery.
+
+Run 5:
+The ThermoBreeze X7 is a lightweight, USB-C-powered personal cooler that uses thermoelectric technology to chill air up to 10°C below ambient. It weighs 340 g, offers three fan speeds, and runs for about 6 hours at medium speed on its built-in 5000mAh battery.
+
+============================================================
+PROMPT TYPE: ENGINEERED
+============================================================
+
+Run 1:
+Stay comfortable on the go with personal cooling that actively chills air up to 10°C below ambient temperature. The ThermoBreeze X7 uses a Peltier module, offers three fan speeds, and runs for approximately 6 hours at medium speed on its 5000mAh battery.
+
+Run 2:
+Stay comfortably cool wherever you go with the portable ThermoBreeze X7, which uses thermoelectric cooling to lower airflow by up to 10°C below ambient temperature. It weighs 340 g, runs on USB-C power, and offers three fan speeds.
+
+Run 3:
+Stay comfortable on the go with personal cooling that chills airflow up to 10°C below ambient temperature. The ThermoBreeze X7 uses a Peltier module, offers three fan speeds, and runs for approximately 6 hours at medium speed on its 5000mAh battery.
+
+Run 4:
+Stay comfortably cool wherever you go with the portable ThermoBreeze X7, which uses thermoelectric cooling to lower air temperature by up to 10°C below ambient. It features USB-C power, three fan speeds, and an internal 5000mAh battery for approximately 6 hours of use at medium speed.
+
+Run 5:
+Stay comfortably cool wherever you go with the portable ThermoBreeze X7, which uses thermoelectric technology to cool air up to 10°C below ambient. It weighs 340 g, offers three fan speeds, and runs for approximately 6 hours at medium speed on its 5000 mAh battery.
+
+
+============================================================
+VARIABILITY REPORT
+============================================================
+
+Underspecified Prompt:
+  Word count range: 43–43 words
+  Average: 43.0 words
+  Variability (range): 0 words
+
+Engineered Prompt:
+  Word count range: 38–46 words
+  Average: 42.4 words
+  Variability (range): 8 words

@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 300,
+    "messages": [
+      {
+        "content": "If all Zorbels are Morbles, and some Morbles are Flurbs, can we conclude that some Zorbels are Flurbs?\n\nThink step by step and provide a final answer.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 2,
+    "reasoning_effort": "none",
+    "temperature": 0.7
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "No. \u201cAll Zorbels are Morbles\u201d means every Zorbel is a Morble, but the Morbles that are Flurbs might not be Zorbels. So we can\u2019t conclude that any Zorbels are Flurbs.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792728099,
+    "id": "chatcmpl-Ec0lHi1UKHp2ergrZT1fM2xWm7cdB",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 53,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 45,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 98
+    }
+  }
+}

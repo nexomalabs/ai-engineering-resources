@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 500,
+    "messages": [
+      {
+        "content": "You are a helpful AI assistant.",
+        "role": "system"
+      },
+      {
+        "content": "Analyze the following drug interaction scenario and provide your assessment:\n\nA 67-year-old patient with atrial fibrillation is taking warfarin (INR 2.4, stable).\nTheir primary care physician wants to add ibuprofen 400mg TID for knee osteoarthritis pain.\n\nQuestion: What are the key considerations for this drug combination?",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "**Adding ibuprofen to warfarin is generally best avoided.** The main concern is a substantially increased risk of bleeding, especially gastrointestinal bleeding. Ibuprofen can damage the stomach lining and impair platelet function, while warfarin reduces clotting. A stable INR of 2.4 does **not** eliminate this risk; serious bleeding can occur even when the INR remains in range. The proposed scheduled dose (400 mg three times daily) and the patient\u2019s age add to the concern.\n\nFor knee osteoarthritis, the prescriber should consider alternatives first, such as physical therapy, exercise, weight management if appropriate, and **topical diclofenac** for localized knee pain. Acetaminophen may be an option, but regular or higher-dose use can also raise the INR, so it should be discussed with the anticoagulation clinician.\n\nIf oral ibuprofen is judged necessary, use the **lowest effective dose for the shortest possible time**, review other bleeding risks and medicines (including aspirin and other NSAIDs), and arrange closer INR follow-up. INR monitoring is useful but **does not fully protect against NSAID-related bleeding**. The patient should seek urgent care for black stools, vomiting blood, unusual or persistent bleeding, or symptoms such as marked weakness or dizziness.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727626,
+    "id": "chatcmpl-Ec0dekQ0Zg89qQPEGouADaiBCOnvy",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 257,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 86,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 343
+    }
+  }
+}

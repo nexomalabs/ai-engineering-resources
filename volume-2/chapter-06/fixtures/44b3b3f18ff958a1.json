@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 10,
+    "messages": [
+      {
+        "content": "You are a sentiment classifier. Respond with only: POSITIVE, NEGATIVE, or NEUTRAL",
+        "role": "system"
+      },
+      {
+        "content": "\nTicket: \"I've been waiting 6 weeks for a refund. This is outrageous.\"\nSentiment: NEGATIVE\n\nTicket: \"Your team resolved my issue in under an hour. Impressive!\"\nSentiment: POSITIVE\n\nTicket: \"Another amazing experience. Your support team is the best!\"\nSentiment: POSITIVE\n\nTicket: \"Five stars! Couldn't ask for better service.\"\nSentiment: POSITIVE\n\nTicket: \"I can't believe how bad this experience has been.\"\nSentiment:",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "NEGATIVE",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727698,
+    "id": "chatcmpl-Ec0eofTLndMQga6kIOXqvzGexPogT",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 5,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 130,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 135
+    }
+  }
+}

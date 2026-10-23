@@ -1,0 +1,63 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "messages": [
+      {
+        "content": "Evaluate this article summary on three dimensions, each scored 1-5.\n\nDimensions:\n- Faithfulness (1=contains false information, 5=fully accurate to source)\n- Coverage (1=misses key information, 5=captures all important points)\n- Conciseness (1=too long or short, 5=optimal length)\n\nArticle: The James Webb Space Telescope has captured unprecedented images of the Carina Nebula,\nrevealing thousands of previously unseen young stars in intricate detail. The nebula, located 7,600\nlight-years from Earth, is a stellar nursery where new stars are constantly forming. The telescope's\ninfrared capabilities allow it to peer through the thick dust clouds that blocked visible-light\nobservations, exposing the birth of stars for the first time. Scientists believe this data will\nfundamentally change our understanding of stellar formation processes.\nReference: The James Webb Space Telescope has revealed thousands of previously hidden young stars in the Carina Nebula using infrared imaging that penetrates dust clouds, potentially revolutionizing our understanding of stellar formation.\nCandidate summary: Webb's infrared telescope revealed thousands of new young stars in the Carina Nebula, 7,600 light-years away, by seeing through dust clouds that blocked previous observations, potentially transforming understanding of stellar birth.\n\nReturn JSON:\n{\"faithfulness\": int, \"coverage\": int, \"conciseness\": int, \"overall\": int,\n  \"reasoning\": str}",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\"faithfulness\":5,\"coverage\":5,\"conciseness\":5,\"overall\":5,\"reasoning\":\"The summary accurately captures the telescope\u2019s infrared imaging, the previously hidden young stars, the nebula\u2019s distance, and the potential impact on understanding star formation. It is concise without omitting a key point.\"}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727836,
+    "id": "chatcmpl-Ec0h2rjXL5ab1B2RJ7eqpz0VBLm8j",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 71,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 302,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 373
+    }
+  }
+}

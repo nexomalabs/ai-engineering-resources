@@ -47,9 +47,10 @@ def call_llm(prompt: str, system: str = "You are a precise assistant.", max_toke
     """LLM call with timeout handling."""
     response = client.chat.completions.create(
         model="gpt-6-luna",
+        reasoning_effort="none",
         messages=[{"role": "system", "content": system}, {"role": "user", "content": prompt}],
         temperature=0.0,
-        max_tokens=max_tokens,
+        max_completion_tokens=max_tokens,
     )
     return response.choices[0].message.content.strip()
 

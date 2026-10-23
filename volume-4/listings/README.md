@@ -75,7 +75,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 5.10 | [`5.10-rollback-procedures.py`](chapter-05/5.10-rollback-procedures.py) | 56 | — | on its own |
 | Lab | [`src/config.py`](chapter-05/src/config.py) | 24 | — | with the other files in `src/` |
 | Lab | [`src/models.py`](chapter-05/src/models.py) | 23 | `pydantic` | with the other files in `src/` |
-| Lab | [`src/main.py`](chapter-05/src/main.py) | 118 | `fastapi`, `openai` | with the other files in `src/` |
+| Lab | [`src/main.py`](chapter-05/src/main.py) | 119 | `fastapi`, `openai` | with the other files in `src/` |
 | Lab | [`lab-dockerfile.Dockerfile`](chapter-05/lab-dockerfile.Dockerfile) | 28 | — | — |
 | Lab | [`lab-docker-compose-yml.yaml`](chapter-05/lab-docker-compose-yml.yaml) | 58 | — | — |
 | Lab | [`scripts/smoke_test.sh`](chapter-05/scripts/smoke_test.sh) | 83 | — | — |
@@ -86,7 +86,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 6.4 | [`6.4-quantization.py`](chapter-06/6.4-quantization.py) | 30 | `torch`, `transformers`, `accelerate`, `optimum`, `gptqmodel`, `CUDA GPU` | on its own |
-| 6.10 | [`6.10-benchmarking-inference.py`](chapter-06/6.10-benchmarking-inference.py) | 98 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |
+| 6.10 | [`6.10-benchmarking-inference.py`](chapter-06/6.10-benchmarking-inference.py) | 99 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 7 — Performance Engineering
 
@@ -94,7 +94,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 7.3 | [`7.3-profiling-ai-applications.py`](chapter-07/7.3-profiling-ai-applications.py) | 19 | — | on its own |
 | 7.3 | [`7.3-profiling-ai-applications-2.py`](chapter-07/7.3-profiling-ai-applications-2.py) | 15 | `line_profiler` | on its own |
-| 7.8 | [`7.8-async-processing.py`](chapter-07/7.8-async-processing.py) | 82 | `openai`, `OPENAI_API_KEY` | on its own |
+| 7.8 | [`7.8-async-processing.py`](chapter-07/7.8-async-processing.py) | 85 | `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 8 — Caching Strategies
 
@@ -102,7 +102,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 8.4 | [`8.4-semantic-similarity-cache.py`](chapter-08/8.4-semantic-similarity-cache.py) | 86 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |
 | 8.7 | [`8.7-cache-warming.py`](chapter-08/8.7-cache-warming.py) | 16 | — | on its own |
-| Lab | [`lab-two-level-cache-system.py`](chapter-08/lab-two-level-cache-system.py) | 16 | — | after `8.4-semantic-similarity-cache.py` |
+| Lab | [`lab-two-level-cache-system.py`](chapter-08/lab-two-level-cache-system.py) | 17 | — | after `8.4-semantic-similarity-cache.py` |
 
 ## Chapter 9 — Security
 
@@ -120,7 +120,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 10.3 | [`10.3-pii-detection-and-redaction.py`](chapter-10/10.3-pii-detection-and-redaction.py) | 94 | `presidio_analyzer`, `presidio_anonymizer`, `spaCy model en_core_web_lg` | on its own |
 | 10.5 | [`10.5-data-retention.py`](chapter-10/10.5-data-retention.py) | 13 | — | on its own |
-| Lab | [`lab-pii-detection-and-redaction-pipeline.py`](chapter-10/lab-pii-detection-and-redaction-pipeline.py) | 19 | — | after `10.3-pii-detection-and-redaction.py` |
+| Lab | [`lab-pii-detection-and-redaction-pipeline.py`](chapter-10/lab-pii-detection-and-redaction-pipeline.py) | 20 | — | after `10.3-pii-detection-and-redaction.py` |
 
 ## Chapter 11 — Governance
 
@@ -140,7 +140,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 14.5 | [`14.5-llm-as-judge.txt`](chapter-14/14.5-llm-as-judge.txt) | 22 | — | — |
 | Lab | [`llm_judge.py`](chapter-14/llm_judge.py) | 58 | `pydantic` | on its own |
-| Lab | [`evaluation_runner.py`](chapter-14/evaluation_runner.py) | 162 | `tabulate`, `llm_judge.py` | on its own |
+| Lab | [`evaluation_runner.py`](chapter-14/evaluation_runner.py) | 163 | `tabulate`, `llm_judge.py` | on its own |
 
 ## Chapter 18 — Final Capstone Project: Enterprise AI Platform
 

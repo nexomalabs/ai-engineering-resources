@@ -1,0 +1,65 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 400,
+    "messages": [
+      {
+        "content": "You are a customer success specialist at a SaaS company. Your goal\nis to resolve billing and account issues efficiently.\n\nRules:\n1. For billing issues: first acknowledge the problem, then provide specific resolution steps\n2. Always include a timeline for resolution\n3. If resolution requires action from the customer, list steps 1, 2, 3\n4. Use plain language (no billing system terminology)\n5. Close with a direct contact for follow-up",
+        "role": "system"
+      },
+      {
+        "content": "I've been charged $49.99 twice for the same subscription. What do I do?",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "I\u2019m sorry you were charged $49.99 twice for the same subscription. We can check the two charges and refund the extra one if it\u2019s a duplicate.\n\n1. Check whether both charges appear as completed on your card or bank statement.\n2. Reply with the dates of both charges and the email address on your account. Please don\u2019t send your full card number.\n3. We\u2019ll review the charges and confirm the next step within 2 business days. If a refund is needed, it typically appears on your statement within 5\u201310 business days after it\u2019s issued.\n\nFor follow-up, reply here and ask for the billing support team.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792728036,
+    "id": "chatcmpl-Ec0kGQLcUkxJgXP6fiRwl5XF95BTY",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 134,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 122,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 256
+    }
+  }
+}

@@ -1,0 +1,98 @@
+
+============================================================
+PATTERN: Template Pattern
+============================================================
+USER STORY ANALYSIS
+==================
+Story: As a mobile banking app user, I want to receive real-time
+notifications when transactions occur on my account so that I can
+immediately detect unauthorized activity.
+
+Acceptance Criteria:
+1. When a transaction is recorded on a user's account, the app sends a push notification to that user's registered device.
+2. Each notification identifies the account, transaction amount, transaction type, and time without exposing a full account number or other sensitive details.
+3. Tapping a notification opens the corresponding transaction in the app after authentication, if authentication is required.
+
+Edge Cases to Consider:
+- A device is offline when a transaction occurs; the notification is delivered when connectivity returns, if still valid.
+- A transaction is reversed or corrected after its initial notification.
+- A user has multiple accounts or registered devices, and notifications reach only devices authorized for the affected account.
+
+Technical Considerations:
+- Integrate transaction events with a push-notification service and monitor delivery latency and failures.
+- Protect notification content and device tokens, and honor the user's notification preferences.
+
+Story Points Estimate: 8 — Rationale: Requires transaction-event integration, secure push delivery, and handling of device and transaction edge cases.
+
+============================================================
+PATTERN: Cognitive Verifier Pattern
+============================================================
+SUB-QUESTIONS:
+1. Which account events should trigger a notification?
+2. How quickly should notifications arrive, and through which channels?
+3. What information should each notification include without exposing sensitive data?
+4. What controls and follow-up actions does the user need?
+
+SUB-ANSWERS:
+1. The story says “transactions,” but the scope needs clarification: should it include pending and posted card purchases, transfers, withdrawals, deposits, reversals, and failed attempts? It also needs a rule for duplicate or changing transaction events.
+2. “Real-time” needs a measurable delivery target. Push notifications are the likely primary channel, but requirements should address offline devices, disabled permissions, delivery failures, and whether another channel is needed.
+3. A useful alert could show the transaction type, amount, time, and a masked account identifier. Lock-screen content should avoid exposing sensitive details; tapping the alert should open the authenticated transaction view.
+4. Users may need to manage notification preferences and quickly report an unrecognized transaction or secure their account. The story should clarify which alerts, if any, cannot be disabled.
+
+SYNTHESIS:
+The core requirement is to alert a user promptly when a transaction occurs on their account so they can recognize unauthorized activity and act. Before implementation, define the triggering events, a measurable notification-time target, delivery and failure behavior, privacy rules, and the path from an alert to transaction review and fraud reporting.
+
+Acceptance criteria should verify that eligible events generate timely alerts for the correct user, alerts contain enough information to identify the activity without revealing sensitive data, tapping an alert requires authentication before showing details, and duplicate or updated events are handled predictably. They should also cover notification preferences and cases where push delivery is unavailable.
+
+============================================================
+PATTERN: Persona + Expert Reviewer Combination
+============================================================
+# Phase 1 — Initial analysis
+
+## User story and outcome
+
+**As a mobile banking app user, I want to receive timely notifications when transactions occur on my account so that I can detect potentially unauthorized activity.**
+
+The product outcome is faster awareness, not a guarantee that a push notification will arrive instantly or that the user can stop a transaction. The app should provide a secure path from an alert to transaction details and a “Report a problem” action.
+
+## Proposed scope
+
+Notify users about posted debits and credits on eligible accounts. Include card purchases, transfers, cash withdrawals, deposits, fees, and reversals when those events post. Send a push notification to each registered device with notifications enabled; retain the alert in an in-app activity feed.
+
+A notification should identify the account using a masked label, show the amount and transaction type, and link to the transaction detail screen. It should not expose a full account or card number.
+
+## Initial acceptance criteria
+
+1. **Posted transaction:** Given an eligible account has a newly posted transaction, when the transaction event is received, then the system creates one alert for that transaction and sends it to the user’s registered devices.
+2. **Notification content:** The alert shows the transaction type, amount, currency, and masked account label, and opens the corresponding transaction detail after authentication.
+3. **Duplicate event:** If the same transaction event is received more than once, the user sees only one alert for that event.
+4. **Push unavailable:** If push delivery fails or the device is offline, the alert remains available in the in-app activity feed.
+5. **User control:** A user can enable or disable transaction push notifications in app settings.
+6. **Security:** Notification payloads contain no full account numbers, card numbers, or authentication credentials.
+
+## Initial implementation considerations
+
+Use transaction events from the ledger or transaction platform rather than polling the mobile app. Process events asynchronously, deduplicate them, store alert records, and submit push messages through APNs or FCM. Instrument event-to-push-submission latency and delivery failures.
+
+# Phase 2 — Review
+
+| Criterion | Rating | Review |
+|---|---|---|
+| **Completeness** | **IMPROVE** | “When transactions occur” is ambiguous. The analysis does not adequately cover pending authorizations, status changes, reversals, corrections, multiple currencies, shared accounts, or delayed and out-of-order events. |
+| **Technical accuracy** | **IMPROVE** | Push-provider acceptance is not device delivery. The design needs explicit event identity, ordering and reconciliation rules, and a measurable latency target tied to a defined starting point. |
+| **Testability** | **IMPROVE** | Terms such as “real-time,” “eligible,” and “one alert” need precise definitions. Several criteria lack observable outcomes for failures and state changes. |
+| **Security** | **IMPROVE** | The analysis needs rules for lock-screen privacy, device-token lifecycle, account-access changes, deep-link authorization, retention, and applicable compliance review. |
+
+# Phase 3 — Revised analysis
+
+## Product definition and decisions
+
+**Revised story:** As a mobile banking app user, I want timely alerts about activity on accounts I can access so that I can review unfamiliar transactions and report suspected unauthorized activity.
+
+The following are **proposed product decisions requiring confirmation** before implementation:
+
+| Decision | Proposed rule |
+|---|---|
+| Alertable activity | Alert on a new **pending card authorization** and on a **posted financial transaction**. Do not alert on a routine pending-to-posted transition for the same purchase unless the final amount differs; if it differs, issue an update alert. |
+| Other status changes | Alert on a reversal, refund, or correction that changes the account’s financial position. Do not alert on internal processing-state changes with no customer-visible effect. |
+| Eligible accounts | Accounts visible to the authenticated user and enabled for

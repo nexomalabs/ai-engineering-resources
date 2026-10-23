@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 800,
+    "messages": [
+      {
+        "content": "Analyze the following user story using exactly this template.\nReplace all [bracketed content]. Do not change any other text.\n\nUSER STORY ANALYSIS\n==================\nStory: [exact user story text]\n\nAcceptance Criteria:\n1. [Specific, testable criterion]\n2. [Specific, testable criterion]\n3. [Specific, testable criterion]\n\nEdge Cases to Consider:\n- [Edge case 1]\n- [Edge case 2]\n- [Edge case 3]\n\nTechnical Considerations:\n- [Technical consideration 1]\n- [Technical consideration 2]\n\nStory Points Estimate: [1/2/3/5/8/13] \u2014 Rationale: [brief explanation]\n\nUser story:\n\nUser story: As a mobile banking app user, I want to receive real-time\nnotifications when transactions occur on my account so that I can\nimmediately detect unauthorized activity.\n",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.2
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "USER STORY ANALYSIS\n==================\nStory: As a mobile banking app user, I want to receive real-time\nnotifications when transactions occur on my account so that I can\nimmediately detect unauthorized activity.\n\nAcceptance Criteria:\n1. When a transaction is recorded on a user's account, the app sends a push notification to that user's registered device.\n2. Each notification identifies the account, transaction amount, transaction type, and time without exposing a full account number or other sensitive details.\n3. Tapping a notification opens the corresponding transaction in the app after authentication, if authentication is required.\n\nEdge Cases to Consider:\n- A device is offline when a transaction occurs; the notification is delivered when connectivity returns, if still valid.\n- A transaction is reversed or corrected after its initial notification.\n- A user has multiple accounts or registered devices, and notifications reach only devices authorized for the affected account.\n\nTechnical Considerations:\n- Integrate transaction events with a push-notification service and monitor delivery latency and failures.\n- Protect notification content and device tokens, and honor the user's notification preferences.\n\nStory Points Estimate: 8 \u2014 Rationale: Requires transaction-event integration, secure push delivery, and handling of device and transaction edge cases.",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792728000,
+    "id": "chatcmpl-Ec0jgHyKIoTSnEaCQHhWo4kRSnpnl",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 244,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 183,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 427
+    }
+  }
+}

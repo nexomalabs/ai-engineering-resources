@@ -1,0 +1,61 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "max_completion_tokens": 300,
+    "messages": [
+      {
+        "content": "Extract all numerical metrics from the following financial statement.\n\nFor each metric:\n1. Metric name (e.g., \"Revenue\")\n2. Previous value (if stated)\n3. Current value\n4. Change (absolute or percentage, as stated in text)\n\nReturn a JSON array with this exact structure:\n[{\"metric\": string, \"previous\": string | null, \"current\": string, \"change\": string | null}]\n\nReturn only the JSON array. No explanation.\n\nText: 'Revenue increased from $4.2M to $5.8M. Operating costs rose by 12%. Net margin improved to 18.3% from 15.1% last year.'",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0.1
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "[{\"metric\":\"Revenue\",\"previous\":\"$4.2M\",\"current\":\"$5.8M\",\"change\":\"increased by $1.6M\"},{\"metric\":\"Operating costs\",\"previous\":null,\"current\":null,\"change\":\"rose by 12%\"},{\"metric\":\"Net margin\",\"previous\":\"15.1%\",\"current\":\"18.3%\",\"change\":\"increased by 3.2 percentage points\"}]",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1792727585,
+    "id": "chatcmpl-Ec0czjDvyUq8lEWTj4LmXzq0ByaXl",
+    "metadata": null,
+    "model": "gpt-6-luna",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 89,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 144,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 233
+    }
+  }
+}

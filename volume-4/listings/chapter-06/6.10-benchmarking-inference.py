@@ -28,8 +28,9 @@ async def cached_complete(prompt: str, model: str = "gpt-6-luna", max_tokens: in
         return _cache[key], True
     response = await client.chat.completions.create(
         model=model,
+        reasoning_effort="none",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=max_tokens,
+        max_completion_tokens=max_tokens,
     )
     text = response.choices[0].message.content or ""
     _cache[key] = text
