@@ -16,7 +16,7 @@ import json
 import sys
 import textwrap
 
-MCP_VERSION = "2024-11-05"
+MCP_VERSION = "2025-11-25"  # the stateful revision; see Section 10.1, Protocol Revisions
 
 # ── Resource Data ─────────────────────────────────────────────────────────────
 DOCUMENTATION = {

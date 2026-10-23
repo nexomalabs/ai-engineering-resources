@@ -79,7 +79,7 @@ class LLMGateway:
     def _select_model(self, request: AIRequest) -> str:
         """Select the optimal model for cost-performance trade-off."""
         # TODO: Implement model routing logic
-        # - If reasoning_required: use o3 or claude-sonnet-5-5
+        # - If reasoning_required: use gpt-6.1-sol or claude-opus-5-5
         # - If high complexity: use gpt-6.1-sol
         # - If low complexity: use gpt-6-luna
         if request.reasoning_required:

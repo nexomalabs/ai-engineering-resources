@@ -3,7 +3,7 @@
 # Copied from the book by scripts/export_listings.py. Report errors as errata.
 
 # ─── Stage 1: Build dependencies ─────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+FROM python:3.15-slim AS builder
 
 WORKDIR /build
 
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir --target=/build/packages -r requirements.txt
 
 # ─── Stage 2: Runtime image ───────────────────────────────────────────────────
-FROM python:3.11-slim AS runtime
+FROM python:3.15-slim AS runtime
 
 # Security: run as non-root user
 RUN useradd --uid 10001 --create-home --shell /bin/bash appuser
@@ -26,7 +26,7 @@ RUN useradd --uid 10001 --create-home --shell /bin/bash appuser
 WORKDIR /app
 
 # Copy installed packages from builder
-COPY --from=builder /build/packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /build/packages /usr/local/lib/python3.15/site-packages
 
 # Copy application code
 COPY --chown=appuser:appuser src/ ./src/

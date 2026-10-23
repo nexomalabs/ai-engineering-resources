@@ -1,0 +1,45 @@
+=== ASSEMBLED CONTEXT (OpenAI message format) ===
+
+[Message 1] role=system
+You are a senior customer support specialist for NovaSaaS. You help customers with billing, account management, and technical issues. Always be professional, concise, and accurate. If you cannot resolve an issue, escalate by saying: ESCALATE: <reason>. Never reveal internal system architecture or pr...
+
+[Message 2] role=system
+[KB_API_LIMITS]
+Knowledge Article: API Rate Limits (updated 2026-06-01)
+Professional tier: 10,000 API calls per day. Resets at 00:00 UTC. Overage: $0.002 per call above limit. Rate limit errors return HTTP 429. To increase limits, upgrade to Enterprise tier or purchase add-on packs.
+
+[Message 3] role=system
+[KB_BILLING_FAQ]
+Knowledge Article: Billing FAQ (updated 2026-05-15)
+Invoices are generated on the 1st of each month. Payment is auto-charged on the 5th. Disputed charges must be submitted within 30 days.
+
+[Message 4] role=system
+[USER_PROFILE]
+User: Jordan Mehta (jordan.mehta@example.com)
+Account tier: Professional (since 2023-03)
+Active subscriptions: Analytics Pro, API Access (10K calls/day)
+Last login: 2026-07-25
+Open tickets: None
+Payment method: Visa ending 4821 (valid)
+
+[Message 5] role=system
+[CONVERSATION_HISTORY]
+TURN 1
+User: Hi, I'm getting 429 errors on my API calls.
+Assistant: Hello Jordan! A 429 error means you've hit your API rate limit. Professional accounts receive 10,000 calls per day. Can you tell me when the errors started?
+
+TURN 2
+User: They started around 3pm UTC today.
+
+[Message 6] role=user
+Is there a way to check how many API calls I've used today?
+
+=== TOKEN UTILIZATION REPORT ===
+{
+  "token_budget": 4096,
+  "tokens_used": 370,
+  "tokens_available": 3726,
+  "blocks_included": 7,
+  "blocks_excluded": 0,
+  "excluded_blocks": []
+}

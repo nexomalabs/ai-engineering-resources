@@ -494,7 +494,7 @@ BEGIN:""",
         ],
         output_schema={"required": ["summary", "key_dates", "word_count"]},
         tags=["task:summarization", "domain:legal", "output:json"],
-        models_tested=["gpt-6.1-sol", "claude-sonnet-5-5", "gemini-1.5-pro"],
+        models_tested=["gpt-6.1-sol", "claude-sonnet-5-5", "gemini-4-argon"],
     )
     library.register(p4)
 

@@ -1,0 +1,12 @@
+[project]
+name = "aiae-vol3-lab01"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume III, Lab 1: Build a Context Pipeline in Python"
+requires-python = ">=3.12"
+dependencies = ["tiktoken>=0.7"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

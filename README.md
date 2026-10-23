@@ -13,12 +13,11 @@ contain the rest of the book text.
 |:------:|-------|:----:|
 | I | AI and LLM Fundamentals | [`volume-1/`](volume-1/) — available now |
 | II | Prompt Engineering | [`volume-2/`](volume-2/) — available now |
-| III | Context and Agents | [`volume-3/`](volume-3/) — 13 of 19 labs now, the rest to follow |
-| IV | Production Systems | [`volume-4/`](volume-4/) — 8 labs now, the rest to follow |
+| III | Context and Agents | [`volume-3/`](volume-3/) — available now |
+| IV | Production Systems | [`volume-4/`](volume-4/) — available now |
 
-Each volume's `README.md` lists every lab in the book and marks which are here
-yet. A lab not yet here has its complete code in the chapter's Hands-on Lab
-section.
+Each volume's `README.md` lists every lab in the book, with what it needs and what
+it costs to run. A few chapters have design exercises instead of code labs.
 
 ## Running a lab
 
@@ -144,8 +143,8 @@ listings.
 
 In Volume I, chapters 1 and 2 are paper exercises: `README.md` only, no code.
 Volume II labs 1–16 replay responses recorded from gpt-6-luna and gpt-6-sol, so they
-need no API key either. Volume III and IV labs so far need no model at all, so they have
-no `fixtures/`.
+need no API key either. Volume III and IV labs that call a model use a deterministic
+stand-in or a simulated API by default; set `NEXOMA_LAB_MODE=live` to call the real one.
 Some Volume IV labs name a script other than `src/lab.py`; each README says which.
 
 ## License

@@ -53,7 +53,7 @@ class ContextWindowManager:
         MODEL_WINDOWS = {
             "gpt-6.1-sol": 1_050_000,
             "gpt-6-luna": 1_050_000,
-            "gpt-4": 8_192,  # retired; kept as a small-window example
+            "local-8k": 8_192,  # a small self-hosted model, as a small-window example
         }
         max_window = MODEL_WINDOWS.get(model, 8_192)
         self.token_budget = token_budget or int(max_window * budget_fraction)

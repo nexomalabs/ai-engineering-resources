@@ -1,0 +1,10 @@
+Test                       Expected   Got
+--------------------------------------------
+No token                        401   401  PASS
+Valid token                     200   200  PASS
+Injection attempt               400   400  PASS
+Rate limit: 6th request         429   429  PASS
+Wrong scope                     403   403  PASS
+Harmful output                  422   422  PASS
+--------------------------------------------
+6/6 passed

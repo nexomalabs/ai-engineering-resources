@@ -17,7 +17,7 @@
   "task_type": "classification",
   "input_type": "text",
   "output_type": "json",
-  "models_tested": ["gpt-6.1-sol", "claude-sonnet-5-5", "gemini-1.5-pro"],
+  "models_tested": ["gpt-6.1-sol", "claude-sonnet-5-5", "gemini-4-argon"],
   "avg_token_cost": 340,
   "p95_latency_ms": 1200,
   "test_coverage": 0.97,

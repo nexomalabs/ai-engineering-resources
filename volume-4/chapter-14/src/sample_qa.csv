@@ -1,0 +1,6 @@
+item_id,question,response,reference
+c001,What is the boiling point of water at sea level?,Water boils at 100 degrees Celsius at sea level.,100 degrees Celsius
+c002,Which planet is closest to the Sun?,Venus is the planet closest to the Sun.,Mercury
+c003,How many days are in a leap year?,A leap year has 366 days.,366
+c004,How do I export my data?,I can't help with that.,Open Settings and choose Export data to download a ZIP file.
+c005,What does HTTP stand for?,HTTP stands for Hypertext Transfer Protocol.,Hypertext Transfer Protocol

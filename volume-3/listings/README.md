@@ -9,7 +9,7 @@ own folder in this volume are not repeated here; open the lab folder instead.
 column. For example:
 
 ```bash
-uv run --with tiktoken python volume-3/listings/chapter-01/context_pipeline.py
+uv run --with tiktoken python volume-3/listings/chapter-02/2.3-token-counting.py
 ```
 
 The **Runs** column says what else it needs:
@@ -25,28 +25,11 @@ The **Runs** column says what else it needs:
 Listings marked `OPENAI_API_KEY` call the OpenAI API and need a key in your environment.
 Listings marked `CUDA GPU` need an NVIDIA graphics card.
 
-## Chapter 1 — Introduction to Context Engineering
-
-| Section | File | Lines | Needs | Runs |
-|:-------:|------|------:|-------|------|
-| Lab | [`context_pipeline.py`](chapter-01/context_pipeline.py) | 17 | `tiktoken` | on its own |
-| Lab | [`lab-implement-the-context-pipeline.py`](chapter-01/lab-implement-the-context-pipeline.py) | 91 | — | after `context_pipeline.py` |
-| Lab | [`lab-populate-the-pipeline-with-mock-data.py`](chapter-01/lab-populate-the-pipeline-with-mock-data.py) | 107 | — | after `context_pipeline.py`, `lab-implement-the-context-pipeline.py` |
-
 ## Chapter 2 — Context Windows
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 2.3 | [`2.3-token-counting.py`](chapter-02/2.3-token-counting.py) | 33 | `tiktoken` | on its own |
-
-## Chapter 4 — Retrieval-Augmented Generation (RAG)
-
-| Section | File | Lines | Needs | Runs |
-|:-------:|------|------:|-------|------|
-| Lab | [`rag_system.py`](chapter-04/rag_system.py) | 67 | `numpy`, `sentence-transformers` | on its own |
-| Lab | [`lab-implement-the-indexing-pipeline.py`](chapter-04/lab-implement-the-indexing-pipeline.py) | 25 | — | after `rag_system.py` |
-| Lab | [`lab-implement-the-retrieval-pipeline.py`](chapter-04/lab-implement-the-retrieval-pipeline.py) | 25 | — | after `lab-implement-the-indexing-pipeline.py`, `rag_system.py` |
-| Lab | [`lab-implement-the-generation-pipeline.py`](chapter-04/lab-implement-the-generation-pipeline.py) | 97 | `OPENAI_API_KEY` | after `lab-implement-the-indexing-pipeline.py`, `lab-implement-the-retrieval-pipeline.py`, `rag_system.py` |
 
 ## Chapter 6 — Knowledge Retrieval
 
@@ -151,22 +134,3 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 16.5 | [`16.5-parallel-workflows.py`](chapter-16/16.5-parallel-workflows.py) | 87 | `openai` | after `16.4-sequential-workflows.py` |
 | 16.8 | [`16.8-error-handling-in-workflows.py`](chapter-16/16.8-error-handling-in-workflows.py) | 97 | — | after `16.4-sequential-workflows.py` |
 | 16.10 | [`16.10-monitoring-workflows.py`](chapter-16/16.10-monitoring-workflows.py) | 29 | — | on its own |
-| Lab | [`lab-document-processing-workflow.py`](chapter-16/lab-document-processing-workflow.py) | 209 | `openai`, `OPENAI_API_KEY` | on its own |
-
-## Chapter 17 — Agent Evaluation
-
-| Section | File | Lines | Needs | Runs |
-|:-------:|------|------:|-------|------|
-| Lab | [`lab-agent-evaluation-suite.py`](chapter-17/lab-agent-evaluation-suite.py) | 352 | `openai`, `OPENAI_API_KEY` | on its own |
-
-## Chapter 18 — Agent Security
-
-| Section | File | Lines | Needs | Runs |
-|:-------:|------|------:|-------|------|
-| Lab | [`lab-agent-security-layer.py`](chapter-18/lab-agent-security-layer.py) | 411 | `openai`, `OPENAI_API_KEY` | on its own |
-
-## Chapter 19 — Volume III Capstone: Intelligent AI Assistant
-
-| Section | File | Lines | Needs | Runs |
-|:-------:|------|------:|-------|------|
-| Lab | [`lab-intelligent-research-assistant-capstone.py`](chapter-19/lab-intelligent-research-assistant-capstone.py) | 584 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |

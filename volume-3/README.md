@@ -18,10 +18,10 @@ uv run pytest                # verify the reference solution
 
 | Ch | Lab | Needs | API cost | Status |
 |:--:|-----|-------|:--------:|:------:|
-| 1 | Build a Context Pipeline in Python | live API | — | ⬜ |
+| 1 | [Build a Context Pipeline in Python](chapter-01/) | — | $0.00 | ✅ |
 | 2 | [Context Window Manager](chapter-02/) | — | $0.00 | ✅ |
 | 3 | [Three-Type Memory System](chapter-03/) | — | $0.00 | ✅ |
-| 4 | Minimal RAG System | embedding model, live API | — | ⬜ |
+| 4 | [Minimal RAG System](chapter-04/) | embedding model (downloaded on first run) | $0.00 | ✅ |
 | 5 | [Vector Index with FAISS](chapter-05/) | embedding model (downloaded on first run) | $0.00 | ✅ |
 | 6 | [Hybrid Retrieval System](chapter-06/) | embedding model (downloaded on first run) | $0.00 | ✅ |
 | 7 | [Extractive Context Compression](chapter-07/) | embedding model (downloaded on first run) | $0.00 | ✅ |
@@ -33,20 +33,22 @@ uv run pytest                # verify the reference solution
 | 13 | [Agent Memory System with SQLite](chapter-13/) | — | $0.00 | ✅ |
 | 14 | [Two-Agent Research Pipeline](chapter-14/) | — | $0.00 | ✅ |
 | 15 | [Async Agent Communication System](chapter-15/) | — | $0.00 | ✅ |
-| 16 | Document Processing Workflow | live API | — | ⬜ |
-| 17 | Agent Evaluation Suite | live API | — | ⬜ |
-| 18 | Agent Security Layer | live API | — | ⬜ |
-| 19 | Intelligent Research Assistant (Capstone) | live API | — | ⬜ |
+| 16 | [Document Processing Workflow](chapter-16/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 17 | [Agent Evaluation Suite](chapter-17/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 18 | [Agent Security Layer](chapter-18/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 19 | [Intelligent Research Assistant (Capstone)](chapter-19/) | — (stand-in model and embeddings; live mode optional) | $0.00 | ✅ |
 
 Legend — ✅ packaged and passing tests · ⬜ not packaged yet.
 
-What the remaining labs need:
+Every lab runs with no API key. Labs 16–19 call a model in the chapter's code; here a
+deterministic stand-in plays the model (and, in Lab 19, the embeddings), so the output is
+the same on every run. Set `NEXOMA_LAB_MODE=live` and `OPENAI_API_KEY`, and add
+`--group live` to `uv run`, to call the real API instead; each lab's README gives the
+estimated cost.
 
-- **live API** — the lab calls a model. These labs will be added here with recorded responses,
-  so that they too run with no API key. Until then, each chapter's Hands-on Lab section has the
-  complete code.
-
-Labs 5–7 (and Lab 4, once recorded) download the `all-MiniLM-L6-v2` embedding model, about
-90 MB, on first run. Their `pyproject.toml` takes PyTorch from its CPU-only index, so
-`uv sync` does not fetch the multi-gigabyte CUDA build. Labs 11–15 had no complete code in
-the book; their reference solutions were written from the chapter's specification.
+Labs 4–7 download the `all-MiniLM-L6-v2` embedding model, about 90 MB, on first run. Their
+`pyproject.toml` takes PyTorch from its CPU-only index, so `uv sync` does not fetch the
+multi-gigabyte CUDA build, and selects Python 3.14, for which PyTorch publishes builds.
+Labs 11–15 had no complete code in the book; their reference solutions were written from
+the chapter's specification. Lab 19 is the capstone: `src/` is the chapter's starter, and
+`solution/` completes its four integration points.

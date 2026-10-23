@@ -73,13 +73,6 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 5.6 | [`5.6-api-gateway-patterns.py`](chapter-05/5.6-api-gateway-patterns.py) | 35 | `fastapi`, `pyjwt` | on its own |
 | 5.9 | [`5.9-model-versioning.py`](chapter-05/5.9-model-versioning.py) | 39 | — | on its own |
 | 5.10 | [`5.10-rollback-procedures.py`](chapter-05/5.10-rollback-procedures.py) | 56 | — | on its own |
-| Lab | [`src/config.py`](chapter-05/src/config.py) | 24 | — | with the other files in `src/` |
-| Lab | [`src/models.py`](chapter-05/src/models.py) | 23 | `pydantic` | with the other files in `src/` |
-| Lab | [`src/main.py`](chapter-05/src/main.py) | 119 | `fastapi`, `openai` | with the other files in `src/` |
-| Lab | [`lab-dockerfile.Dockerfile`](chapter-05/lab-dockerfile.Dockerfile) | 28 | — | — |
-| Lab | [`lab-docker-compose-yml.yaml`](chapter-05/lab-docker-compose-yml.yaml) | 58 | — | — |
-| Lab | [`scripts/smoke_test.sh`](chapter-05/scripts/smoke_test.sh) | 83 | — | — |
-| Lab | [`lab-usage-instructions.sh`](chapter-05/lab-usage-instructions.sh) | 16 | — | — |
 
 ## Chapter 6 — Inference Optimization
 
@@ -94,7 +87,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 7.3 | [`7.3-profiling-ai-applications.py`](chapter-07/7.3-profiling-ai-applications.py) | 19 | — | on its own |
 | 7.3 | [`7.3-profiling-ai-applications-2.py`](chapter-07/7.3-profiling-ai-applications-2.py) | 15 | `line_profiler` | on its own |
-| 7.8 | [`7.8-async-processing.py`](chapter-07/7.8-async-processing.py) | 85 | `openai`, `OPENAI_API_KEY` | on its own |
+| 7.8 | [`7.8-async-processing.py`](chapter-07/7.8-async-processing.py) | 90 | `openai`, `OPENAI_API_KEY` | on its own |
 
 ## Chapter 8 — Caching Strategies
 
@@ -102,25 +95,21 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 8.4 | [`8.4-semantic-similarity-cache.py`](chapter-08/8.4-semantic-similarity-cache.py) | 86 | `numpy`, `openai`, `OPENAI_API_KEY` | on its own |
 | 8.7 | [`8.7-cache-warming.py`](chapter-08/8.7-cache-warming.py) | 16 | — | on its own |
-| Lab | [`lab-two-level-cache-system.py`](chapter-08/lab-two-level-cache-system.py) | 17 | — | after `8.4-semantic-similarity-cache.py` |
 
 ## Chapter 9 — Security
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 9.3 | [`9.3-prompt-injection-direct.py`](chapter-09/9.3-prompt-injection-direct.py) | 22 | — | on its own |
-| 9.8 | [`9.8-authentication-and-authorization.py`](chapter-09/9.8-authentication-and-authorization.py) | 57 | `fastapi`, `python-jose` | on its own |
+| 9.8 | [`9.8-authentication-and-authorization.py`](chapter-09/9.8-authentication-and-authorization.py) | 58 | `fastapi`, `pyjwt` | on its own |
 | 9.9 | [`9.9-rate-limiting.py`](chapter-09/9.9-rate-limiting.py) | 41 | — | on its own |
-| Lab | [`lab-create-the-ai-endpoint.py`](chapter-09/lab-create-the-ai-endpoint.py) | 33 | `fastapi`, `pydantic`, `security_middleware.py` | on its own |
-| Lab | [`lab-run-attack-simulations.py`](chapter-09/lab-run-attack-simulations.py) | 15 | `httpx`, `security_middleware.py` | on its own |
 
 ## Chapter 10 — Privacy
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| 10.3 | [`10.3-pii-detection-and-redaction.py`](chapter-10/10.3-pii-detection-and-redaction.py) | 94 | `presidio_analyzer`, `presidio_anonymizer`, `spaCy model en_core_web_lg` | on its own |
+| 10.3 | [`10.3-pii-detection-and-redaction.py`](chapter-10/10.3-pii-detection-and-redaction.py) | 95 | `presidio_analyzer`, `presidio_anonymizer`, `spaCy model en_core_web_lg` | on its own |
 | 10.5 | [`10.5-data-retention.py`](chapter-10/10.5-data-retention.py) | 13 | — | on its own |
-| Lab | [`lab-pii-detection-and-redaction-pipeline.py`](chapter-10/lab-pii-detection-and-redaction-pipeline.py) | 20 | — | after `10.3-pii-detection-and-redaction.py` |
 
 ## Chapter 11 — Governance
 
@@ -139,8 +128,6 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 14.5 | [`14.5-llm-as-judge.txt`](chapter-14/14.5-llm-as-judge.txt) | 22 | — | — |
-| Lab | [`llm_judge.py`](chapter-14/llm_judge.py) | 58 | `pydantic` | on its own |
-| Lab | [`evaluation_runner.py`](chapter-14/evaluation_runner.py) | 163 | `tabulate`, `llm_judge.py` | on its own |
 
 ## Chapter 18 — Final Capstone Project: Enterprise AI Platform
 

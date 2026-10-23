@@ -1,0 +1,19 @@
+
+=== Cache Report ===
+Total queries  : 50
+Exact hits     : 10
+Semantic hits  : 6
+Misses         : 34
+Hit rate       : 32.0%
+
+Semantic hits (paraphrase -> answer reused):
+  Can you explain gradient descent?
+  How does dropout help prevent overfitting?
+  How do transformers use attention?
+  What's a learning-rate schedule?
+  Explain transfer learning in simple terms.
+  What do embeddings represent?
+
+Exact-cache p50    : 0.004 ms
+Semantic-cache p50 : 91.4 ms  (11x faster than the LLM)
+LLM p50            : 1048.1 ms

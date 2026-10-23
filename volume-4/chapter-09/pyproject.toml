@@ -1,0 +1,14 @@
+[project]
+name = "aiae-vol4-lab09"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 9: Security Middleware for FastAPI"
+requires-python = ">=3.12"
+dependencies = ["fastapi>=0.110", "uvicorn>=0.29", "pyjwt>=2.8", "httpx>=0.27", "httpx2>=2.16"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live mode only: real moderation calls. The default mode simulates moderation.
+live = ["openai>=1.40"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

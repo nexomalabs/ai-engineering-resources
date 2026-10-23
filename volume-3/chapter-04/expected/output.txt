@@ -1,0 +1,57 @@
+Loading embedding model: all-MiniLM-L6-v2
+Encoding 12 documents...
+Indexed 12 documents.
+
+============================================================
+QUERY: How does JWT token authentication work?
+============================================================
+
+ANSWER:
+Based on the retrieved context, how does jwt token authentication work
+is addressed in the knowledge base as follows: The relevant technical
+details are provided in [1], [2]. [Mock response — replace
+mock_llm_call() with a real LLM API call for production.]
+
+SOURCES:
+  [1] Security Guide (score=0.6806)
+       JWT (JSON Web Token) consists of three base64url-encoded parts: header, payload,...
+  [2] Security Guide (score=0.4121)
+       Access tokens should be short-lived (15–60 minutes). Refresh tokens are long-liv...
+  [3] REST API Guide (score=0.2703)
+       HTTP POST requests send data to a server to create a new resource. The request b...
+
+============================================================
+QUERY: What is the difference between GET and POST requests?
+============================================================
+
+ANSWER:
+Based on the retrieved context, what is the difference between get and
+post requests is addressed in the knowledge base as follows: The
+relevant technical details are provided in [1], [2]. [Mock response —
+replace mock_llm_call() with a real LLM API call for production.]
+
+SOURCES:
+  [1] REST API Guide (score=0.666)
+       HTTP POST requests send data to a server to create a new resource. The request b...
+  [2] REST API Guide (score=0.4723)
+       HTTP GET requests retrieve data without modifying server state. They should be i...
+  [3] Security Guide (score=0.2373)
+       JWT (JSON Web Token) consists of three base64url-encoded parts: header, payload,...
+
+============================================================
+QUERY: How do I persist data in Docker containers?
+============================================================
+
+ANSWER:
+Based on the retrieved context, how do i persist data in docker
+containers is addressed in the knowledge base as follows: The relevant
+technical details are provided in [1], [2]. [Mock response — replace
+mock_llm_call() with a real LLM API call for production.]
+
+SOURCES:
+  [1] Docker Guide (score=0.6769)
+       Docker volumes persist data outside container lifecycles. Use `docker run -v /ho...
+  [2] Docker Guide (score=0.3347)
+       A Docker image is a read-only template containing an application and its depende...
+  [3] Git Guide (score=0.3145)
+       Git stash temporarily shelves changes not yet ready to commit. Use `git stash pu...

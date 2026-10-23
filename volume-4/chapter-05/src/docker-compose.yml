@@ -1,0 +1,58 @@
+services:
+  ai-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: ai-api-service:local
+    container_name: ai-api-service
+    ports:
+      - "8000:8000"
+    environment:
+      # Inject from host environment — never hardcode in compose file
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # fixture: a stand-in answers, no key needed. live: calls the model.
+      NEXOMA_LAB_MODE: ${NEXOMA_LAB_MODE:-fixture}
+      MODEL_NAME: ${MODEL_NAME:-gpt-6-luna}
+      MAX_TOKENS: ${MAX_TOKENS:-512}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      SERVICE_VERSION: ${SERVICE_VERSION:-dev}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: "1.0"
+        reservations:
+          memory: 256M
+          cpus: "0.25"
+
+  # Optional: Redis for rate limiting / caching
+  redis:
+    image: redis:7-alpine
+    container_name: ai-api-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  default:
+    name: ai-api-network

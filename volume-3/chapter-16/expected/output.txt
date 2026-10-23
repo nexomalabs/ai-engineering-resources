@@ -1,0 +1,16 @@
+
+============================================================
+DOCUMENT 1
+============================================================
+Type:    memo (94%)
+Topic:   Remote Work Policy Update
+Summary: Main point: Effective August 1, 2026, all employees may work remotely up to three days per week. Directive: Please update your schedules in the HR portal by July 31.
+Timings: {'extract': 0.0, 'classify': 0.0, 'summarize': 0.0}
+
+============================================================
+DOCUMENT 2
+============================================================
+Type:    report (91%)
+Topic:   Q2 2026 Sales Report
+Summary: Key findings: Total Revenue: $6.1M (up 31% YoY); New Customers: 142; Churn Rate: 2.1%; Top Product: Context Engineering Suite (43% of revenue); Pipeline: $18M qualified, close rate 28%. Recommendation: Increase SDR headcount by 4 to address pipeline volume.
+Timings: {'extract': 0.0, 'classify': 1.0, 'summarize': 0.0}

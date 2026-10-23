@@ -1,0 +1,16 @@
+[project]
+name = "aiae-vol4-lab07"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 7: Pipeline Profiling and Optimization"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live mode only. The default mode simulates the API and needs no key.
+live = ["openai>=1.40"]
+# Step 5 only: line-by-line profiling.
+profile = ["line-profiler>=4.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

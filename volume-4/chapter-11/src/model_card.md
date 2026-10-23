@@ -33,8 +33,8 @@ license: "Internal use only"
 
 | Benchmark                       | Score | Baseline       |
 | ------------------------------- | ----- | -------------- |
-| IT Ticket Resolution Rate       | 72%   | 58% (GPT-3.5)  |
-| Hallucination Rate              | 3.1%  | 8.4% (GPT-3.5) |
+| IT Ticket Resolution Rate       | 72%   | 58% (gpt-6-luna, prompted)  |
+| Hallucination Rate              | 3.1%  | 8.4% (gpt-6-luna, prompted) |
 | Response Relevance (human eval) | 4.2/5 | 3.8/5          |
 
 ## Evaluation

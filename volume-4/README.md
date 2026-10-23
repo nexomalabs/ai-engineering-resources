@@ -22,16 +22,16 @@ uv run pytest                    # verify the reference solution
 | 2 | System Design Document for an AI Document Analysis Service | design exercise | — | — |
 | 3 | [Enterprise Document Review Workflow](chapter-03/) | — | $0.00 | ✅ |
 | 4 | [Event-Driven Document Automation Pipeline](chapter-04/) | — | $0.00 | ✅ |
-| 5 | Containerized AI API Service | Docker, live API | — | ⬜ |
-| 6 | Inference Benchmark Harness | live API | — | ⬜ |
-| 7 | Pipeline Profiling and Optimization | live API | — | ⬜ |
-| 8 | Two-Level Cache System | live API | — | ⬜ |
-| 9 | Security Middleware for FastAPI | live API (moderation) | — | ⬜ |
-| 10 | PII Detection and Redaction Pipeline | live API; Presidio and a spaCy model | — | ⬜ |
+| 5 | [Containerized AI API Service](chapter-05/) | Docker for the container steps only; stand-in model | $0.00 | ✅ |
+| 6 | [Inference Benchmark Harness](chapter-06/) | — (simulated API; live mode optional) | $0.00 | ✅ |
+| 7 | [Pipeline Profiling and Optimization](chapter-07/) | — (simulated API; live mode optional) | $0.00 | ✅ |
+| 8 | [Two-Level Cache System](chapter-08/) | — (simulated API; live mode optional) | $0.00 | ✅ |
+| 9 | [Security Middleware for FastAPI](chapter-09/) | — (simulated moderation; live mode optional) | $0.00 | ✅ |
+| 10 | [PII Detection and Redaction Pipeline](chapter-10/) | Presidio and a spaCy model, optional | $0.00 | ✅ |
 | 11 | [Model Card, System Card, and Governance Validator](chapter-11/) | — | $0.00 | ✅ |
 | 12 | [Compliance Audit Checklist Runner](chapter-12/) | — | $0.00 | ✅ |
 | 13 | [Instrumenting an AI Service with Prometheus Metrics](chapter-13/) | — | $0.00 | ✅ |
-| 14 | LLM-as-Judge Evaluation Pipeline | live API | — | ⬜ |
+| 14 | [LLM-as-Judge Evaluation Pipeline](chapter-14/) | — (mock judge; live mode optional) | $0.00 | ✅ |
 | 15 | [Cost Tracking and Optimization Dashboard](chapter-15/) | — | $0.00 | ✅ |
 | 16 | [Request Queue Simulation with Autoscaling](chapter-16/) | — | $0.00 | ✅ |
 | 17 | [Enterprise AI Adoption Roadmap](chapter-17/) | — | $0.00 | ✅ |
@@ -39,11 +39,16 @@ uv run pytest                    # verify the reference solution
 
 Legend — ✅ packaged and passing tests · ⬜ not packaged yet · — not a code lab.
 
-What the remaining labs need:
+Every code lab runs with no API key. Where the chapter's code calls a model, a stand-in
+plays it: a simulated API with realistic latencies in Labs 6–8, simulated moderation in
+Lab 9, a mock judge in Lab 14, and a fixed-reply model elsewhere. Set
+`NEXOMA_LAB_MODE=live` and `OPENAI_API_KEY`, and add `--group live` to `uv run`, to call the
+real API instead; each lab's README gives the estimated cost.
 
-- **live API** — the lab calls a model. These labs will be added here with recorded responses,
-  so that they too run with no API key. Until then, each chapter's Hands-on Lab section has the
-  complete code.
-- **Docker** — Lab 5 builds a container image; its tests can cover the service, but the
-  image build needs Docker in CI.
-- **Presidio and a spaCy model** — Lab 10 downloads a spaCy language model on setup.
+- **Docker** — Lab 5's tests and smoke test run without it; only building and running the
+  container image need Docker.
+- **Presidio and a spaCy model** — Lab 10 runs with its regex fallback by default.
+  `uv sync --group presidio` adds Presidio and its language model (about 600 MB) on
+  Python 3.14, and the lab then compares the two detectors.
+- Labs 6–10 gave requirements rather than complete code; their reference solutions were
+  written from the chapter's steps and the sections they build on.

@@ -26,7 +26,7 @@ def test_token_count_matches_the_tokenizer():
 
 
 def test_budget_from_fraction_and_unknown_model_fallback():
-    assert ContextWindowManager(model="gpt-4", budget_fraction=0.5).token_budget == 4096
+    assert ContextWindowManager(model="local-8k", budget_fraction=0.5).token_budget == 4096
     assert ContextWindowManager(model="no-such-model", budget_fraction=1.0).token_budget == 8192
 
 

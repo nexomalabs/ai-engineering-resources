@@ -1,0 +1,55 @@
+Detector: Presidio
+
+Original : Hi, I'm Maria Gonzalez. Please update my email to maria.gonzalez@example.com.
+Redacted : Hi, I'm [PERSON]. Please update my email to [EMAIL].
+Detected : [{'entity': 'EMAIL_ADDRESS', 'start': 50, 'end': 76, 'score': 1.0}, {'entity': 'PERSON', 'start': 8, 'end': 22, 'score': 0.85}]
+Output   : Thanks for your message: "Hi, I'm [PERSON]. Please update my email to [EMAIL].". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : My SSN is 987-65-4325 and I need a copy of my tax form.
+Redacted : My SSN is [SSN] and I need a copy of my tax form.
+Detected : [{'entity': 'US_SSN', 'start': 10, 'end': 21, 'score': 0.85}]
+Output   : Thanks for your message: "My SSN is [SSN] and I need a copy of my tax form.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : Call me back on (415) 555-0132 after 5pm.
+Redacted : Call me back on [PHONE] after 5pm.
+Detected : [{'entity': 'PHONE_NUMBER', 'start': 16, 'end': 30, 'score': 0.4}]
+Output   : Thanks for your message: "Call me back on [PHONE] after 5pm.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : This is David Chen; reach me at david.chen@example.org or 212-555-0187.
+Redacted : This is [PERSON]; reach me at [EMAIL] or [PHONE].
+Detected : [{'entity': 'EMAIL_ADDRESS', 'start': 32, 'end': 54, 'score': 1.0}, {'entity': 'PERSON', 'start': 8, 'end': 18, 'score': 0.85}, {'entity': 'PHONE_NUMBER', 'start': 58, 'end': 70, 'score': 0.4}]
+Output   : Thanks for your message: "This is [PERSON]; reach me at [EMAIL] or [PHONE].". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : Please verify my identity: Priya Patel, SSN 987-65-4321.
+Redacted : Please verify my identity: [PERSON], SSN [SSN].
+Detected : [{'entity': 'PERSON', 'start': 27, 'end': 38, 'score': 0.85}, {'entity': 'US_SSN', 'start': 44, 'end': 55, 'score': 0.85}]
+Output   : Thanks for your message: "Please verify my identity: [PERSON], SSN [SSN].". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : The invoice went to accounts@contoso.example, not to me.
+Redacted : The invoice went to accounts@contoso.example, not to me.
+Detected : []
+Output   : Thanks for your message: "The invoice went to accounts@contoso.example, not to me.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : Text 646-555-0199 when the package arrives.
+Redacted : Text [PHONE] when the package arrives.
+Detected : [{'entity': 'PHONE_NUMBER', 'start': 5, 'end': 17, 'score': 0.4}]
+Output   : Thanks for your message: "Text [PHONE] when the package arrives.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : James O'Brien asked whether his account was closed.
+Redacted : [PERSON] asked whether his account was closed.
+Detected : [{'entity': 'PERSON', 'start': 0, 'end': 13, 'score': 0.85}]
+Output   : Thanks for your message: "[PERSON] asked whether his account was closed.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : Reach Aisha Rahman at +1 312 555 0145 or aisha.r@example.net; her SSN on file is 987-65-4329.
+Redacted : [PERSON] at [PHONE] or [EMAIL]; her SSN on file is [SSN].
+Detected : [{'entity': 'EMAIL_ADDRESS', 'start': 41, 'end': 60, 'score': 1.0}, {'entity': 'PERSON', 'start': 0, 'end': 18, 'score': 0.85}, {'entity': 'US_SSN', 'start': 81, 'end': 92, 'score': 0.85}, {'entity': 'PHONE_NUMBER', 'start': 22, 'end': 37, 'score': 0.4}]
+Output   : Thanks for your message: "[PERSON] at [PHONE] or [EMAIL]; her SSN on file is [SSN].". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Original : Nothing personal here, just asking about pricing tiers.
+Redacted : Nothing personal here, just asking about pricing tiers.
+Detected : []
+Output   : Thanks for your message: "Nothing personal here, just asking about pricing tiers.". I have passed it to our team, who will reply from [EMAIL] within one business day.
+
+Detector          recall  PERSON   EMAIL   PHONE     SSN
+Presidio             89%    100%     75%    100%    100%
+regex fallback       71%      0%    100%    100%    100%

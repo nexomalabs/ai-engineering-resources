@@ -1,0 +1,18 @@
+
+=== Before: sequential, via disk: 10.02 s wall time ===
+  model calls            10.018 s cumulative (100.0% of wall)
+  file write and read     0.004 s cumulative (  0.0% of wall)
+  report building         0.000 s cumulative (  0.0% of wall)
+
+=== After: concurrent, in memory: 1.32 s wall time ===
+  model calls             0.008 s cumulative (  0.6% of wall)
+  file write and read     0.000 s cumulative (  0.0% of wall)
+  report building         0.000 s cumulative (  0.0% of wall)
+
+=== Improvement ===
+Wall time: 10.02 s -> 1.32 s (87% less)
+Same report: True
+
+cProfile counts the time a coroutine spends running, not the time it spends waiting in await,
+so the async pipeline's model calls look almost free. The waiting is still there, overlapped.
+Compare wall times, not the profile's totals, across sync and async code.

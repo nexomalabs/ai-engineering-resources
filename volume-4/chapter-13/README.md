@@ -16,7 +16,7 @@ A FastAPI service that simulates model calls and exposes Prometheus metrics at `
 
 - Python 3.15
 - Chapter 13, read through its hands-on lab
-- Dependencies: `fastapi`, `uvicorn`, `prometheus-client`, `httpx`, installed by `uv sync`
+- Dependencies: `fastapi`, `uvicorn`, `prometheus-client`, `httpx` and `httpx2` (which FastAPI's test client now uses), installed by `uv sync`
 - No API key. **Estimated API cost: $0.00** (model calls are simulated)
 
 ## Setup

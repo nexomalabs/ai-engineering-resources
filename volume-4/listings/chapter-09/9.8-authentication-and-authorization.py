@@ -3,13 +3,14 @@
 # Copied from the book by scripts/export_listings.py. Report errors as errata.
 
 # JWT authentication middleware for FastAPI
-# Requires: pip install fastapi python-jose[cryptography] passlib
+# Requires: pip install fastapi pyjwt
 
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from jose import JWTError, jwt
+import jwt
+from jwt import InvalidTokenError
 
 SECRET_KEY = "change-this-to-a-256-bit-random-secret-in-production"
 ALGORITHM = "HS256"
@@ -36,7 +37,7 @@ def verify_token(credentials: HTTPAuthorizationCredentials = Depends(bearer_sche
         if not subject:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token subject")
         return payload
-    except JWTError as exc:
+    except InvalidTokenError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Token validation failed: {exc}",

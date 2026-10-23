@@ -1,0 +1,14 @@
+[project]
+name = "aiae-vol4-lab08"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 8: Two-Level Cache System"
+requires-python = ">=3.12"
+dependencies = ["numpy>=1.26"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live mode only. The default mode simulates the API and needs no key.
+live = ["openai>=1.40"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

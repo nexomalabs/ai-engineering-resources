@@ -1,0 +1,16 @@
+=== AI API Service Smoke Tests ===
+Target: http://localhost:8765
+
+1. Health endpoint
+  [PASS] GET /health → 200
+2. Readiness endpoint
+  [PASS] GET /ready → 200
+3. Analysis endpoint (valid request)
+  [PASS] POST /api/v1/analyze → 200 with result
+4. Input validation (empty text)
+  [PASS] Empty text → 422 Unprocessable Entity
+5. Input validation (invalid task)
+  [PASS] Invalid task → 422 Unprocessable Entity
+
+=== Results: 5 passed, 0 failed ===
+SMOKE TEST PASSED — Safe to promote

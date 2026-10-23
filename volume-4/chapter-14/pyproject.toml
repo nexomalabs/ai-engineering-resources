@@ -1,0 +1,14 @@
+[project]
+name = "aiae-vol4-lab14"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 14: LLM-as-Judge Evaluation Pipeline"
+requires-python = ">=3.12"
+dependencies = ["pydantic>=2.6", "tabulate>=0.9"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live mode only: the real judge. The default mode uses the mock judge and needs no key.
+live = ["openai>=1.40"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

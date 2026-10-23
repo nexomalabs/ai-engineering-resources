@@ -1,0 +1,70 @@
+============================================================
+AGENT EVALUATION SUITE — LAB 17
+============================================================
+Running 10 test cases...
+
+  Running TC01: What is the capital of France?...
+  Running TC02: Calculate 15 times 8....
+  Running TC03: What is the population of Tokyo?...
+  Running TC04: What is 2 to the power of 10?...
+  Running TC05: What is the current weather in London?...
+  Running TC06: What is the speed of light in meters per second?...
+  Running TC07: What is 100 divided by 4?...
+  Running TC08: When was Python first released?...
+  Running TC09: What is the highest mountain and its height?...
+  Running TC10: What is the weather in Tokyo?...
+
+============================================================
+EVALUATION REPORT
+============================================================
+{
+  "total_test_cases": 10,
+  "task_completion_rate": 90.0,
+  "avg_tool_use_accuracy": 90.0,
+  "avg_step_efficiency": 96.7,
+  "avg_duration_seconds": 0.0
+}
+
+PER-CASE RESULTS:
+------------------------------------------------------------
+✓ TC01: What is the capital of France?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: Paris is the capital of France.
+✓ TC02: Calculate 15 times 8.
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: 120
+✓ TC03: What is the population of Tokyo?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: Tokyo has a population of approximately 13.96 million.
+✓ TC04: What is 2 to the power of 10?
+    Tool accuracy: 100% | Step efficiency: 67% | Steps: 3/2 | Time: 0.0s
+    Answer: 1024
+✓ TC05: What is the current weather in London?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: London: 18°C, partly cloudy.
+✓ TC06: What is the speed of light in meters per seco
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: The speed of light is 299,792,458 meters per second.
+✓ TC07: What is 100 divided by 4?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: 25.0
+✓ TC08: When was Python first released?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: Python was first released in 1991.
+✗ TC09: What is the highest mountain and its height?
+    Tool accuracy: 0% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: I could not find that.
+✓ TC10: What is the weather in Tokyo?
+    Tool accuracy: 100% | Step efficiency: 100% | Steps: 2/2 | Time: 0.0s
+    Answer: Tokyo: 29°C, humid.
+
+FAILURE ANALYSIS:
+{
+  "incomplete_tasks": [
+    "TC09"
+  ],
+  "inefficient_tasks": [],
+  "wrong_tools": [
+    "TC09"
+  ]
+}

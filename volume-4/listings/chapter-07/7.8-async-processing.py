@@ -3,7 +3,7 @@
 # Copied from the book by scripts/export_listings.py. Report errors as errata.
 
 # Async AI pipeline with parallel API calls
-# Requires: pip install openai aiohttp
+# Requires: pip install openai
 
 import asyncio
 import time
@@ -77,13 +77,18 @@ if __name__ == "__main__":
         "while reducing infrastructure costs by 40 percent in early benchmarks."
     )
 
-    print("=== Sequential ===")
-    seq_result = asyncio.run(process_sequential(sample))
-    print(seq_result)
+    async def main() -> None:
+        print("=== Sequential ===")
+        seq_result = await process_sequential(sample)
+        print(seq_result)
 
-    print("\n=== Parallel ===")
-    par_result = asyncio.run(process_document(sample))
-    print(par_result)
+        print("\n=== Parallel ===")
+        par_result = await process_document(sample)
+        print(par_result)
 
-    speedup = seq_result["elapsed_ms"] / par_result["elapsed_ms"]
-    print(f"\nSpeedup: {speedup:.2f}x")
+        speedup = seq_result["elapsed_ms"] / par_result["elapsed_ms"]
+        print(f"\nSpeedup: {speedup:.2f}x")
+
+    # One event loop for both runs: the async client's connections belong to the loop that
+    # opened them, so calling asyncio.run() a second time can fail with "Event loop is closed".
+    asyncio.run(main())

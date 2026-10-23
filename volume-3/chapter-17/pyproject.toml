@@ -1,0 +1,14 @@
+[project]
+name = "aiae-vol3-lab17"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume III, Lab 17: Agent Evaluation Suite"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+# Live mode only. The default mode uses the stand-in model and needs no packages and no key.
+live = ["openai>=1.40"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

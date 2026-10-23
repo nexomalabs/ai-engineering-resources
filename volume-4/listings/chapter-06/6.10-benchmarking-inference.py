@@ -64,7 +64,7 @@ async def run_benchmark(
     model: str = "gpt-6-luna",
     max_tokens: int = 100,
     concurrency: int = 5,
-    cost_per_1k_tokens: float = 0.00015,
+    cost_per_1k_tokens: float = 0.0005,  # gpt-6-luna output price, Chapter 15
 ) -> BenchmarkResult:
     result = BenchmarkResult()
     semaphore = asyncio.Semaphore(concurrency)

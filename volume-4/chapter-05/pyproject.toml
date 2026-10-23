@@ -1,0 +1,15 @@
+[project]
+name = "aiae-vol4-lab05"
+version = "1.0.0"
+description = "Applied AI Engineering — Volume IV, Lab 5: Containerized AI API Service"
+requires-python = ">=3.12"
+# The service's own requirements (solution/requirements.txt), plus httpx for the test client.
+# openai is imported for its error types; the default mode never calls the API.
+# httpx2 is what FastAPI's test client now uses; httpx alone triggers a deprecation warning.
+dependencies = ["fastapi>=0.110", "uvicorn>=0.29", "pydantic>=2.6", "openai>=1.40", "httpx>=0.27", "httpx2>=2.16"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

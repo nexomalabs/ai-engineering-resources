@@ -22,7 +22,7 @@ class SemanticCache:
         # Level 1: exact match  {key: response_str}
         self._exact: dict[str, str] = {}
         # Level 2: semantic  list of {"embedding": np.ndarray, "response": str, "query": str}
-        self._semantic: list[dict] = {}
+        self._semantic: list[dict] = []
         self.stats = {"exact_hits": 0, "semantic_hits": 0, "misses": 0}
 
     def _exact_key(self, query: str) -> str:
