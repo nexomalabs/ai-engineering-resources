@@ -34,6 +34,8 @@ def test_security_helpers():
     assert ra.validate_input("What is RAG?") == ("What is RAG?", False)
     redacted, found = ra.sanitize_output("password: hunter2")
     assert found and "hunter2" not in redacted
+    redacted, found = ra.sanitize_output("key sk-proj-AbCdEf_GhIjKl-MnOpQrStUv0123")
+    assert found and "sk-proj" not in redacted
 
 
 def test_audit_entries_chain_their_hashes(assistant):

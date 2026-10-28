@@ -4,8 +4,8 @@
 
 def extract_structured_data(text: str, schema: dict, client: OpenAI) -> dict:
     """
-    Use forced function calling to extract structured data from text.
-    Returns a validated dict conforming to the provided JSON schema.
+    Use forced function calling with strict mode to extract structured data from text.
+    With strict mode, the returned arguments are guaranteed to match the schema.
     """
     extraction_tool = {
         "type": "function",
@@ -13,6 +13,7 @@ def extract_structured_data(text: str, schema: dict, client: OpenAI) -> dict:
             "name": "extract_data",
             "description": "Extract structured information from the provided text.",
             "parameters": schema,
+            "strict": True,  # constrain generation to the schema (Structured Outputs)
         },
     }
     response = client.chat.completions.create(
@@ -32,13 +33,14 @@ def extract_structured_data(text: str, schema: dict, client: OpenAI) -> dict:
     tool_call = response.choices[0].message.tool_calls[0]
     return json.loads(tool_call.function.arguments)
 
-# Example: Extract invoice data from unstructured text
+# Example: Extract invoice data from unstructured text. A strict schema lists every
+# property in "required" and sets additionalProperties to False on every object.
 INVOICE_SCHEMA = {
     "type": "object",
     "properties": {
         "vendor_name":    {"type": "string"},
         "invoice_number": {"type": "string"},
-        "invoice_date":   {"type": "string", "description": "ISO 8601 date"},
+        "invoice_date":   {"type": ["string", "null"], "description": "ISO 8601 date"},
         "line_items": {
             "type": "array",
             "items": {
@@ -49,10 +51,13 @@ INVOICE_SCHEMA = {
                     "unit_price":  {"type": "number"},
                 },
                 "required": ["description", "quantity", "unit_price"],
+                "additionalProperties": False,
             },
         },
         "total_amount": {"type": "number"},
-        "currency":     {"type": "string"},
+        "currency":     {"type": ["string", "null"]},
     },
-    "required": ["vendor_name", "invoice_number", "total_amount"],
+    "required": ["vendor_name", "invoice_number", "invoice_date", "line_items",
+                 "total_amount", "currency"],
+    "additionalProperties": False,
 }

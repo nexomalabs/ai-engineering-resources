@@ -37,11 +37,23 @@ By default a scripted stand-in plays the agent's model (`stand_in.py`). It expos
 
 `src/agent_eval.py` runs as supplied, but it never parses an action (TODO 1), so no tool is ever called and every task fails; and its tool-accuracy and step-efficiency scores always return 100% (TODOs 2 and 3). Complete all three.
 
-For live mode:
+For live mode, set your key and the mode, and add `--group live`, which installs the OpenAI
+SDK that the default mode does not need.
+
+macOS or Linux:
 
 ```bash
-uv sync --group live
-NEXOMA_LAB_MODE=live OPENAI_API_KEY=... uv run python solution/agent_eval.py
+export OPENAI_API_KEY=sk-...
+NEXOMA_LAB_MODE=live uv run --group live python solution/agent_eval.py
+```
+
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/agent_eval.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to the stand-in
 ```
 
 ## Expected Result

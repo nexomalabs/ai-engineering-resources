@@ -117,7 +117,7 @@ def run_sequential_workflow(document: str) -> WorkflowContext:
 if __name__ == "__main__":
     sample_doc = """
     QUARTERLY FINANCIAL REPORT - Q3 2025
-    Nexoma Labs LLC | Confidential
+    Quillmark Software | Confidential
 
     Revenue for Q3 2025 reached $4.2M, representing a 23% increase over Q3 2024.
     Operating expenses totaled $2.8M. Net profit margin stood at 33%.

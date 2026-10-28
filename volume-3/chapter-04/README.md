@@ -77,6 +77,8 @@ Seven tests: twelve unit-length embeddings, the top passages for each of the thr
 | `uv: command not found` | uv is not installed | Install uv (docs.astral.sh/uv) |
 | `uv sync` downloads gigabytes | PyTorch came from PyPI with CUDA | Keep the `[tool.uv.sources]` section of `pyproject.toml`; it selects the CPU build |
 | A network error on the first run | The embedding model downloads once from Hugging Face | Run it once with a connection; after that it is cached |
+| A warning about unauthenticated requests to the HF Hub, or a `HF_TOKEN` | Hugging Face asks anonymous downloads to sign in for higher rate limits | Harmless: the model downloads without a token. To silence it, set `HF_TOKEN` to a free Hugging Face access token |
+| A warning that symlinks are not supported, on Windows | Hugging Face caches files without symlinks unless Developer Mode is on | Harmless: the cache just uses more disk; set `HF_HUB_DISABLE_SYMLINKS_WARNING=1` |
 | Every score is 0.0 | TODO 1 still returns zeros | Multiply the document matrix by the query vector |
 | The answer cites only `[1]` | TODO 2 still adds passages without numbers | Prefix each passage with `[i] Source: ...` |
 

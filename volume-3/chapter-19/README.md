@@ -43,11 +43,23 @@ Both write `capstone_audit_log.json` in the current folder. By default a stand-i
 3. `run_evaluation()` runs ten cases and reports completion, tool-use accuracy and step efficiency.
 4. `ARCHITECTURE.md` is the system architecture document, with a Mermaid component diagram.
 
-For live mode:
+For live mode, set your key and the mode, and add `--group live`, which installs the OpenAI
+SDK that the default mode does not need.
+
+macOS or Linux:
 
 ```bash
-uv sync --group live
-NEXOMA_LAB_MODE=live OPENAI_API_KEY=... uv run python solution/research_assistant.py
+export OPENAI_API_KEY=sk-...
+NEXOMA_LAB_MODE=live uv run --group live python solution/research_assistant.py
+```
+
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/research_assistant.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to the stand-in
 ```
 
 ## Expected Result

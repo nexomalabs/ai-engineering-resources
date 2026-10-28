@@ -45,7 +45,7 @@ INJECTION_PATTERNS = [
 # Sensitive output patterns that should be blocked
 SENSITIVE_OUTPUT_PATTERNS = [
     r"(api[_\s]?key|secret[_\s]?key|password|passwd|token)\s*[:=]\s*\S+",
-    r"sk-[a-zA-Z0-9]{20,}",  # OpenAI API key pattern
+    r"sk-[A-Za-z0-9_-]{20,}",  # OpenAI API keys, including sk-proj-... project keys
     r"bearer\s+[a-zA-Z0-9\-._~+/]{20,}",
     r"-----BEGIN\s+(RSA\s+)?PRIVATE\s+KEY-----",
     r"(ssn|social.security)\s*[:=]?\s*\d{3}-\d{2}-\d{4}",
@@ -137,18 +137,9 @@ class AuditEntry:
     entry_hash: str = ""  # Hash of this entry's content (set after construction)
 
     def compute_hash(self) -> str:
-        """Compute a deterministic hash of this entry's immutable fields."""
-        hashable = json.dumps(
-            {
-                "entry_id": self.entry_id,
-                "session_id": self.session_id,
-                "timestamp": self.timestamp,
-                "event_type": self.event_type,
-                "content_hash": self.content_hash,
-                "previous_hash": self.previous_hash,
-            },
-            sort_keys=True,
-        )
+        """Hash every field except entry_hash itself, so editing any of them is detectable."""
+        fields = {name: value for name, value in vars(self).items() if name != "entry_hash"}
+        hashable = json.dumps(fields, sort_keys=True)
         return hashlib.sha256(hashable.encode()).hexdigest()
 
 
