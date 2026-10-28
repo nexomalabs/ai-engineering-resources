@@ -16,8 +16,9 @@ folder holds the code, the recordings and the output to compare against.
 
 - Python 3.15
 - Chapter 9, read through its Hands-on Lab
-- **No API key required by default.** The lab replays 3 responses recorded from
-  `gpt-6-sol` on 22 October 2026. Estimated API cost: **$0.00**.
+- **No API key required by default.** The lab replays 9 responses recorded from
+  `gpt-6-sol`: the three Level 4 extractions on 22 October 2026 and the six Level 1
+  and 2 replies on 28 October 2026. Estimated API cost: **$0.00**.
 - To run it against the real API instead, see "Running It Against the Real API" below.
 
 ## Setup
