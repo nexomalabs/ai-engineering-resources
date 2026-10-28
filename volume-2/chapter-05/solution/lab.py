@@ -14,6 +14,7 @@ sys.path.insert(
 )
 
 import os
+import re
 
 from nexoma_labs import OpenAI  # records and replays responses; see shared/
 
@@ -106,3 +107,39 @@ for label, output in outputs.items():
     print(
         f"  Has uncertainty language: {'uncertain' in output.lower() or 'verify' in output.lower() or 'consult' in output.lower()}"
     )
+
+# Persona drift check: does each output keep the Level 3 persona's rules?
+print(f"\n\n{'=' * 60}")
+print("PERSONA DRIFT CHECK (rules from the Level 3 persona)")
+print(f"{'=' * 60}")
+
+PERSONA_SECTIONS = ["mechanism", "risk assessment", "management", "monitoring"]
+HEADING = r"^\s*(?:#+|\*\*|\d+[.)])\s*(.+)$"
+QUANTIFIED = r"\d+(?:\.\d+)?\s*%|\b(?:\d+-|two|three|four|five|ten)fold\b"
+CLOSING = r"recommend|decision|action"
+VERIFY_SENTENCE = "verifying this in current prescribing information"
+
+
+def check_persona_drift(output: str) -> list[str]:
+    """Return the persona rules an output breaks (empty: no drift)."""
+    text = output.lower()
+    headings = " ".join(re.findall(HEADING, output, flags=re.M)).lower()
+    positions = [headings.find(section) for section in PERSONA_SECTIONS]
+    last_line = output.strip().splitlines()[-1].lower()
+    drift = []
+    if -1 in positions or positions != sorted(positions):
+        drift.append("structure: sections missing or out of order")
+    if not re.search(QUANTIFIED, text):
+        drift.append("risk: no quantified risk estimate")
+    if not re.search(CLOSING, last_line):
+        drift.append("closing: no explicit recommendation or decision")
+    if VERIFY_SENTENCE not in text:
+        drift.append("uncertainty: verification sentence missing")
+    return drift
+
+
+for label, output in outputs.items():
+    drift = check_persona_drift(output)
+    print(f"\n{label}: {len(drift)} of 4 persona rules broken")
+    for item in drift:
+        print(f"  - {item}")

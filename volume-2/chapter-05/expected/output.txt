@@ -55,3 +55,23 @@ LEVEL 3 — Full Persona
   Medical terms used (7): INR, warfarin, NSAID, anticoagulant, platelet, bleeding, GI
   Word count: 305
   Has uncertainty language: False
+
+
+============================================================
+PERSONA DRIFT CHECK (rules from the Level 3 persona)
+============================================================
+
+LEVEL 1 — Generic: 4 of 4 persona rules broken
+  - structure: sections missing or out of order
+  - risk: no quantified risk estimate
+  - closing: no explicit recommendation or decision
+  - uncertainty: verification sentence missing
+
+LEVEL 2 — Specialized Expert: 4 of 4 persona rules broken
+  - structure: sections missing or out of order
+  - risk: no quantified risk estimate
+  - closing: no explicit recommendation or decision
+  - uncertainty: verification sentence missing
+
+LEVEL 3 — Full Persona: 1 of 4 persona rules broken
+  - uncertainty: verification sentence missing

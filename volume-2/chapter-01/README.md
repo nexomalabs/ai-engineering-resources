@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Measure the output variability of an underspecified prompt across 10 runs.
+- Measure the output variability of an underspecified prompt across five runs.
 - Compare underspecified and engineered prompts on the same task.
 - Establish a personal prompt quality scoring rubric.
 

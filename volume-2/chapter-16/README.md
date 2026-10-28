@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Identify all anti-patterns in three provided prompts.
+- Identify all anti-patterns in two provided prompts.
 - Refactor each prompt to eliminate the anti-patterns.
 - Measure the quality improvement after refactoring.
 

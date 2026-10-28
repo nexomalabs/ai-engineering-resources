@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Compare format compliance rates for Levels 1, 2, and 4 format control.
+- Measure format compliance under Level 4 format control (API-level JSON mode with a strict schema).
 - Implement a JSON schema extraction pipeline with Pydantic validation.
 - Build a retry mechanism that automatically corrects format failures.
 

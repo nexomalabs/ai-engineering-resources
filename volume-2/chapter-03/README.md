@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Score five poorly-written instructions using the SMART framework.
+- Score the three original instructions using the SMART framework.
 - Rewrite each instruction to a Level 4 specification.
 - Compare outputs from original and rewritten instructions.
 

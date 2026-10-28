@@ -10,7 +10,7 @@ folder holds the code, the recordings and the output to compare against.
 
 - Demonstrate label imbalance bias in a classification task.
 - Implement dynamic few-shot selection using cosine similarity.
-- Measure the impact of example quality on extraction accuracy.
+- Design a balanced few-shot example set for a new classification task.
 
 ## Prerequisites
 
