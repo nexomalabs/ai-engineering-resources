@@ -1,0 +1,60 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "messages": [
+      {
+        "content": "Extract the job title, company, location, salary range,\nyears of experience required, whether the job is remote, and the skills from\nthis job posting. Return a JSON object.\n\nSenior Python Developer at TechCorp. San Francisco, CA or remote.\n    $130,000\u2013$160,000/year. 5+ years required. Must know: Python, Django, PostgreSQL,\n    Docker, AWS, REST APIs, Git.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\n  \"job_title\": \"Senior Python Developer\",\n  \"company\": \"TechCorp\",\n  \"location\": \"San Francisco, CA or remote\",\n  \"salary_range\": \"$130,000\u2013$160,000/year\",\n  \"years_of_experience_required\": \"5+ years\",\n  \"remote\": true,\n  \"skills\": [\"Python\", \"Django\", \"PostgreSQL\", \"Docker\", \"AWS\", \"REST APIs\", \"Git\"]\n}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1793199445,
+    "id": "chatcmpl-EdzNdR3xNse3CtOP3PkgfKx5ROTC0",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 99,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 95,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 194
+    }
+  }
+}

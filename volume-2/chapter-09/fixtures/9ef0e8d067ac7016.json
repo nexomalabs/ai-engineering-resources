@@ -1,0 +1,60 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "messages": [
+      {
+        "content": "Extract the job title, company, location, salary range,\nyears of experience required, whether the job is remote, and the skills from\nthis job posting. Return a JSON object.\n\nJunior Data Analyst. Remote-first company. $55k-$70k. Recent grads welcome.\n    Skills: Excel, SQL, Tableau, Python basics.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\n  \"job_title\": \"Junior Data Analyst\",\n  \"company\": null,\n  \"location\": null,\n  \"salary_range\": \"$55k-$70k\",\n  \"years_of_experience_required\": null,\n  \"remote\": true,\n  \"skills\": [\"Excel\", \"SQL\", \"Tableau\", \"Python basics\"]\n}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1793199449,
+    "id": "chatcmpl-EdzNhpcBkxW8XHPYtOe5Z3lsgRINg",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 73,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 74,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 147
+    }
+  }
+}
