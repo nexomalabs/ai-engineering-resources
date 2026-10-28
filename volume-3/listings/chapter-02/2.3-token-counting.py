@@ -34,4 +34,4 @@ messages = [
     {"role": "system", "content": "You are a helpful assistant."},
     {"role": "user", "content": "What is the capital of France?"},
 ]
-print(f"Total tokens: {count_chat_tokens(messages)}")  # ~22 tokens
+print(f"Total tokens: {count_chat_tokens(messages)}")  # 24 tokens

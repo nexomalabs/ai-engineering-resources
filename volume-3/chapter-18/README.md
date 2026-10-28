@@ -37,11 +37,23 @@ Both write `audit_log.json` in the current folder. By default a stand-in answers
 
 `src/security_layer.py` runs as supplied, but it detects no injections (TODO 1), redacts nothing (TODO 2) and never reports tampering (TODO 3); its suite ends with `Test Results: 4/10 passed`. Complete all three.
 
-For live mode:
+For live mode, set your key and the mode, and add `--group live`, which installs the OpenAI
+SDK that the default mode does not need.
+
+macOS or Linux:
 
 ```bash
-uv sync --group live
-NEXOMA_LAB_MODE=live OPENAI_API_KEY=... uv run python solution/security_layer.py
+export OPENAI_API_KEY=sk-...
+NEXOMA_LAB_MODE=live uv run --group live python solution/security_layer.py
+```
+
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/security_layer.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to the stand-in
 ```
 
 ## Expected Result
@@ -68,7 +80,7 @@ The pattern list is deliberately simple. It catches the phrasings it anticipates
 uv run pytest
 ```
 
-Fifteen tests: each of the six injections is detected and removed, three safe inputs pass unchanged, over-long input is truncated, secrets are redacted, the chain verifies and pinpoints an edited entry, a broken link flags two entries, the agent redacts its own JWT answer, and the whole suite passes 10 of 10. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`.
+Nineteen tests: each of the six injections is detected and removed, three safe inputs pass unchanged, over-long input is truncated, secrets are redacted, project keys (`sk-proj-...`) included, the chain verifies and pinpoints an edited entry, an edit to the actor, the preview or the logged security events is detected, a broken link flags two entries, the agent redacts its own JWT answer, and the whole suite passes 10 of 10. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`.
 
 ## If It Does Not Work
 
@@ -93,5 +105,5 @@ Fifteen tests: each of the six injections is detected and removed, three safe in
 | `src/security_layer.py` | Your starting point; runs, with 3 TODOs |
 | `src/stand_in.py`, `solution/stand_in.py` | The stand-in for the model |
 | `solution/security_layer.py` | Reference implementation: the chapter's code, with the mode switch where the client is created |
-| `tests/test_lab.py` | 15 tests, run against `solution/` |
+| `tests/test_lab.py` | 19 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

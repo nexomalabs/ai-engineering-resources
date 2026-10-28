@@ -7,7 +7,7 @@ A three-stage document workflow: extraction cleans the raw text, classification 
 ## Learning Outcomes
 
 - Pass state between stages in a single context object.
-- Wrap an unreliable call in a retry with exponential backoff, and know when to give up.
+- Wrap an unreliable call in a retry with exponential backoff, retry only the failures a second attempt can fix, and know when to give up.
 - Validate a model's JSON before the next stage relies on it.
 - Stop a pipeline at the first failed stage, and record where and why it stopped.
 - Choose stage instructions from an earlier stage's output (type-aware summaries).
@@ -37,11 +37,23 @@ By default a stand-in plays the model (`stand_in.py`): it answers the three kind
 
 `src/document_workflow.py` runs as supplied, but it has no retry (TODO 1), so the report fails at classification; it does not validate the classification (TODO 2); and a failed stage does not stop the pipeline (TODO 3), so summarization runs on missing data. Complete all three.
 
-For live mode:
+For live mode, set your key and the mode, and add `--group live`, which installs the OpenAI
+SDK that the default mode does not need.
+
+macOS or Linux:
 
 ```bash
-uv sync --group live
-NEXOMA_LAB_MODE=live OPENAI_API_KEY=... uv run python solution/document_workflow.py
+export OPENAI_API_KEY=sk-...
+NEXOMA_LAB_MODE=live uv run --group live python solution/document_workflow.py
+```
+
+Windows PowerShell:
+
+```powershell
+$env:OPENAI_API_KEY = "sk-..."
+$env:NEXOMA_LAB_MODE = "live"
+uv run --group live python solution/document_workflow.py
+Remove-Item Env:NEXOMA_LAB_MODE     # back to the stand-in
 ```
 
 ## Expected Result
@@ -72,7 +84,7 @@ The timings change on every run. The report's classification takes about a secon
 uv run pytest
 ```
 
-Six tests: the retry recovers and waits 1 s then 2 s with a backoff of 2, the retry gives up after its last attempt, the memo runs all three stages, the report recovers from the malformed classification, an out-of-range confidence is rejected, and a failed extraction stops the pipeline. The tests replace `time.sleep`, so they do not wait. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. With all three TODOs left in place, four tests fail.
+Seven tests: the retry recovers and waits 1 s then 2 s with a backoff of 2, the retry gives up after its last attempt, an error that a second attempt cannot fix is raised at once without a retry, the memo runs all three stages, the report recovers from the malformed classification, an out-of-range confidence is rejected, and a failed extraction stops the pipeline. The tests replace `time.sleep`, so they do not wait. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. With all three TODOs left in place, four tests fail.
 
 ## If It Does Not Work
 
@@ -97,5 +109,5 @@ Six tests: the retry recovers and waits 1 s then 2 s with a backoff of 2, the re
 | `src/document_workflow.py` | Your starting point; runs, with 3 TODOs |
 | `src/stand_in.py`, `solution/stand_in.py` | The deterministic stand-in for the model |
 | `solution/document_workflow.py` | Reference implementation: the chapter's code, with the mode switch in `call_llm()` |
-| `tests/test_lab.py` | 6 tests, run against `solution/` |
+| `tests/test_lab.py` | 7 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

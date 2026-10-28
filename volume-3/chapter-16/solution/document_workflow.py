@@ -62,11 +62,15 @@ def call_llm(
 
 
 def retry(func, max_attempts: int = 3, backoff: float = 1.5):
-    """Simple retry wrapper with exponential backoff."""
+    """
+    Retry func, with exponential backoff, when its output fails validation (ValueError).
+    Any other error, such as a bad API key or a bug, is raised at once: retrying it would
+    only fail again. Timeouts and rate limits are retried by the OpenAI client itself.
+    """
     for attempt in range(1, max_attempts + 1):
         try:
             return func()
-        except Exception as e:
+        except ValueError as e:
             if attempt == max_attempts:
                 raise
             wait = backoff ** (attempt - 1)
@@ -119,10 +123,13 @@ def classify(ctx: DocumentContext) -> DocumentContext:
         match = re.search(r"\{[^{}]+\}", raw, re.DOTALL)
         if not match:
             raise ValueError(f"No JSON in classification response: {raw[:100]}")
-        parsed = json.loads(match.group())
-        # Validate schema
-        assert "type" in parsed and "topic" in parsed and "confidence" in parsed
-        assert 0.0 <= float(parsed["confidence"]) <= 1.0
+        parsed = json.loads(match.group())  # a JSONDecodeError is a ValueError, so it is retried
+        # Validate the schema. Raise, rather than assert: `python -O` removes asserts.
+        missing = {"type", "topic", "confidence"} - parsed.keys()
+        if missing:
+            raise ValueError(f"Classification is missing {sorted(missing)}")
+        if not 0.0 <= float(parsed["confidence"]) <= 1.0:
+            raise ValueError(f"Confidence out of range: {parsed['confidence']}")
         return parsed
 
     ctx.classification = retry(_call, max_attempts=3)

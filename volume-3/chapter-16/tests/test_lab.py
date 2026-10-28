@@ -79,8 +79,20 @@ def test_classification_rejects_an_out_of_range_confidence(monkeypatch):
         wf, "call_llm", lambda *a, **k: '{"type": "memo", "topic": "x", "confidence": 1.7}'
     )
     ctx = wf.DocumentContext(extracted_text="some text")
-    with pytest.raises(AssertionError):
+    with pytest.raises(ValueError, match="Confidence out of range"):
         wf.classify(ctx)
+
+
+def test_retry_does_not_retry_errors_a_second_attempt_cannot_fix(no_waiting):
+    calls = []
+
+    def bad_key():
+        calls.append(1)
+        raise PermissionError("invalid API key")
+
+    with pytest.raises(PermissionError):
+        wf.retry(bad_key, max_attempts=3)
+    assert len(calls) == 1 and no_waiting == []
 
 
 def test_a_failed_stage_stops_the_pipeline():

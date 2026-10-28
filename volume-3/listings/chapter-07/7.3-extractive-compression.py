@@ -12,7 +12,7 @@ def sentence_tokenize(text: str) -> list[str]:
     return [s.strip() for s in sentences if len(s.strip()) > 20]
 
 def estimate_tokens(text: str) -> int:
-    """Approximate token count: ~0.75 tokens per word."""
+    """Approximate token count: about 1.33 tokens per word."""
     return max(1, int(len(text.split()) * 1.33))
 
 class ExtractiveSentenceCompressor:

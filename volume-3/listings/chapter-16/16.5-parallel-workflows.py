@@ -85,7 +85,7 @@ async def run_parallel_analysis(document: str) -> dict:
 
 
 if __name__ == "__main__":
-    doc = "Apple announced record earnings of $89B, driven by iPhone 15 sales in China and Europe."
+    doc = "Quillmark Software reported record Q3 revenue of $4.2M, driven by its AI consulting division."
     output = asyncio.run(run_parallel_analysis(doc))
     import json
     print(json.dumps(output, indent=2))

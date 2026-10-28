@@ -8,7 +8,7 @@ Every finished lab runs from a clean checkout and is tested in CI on every push.
 
 ```bash
 uv sync
-uv run python src/lab.py     # your starting point
+uv run python src/lab.py     # your starting point (the Index gives each lab's file)
 uv run pytest                # verify the reference solution
 ```
 
@@ -16,27 +16,27 @@ uv run pytest                # verify the reference solution
 
 ## Index
 
-| Ch | Lab | Needs | API cost | Status |
-|:--:|-----|-------|:--------:|:------:|
-| 1 | [Build a Context Pipeline in Python](chapter-01/) | — | $0.00 | ✅ |
-| 2 | [Context Window Manager](chapter-02/) | — | $0.00 | ✅ |
-| 3 | [Three-Type Memory System](chapter-03/) | — | $0.00 | ✅ |
-| 4 | [Minimal RAG System](chapter-04/) | embedding model (downloaded on first run) | $0.00 | ✅ |
-| 5 | [Vector Index with FAISS](chapter-05/) | embedding model (downloaded on first run) | $0.00 | ✅ |
-| 6 | [Hybrid Retrieval System](chapter-06/) | embedding model (downloaded on first run) | $0.00 | ✅ |
-| 7 | [Extractive Context Compression](chapter-07/) | embedding model (downloaded on first run) | $0.00 | ✅ |
-| 8 | [Tool-Calling System](chapter-08/) | — | $0.00 | ✅ |
-| 9 | [Multi-Step Function Calling Pipeline](chapter-09/) | — | $0.00 | ✅ |
-| 10 | [MCP-Compatible Server](chapter-10/) | — | $0.00 | ✅ |
-| 11 | [Build a ReAct Agent with Three Tools](chapter-11/) | — | $0.00 | ✅ |
-| 12 | [Task Planning Agent](chapter-12/) | — | $0.00 | ✅ |
-| 13 | [Agent Memory System with SQLite](chapter-13/) | — | $0.00 | ✅ |
-| 14 | [Two-Agent Research Pipeline](chapter-14/) | — | $0.00 | ✅ |
-| 15 | [Async Agent Communication System](chapter-15/) | — | $0.00 | ✅ |
-| 16 | [Document Processing Workflow](chapter-16/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
-| 17 | [Agent Evaluation Suite](chapter-17/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
-| 18 | [Agent Security Layer](chapter-18/) | — (stand-in model; live mode optional) | $0.00 | ✅ |
-| 19 | [Intelligent Research Assistant (Capstone)](chapter-19/) | — (stand-in model and embeddings; live mode optional) | $0.00 | ✅ |
+| Ch | Lab | Starting file | Needs | API cost | Status |
+|:--:|-----|---------------|-------|:--------:|:------:|
+| 1 | [Build a Context Pipeline in Python](chapter-01/) | `src/context_pipeline.py` | — | $0.00 | ✅ |
+| 2 | [Context Window Manager](chapter-02/) | `src/lab.py` | — | $0.00 | ✅ |
+| 3 | [Three-Type Memory System](chapter-03/) | `src/lab.py` | — | $0.00 | ✅ |
+| 4 | [Minimal RAG System](chapter-04/) | `src/rag_system.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
+| 5 | [Vector Index with FAISS](chapter-05/) | `src/lab.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
+| 6 | [Hybrid Retrieval System](chapter-06/) | `src/lab.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
+| 7 | [Extractive Context Compression](chapter-07/) | `src/lab.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
+| 8 | [Tool-Calling System](chapter-08/) | `src/lab.py` | — | $0.00 | ✅ |
+| 9 | [Multi-Step Function Calling Pipeline](chapter-09/) | `src/lab.py` | — | $0.00 | ✅ |
+| 10 | [MCP-Compatible Server](chapter-10/) | `src/lab.py` | — | $0.00 | ✅ |
+| 11 | [Build a ReAct Agent with Three Tools](chapter-11/) | `src/react_agent.py` | — | $0.00 | ✅ |
+| 12 | [Task Planning Agent](chapter-12/) | `src/planning_agent.py` | — | $0.00 | ✅ |
+| 13 | [Agent Memory System with SQLite](chapter-13/) | `src/memory_lab.py` | — | $0.00 | ✅ |
+| 14 | [Two-Agent Research Pipeline](chapter-14/) | `src/multi_agent_pipeline.py` | — | $0.00 | ✅ |
+| 15 | [Async Agent Communication System](chapter-15/) | `src/async_agents.py` | — | $0.00 | ✅ |
+| 16 | [Document Processing Workflow](chapter-16/) | `src/document_workflow.py` | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 17 | [Agent Evaluation Suite](chapter-17/) | `src/agent_eval.py` | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 18 | [Agent Security Layer](chapter-18/) | `src/security_layer.py` | — (stand-in model; live mode optional) | $0.00 | ✅ |
+| 19 | [Intelligent Research Assistant (Capstone)](chapter-19/) | `src/research_assistant.py` | — (stand-in model and embeddings; live mode optional) | $0.00 | ✅ |
 
 Legend — ✅ packaged and passing tests · ⬜ not packaged yet.
 

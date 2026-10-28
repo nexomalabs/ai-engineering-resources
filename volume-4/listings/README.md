@@ -48,7 +48,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 3.3 | [`3.3-approval-workflows.py`](chapter-03/3.3-approval-workflows.py) | 60 | — | on its own |
 | 3.4 | [`3.4-escalation-workflows.py`](chapter-03/3.4-escalation-workflows.py) | 59 | — | on its own |
 | 3.5 | [`3.5-batch-processing.py`](chapter-03/3.5-batch-processing.py) | 33 | — | on its own |
-| 3.6 | [`3.6-real-time-processing.py`](chapter-03/3.6-real-time-processing.py) | 20 | `openai` | on its own |
+| 3.6 | [`3.6-real-time-processing.py`](chapter-03/3.6-real-time-processing.py) | 20 | `openai`, `OPENAI_API_KEY` | on its own |
 | 3.7 | [`3.7-workflow-state-management.py`](chapter-03/3.7-workflow-state-management.py) | 40 | `pydantic` | on its own |
 | 3.9 | [`3.9-sla-management.py`](chapter-03/3.9-sla-management.py) | 30 | — | on its own |
 

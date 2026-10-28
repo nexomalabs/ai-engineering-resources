@@ -38,7 +38,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 6.3 | [`6.3-bm25-and-keyword-search.py`](chapter-06/6.3-bm25-and-keyword-search.py) | 35 | `numpy`, `rank-bm25` | on its own |
 | 6.4 | [`6.4-dense-retrieval-with-embeddings.py`](chapter-06/6.4-dense-retrieval-with-embeddings.py) | 44 | `faiss-cpu`, `numpy`, `sentence-transformers` | on its own |
 | 6.6 | [`6.6-query-expansion.py`](chapter-06/6.6-query-expansion.py) | 27 | — | on its own |
-| 6.7 | [`6.7-metadata-filtering.py`](chapter-06/6.7-metadata-filtering.py) | 37 | — | after `6.3-bm25-and-keyword-search.py`, `6.4-dense-retrieval-with-embeddings.py` |
+| 6.7 | [`6.7-metadata-filtering.py`](chapter-06/6.7-metadata-filtering.py) | 32 | — | after `6.3-bm25-and-keyword-search.py`, `6.4-dense-retrieval-with-embeddings.py` |
 | 6.8 | [`6.8-cross-encoder-reranking.py`](chapter-06/6.8-cross-encoder-reranking.py) | 41 | `sentence-transformers` | after `6.3-bm25-and-keyword-search.py`, `6.4-dense-retrieval-with-embeddings.py` |
 | 6.10 | [`6.10-evaluation-metrics.py`](chapter-06/6.10-evaluation-metrics.py) | 25 | — | after `6.3-bm25-and-keyword-search.py` |
 
@@ -68,7 +68,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 9.5 | [`9.5-handling-function-call-results.py`](chapter-09/9.5-handling-function-call-results.py) | 25 | — | on its own |
 | 9.6 | [`9.6-multi-step-function-calls.py`](chapter-09/9.6-multi-step-function-calls.py) | 158 | `openai`, `OPENAI_API_KEY` | on its own |
 | 9.7 | [`9.7-validation-and-type-safety.py`](chapter-09/9.7-validation-and-type-safety.py) | 53 | `pydantic` | after `9.6-multi-step-function-calls.py` |
-| 9.8 | [`9.8-function-calling-in-practice.py`](chapter-09/9.8-function-calling-in-practice.py) | 54 | — | after `9.5-handling-function-call-results.py`, `9.6-multi-step-function-calls.py` |
+| 9.8 | [`9.8-function-calling-in-practice.py`](chapter-09/9.8-function-calling-in-practice.py) | 59 | — | after `9.5-handling-function-call-results.py`, `9.6-multi-step-function-calls.py` |
 
 ## Chapter 10 — Model Context Protocol (MCP)
 
@@ -88,7 +88,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 11.6 | [`11.6-action.py`](chapter-11/11.6-action.py) | 16 | — | on its own |
 | 11.9 | [`11.9-agent-loops.py`](chapter-11/11.9-agent-loops.py) | 18 | — | sketch: see the text |
-| 11.11 | [`11.11-building-a-simple-agent.py`](chapter-11/11.11-building-a-simple-agent.py) | 168 | `openai`, `OPENAI_API_KEY` | on its own |
+| 11.11 | [`11.11-building-a-simple-agent.py`](chapter-11/11.11-building-a-simple-agent.py) | 168 | — | on its own |
 
 ## Chapter 12 — Agent Planning
 
@@ -131,6 +131,6 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 16.4 | [`16.4-sequential-workflows.py`](chapter-16/16.4-sequential-workflows.py) | 130 | `openai`, `OPENAI_API_KEY` | on its own |
-| 16.5 | [`16.5-parallel-workflows.py`](chapter-16/16.5-parallel-workflows.py) | 87 | `openai` | after `16.4-sequential-workflows.py` |
+| 16.5 | [`16.5-parallel-workflows.py`](chapter-16/16.5-parallel-workflows.py) | 87 | `openai`, `OPENAI_API_KEY` | after `16.4-sequential-workflows.py` |
 | 16.8 | [`16.8-error-handling-in-workflows.py`](chapter-16/16.8-error-handling-in-workflows.py) | 97 | — | after `16.4-sequential-workflows.py` |
 | 16.10 | [`16.10-monitoring-workflows.py`](chapter-16/16.10-monitoring-workflows.py) | 29 | — | on its own |

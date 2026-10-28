@@ -220,7 +220,7 @@ class EpisodicMemory:
 
 
 def tool_web_search(query: str) -> str:
-    """Mock web search tool. In production: call Tavily or Bing Search API."""
+    """Mock web search tool. In production: call a search API such as Tavily or SerpAPI."""
     mock_results = {
         "transformer": "Transformers use self-attention (Vaswani et al., 2017) and underlie today's large language models.",
         "prompt engineering": "Prompt engineering is a key skill for LLM applications. Zero-shot, few-shot, and chain-of-thought are primary techniques.",
@@ -394,7 +394,7 @@ INJECTION_PATTERNS = [
 ]
 
 SENSITIVE_OUTPUT_PATTERNS = [
-    r"sk-[a-zA-Z0-9]{20,}",
+    r"sk-[A-Za-z0-9_-]{20,}",
     r"(api[_\s]?key|password)\s*[:=]\s*\S+",
     r"-----BEGIN.*PRIVATE KEY-----",
 ]

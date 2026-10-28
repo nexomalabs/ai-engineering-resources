@@ -77,6 +77,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | `OSError` or a connection error loading the model | The model could not be downloaded from Hugging Face | Connect to the internet for the first run; set `HF_HUB_OFFLINE=1` afterwards |
 | A warning that symlinks are not supported, on Windows | Hugging Face caches files without symlinks unless Developer Mode is on | Harmless: the cache just uses more disk; set `HF_HUB_DISABLE_SYMLINKS_WARNING=1` |
+| A warning about unauthenticated requests to the HF Hub, or a `HF_TOKEN` | Hugging Face asks anonymous downloads to sign in for higher rate limits | Harmless: the model downloads without a token. To silence it, set `HF_TOKEN` to a free Hugging Face access token |
 | `uv sync` downloads several gigabytes on Linux | PyTorch was resolved from PyPI instead of its CPU index | Keep the `[tool.uv.sources]` entry for torch in `pyproject.toml` |
 
 ## Going Further

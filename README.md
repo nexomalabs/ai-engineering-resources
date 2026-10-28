@@ -126,14 +126,14 @@ volume-1/              — the same layout for volume-2/, volume-3/, volume-4/
 ├── README.md          — lab index: chapter, type, time, API cost, status
 ├── ANSWERS.md         — model answers to the review questions, as in Appendix B
 ├── listings/          — the book's code listings, by chapter, with an index of what each needs
-├── shared/             — nexoma_labs package used by every lab (client, cost ledger, fixtures)
+├── shared/             — nexoma_labs package: client, cost ledger, fixtures (Volumes I and II)
 └── chapter-01/ … chapter-10/
     ├── README.md        — setup, run, expected output, failure table, API cost
     ├── src/lab.py        — starter with TODOs (chapters with runnable code)
     ├── solution/lab.py    — reference implementation
     ├── tests/              — runs in CI against the solution
     ├── expected/            — captured reference output
-    └── fixtures/             — recorded model responses (labs that call a model)
+    └── fixtures/             — recorded model responses (Volume I and II labs that call a model)
 ```
 
 `listings/` and `ANSWERS.md` are generated from the manuscript, so report a
