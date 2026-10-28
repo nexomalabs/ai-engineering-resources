@@ -1,0 +1,64 @@
+{
+  "request": {
+    "endpoint": "chat.completions",
+    "messages": [
+      {
+        "content": "You are a job posting data extraction specialist.\n\nExtract all available information from job postings into the specified JSON schema.\nFor missing fields, use null (not \"N/A\" or empty string).\nFor salary ranges, extract as integers (dollars only, no symbols).\n\nReturn only a JSON object with exactly these fields and types:\n{\"job_title\": string, \"company\": string, \"location\": string or null,\n \"salary_min\": integer or null, \"salary_max\": integer or null,\n \"required_years_experience\": integer or null, \"is_remote\": boolean,\n \"skills\": list of strings}",
+        "role": "system"
+      },
+      {
+        "content": "Extract from this job posting:\n\nSenior Python Developer at TechCorp. San Francisco, CA or remote.\n    $130,000\u2013$160,000/year. 5+ years required. Must know: Python, Django, PostgreSQL,\n    Docker, AWS, REST APIs, Git.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-sol",
+    "occurrence": 1,
+    "reasoning_effort": "none",
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": [],
+          "audio": null,
+          "content": "{\"job_title\":\"Senior Python Developer\",\"company\":\"TechCorp\",\"location\":\"San Francisco, CA\",\"salary_min\":130000,\"salary_max\":160000,\"required_years_experience\":5,\"is_remote\":true,\"skills\":[\"Python\",\"Django\",\"PostgreSQL\",\"Docker\",\"AWS\",\"REST APIs\",\"Git\"]}",
+          "function_call": null,
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1793199452,
+    "id": "chatcmpl-EdzNkCCie1tUaDwOeFKu8bX2Hb5X0",
+    "metadata": null,
+    "model": "gpt-6-sol",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": "default",
+    "system_fingerprint": null,
+    "usage": {
+      "completion_tokens": 69,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": 0,
+        "audio_tokens": 0,
+        "reasoning_tokens": 0,
+        "rejected_prediction_tokens": 0,
+        "text_tokens": null
+      },
+      "prompt_tokens": 191,
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cache_write_tokens": 0,
+        "cached_tokens": 0,
+        "image_tokens": null,
+        "text_tokens": null
+      },
+      "total_tokens": 260
+    }
+  }
+}

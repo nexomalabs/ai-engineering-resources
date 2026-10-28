@@ -18,7 +18,7 @@ import os
 from typing import Optional
 
 from nexoma_labs import OpenAI  # records and replays responses; see shared/
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, ValidationError, field_validator
 
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
@@ -146,3 +146,81 @@ for i, posting in enumerate(JOB_POSTINGS, 1):
 print(
     f"\n\nSuccess rate: {len(results)}/{len(JOB_POSTINGS)} ({len(results) / len(JOB_POSTINGS) * 100:.0f}%)"
 )
+
+# ============================================================
+# FORMAT COMPLIANCE BY LEVEL
+# ============================================================
+
+LEVEL_1_PROMPT = """Extract the job title, company, location, salary range,
+years of experience required, whether the job is remote, and the skills from
+this job posting. Return a JSON object.
+
+{posting}"""
+
+LEVEL_2_SYSTEM = (
+    EXTRACTION_SYSTEM
+    + """
+
+Return only a JSON object with exactly these fields and types:
+{"job_title": string, "company": string, "location": string or null,
+ "salary_min": integer or null, "salary_max": integer or null,
+ "required_years_experience": integer or null, "is_remote": boolean,
+ "skills": list of strings}"""
+)
+
+
+USER_PROMPT = "Extract from this job posting:\n\n"
+
+
+def extract_raw(messages: list[dict]) -> str:
+    """Levels 1 and 2: the format is asked for in the prompt only."""
+    response = client.chat.completions.create(
+        model="gpt-6-sol",
+        reasoning_effort="none",
+        messages=messages,
+        temperature=0,
+    )
+    return response.choices[0].message.content
+
+
+def check_format(raw: str) -> str:
+    """Return "ok", or the first way a reply fails the JobPosting schema."""
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        return f"not valid JSON (starts {raw.strip()[:12]!r})"
+    if not isinstance(data, dict):
+        return "valid JSON, but not an object"
+    try:
+        JobPosting(**data)
+    except ValidationError as e:
+        err = e.errors()[0]
+        field = ".".join(str(part) for part in err["loc"])
+        return f"wrong schema: {field} {err['msg'].lower()}"
+    return "ok"
+
+
+levels = {
+    "1 — Prose instruction": lambda p: [
+        {"role": "user", "content": LEVEL_1_PROMPT.format(posting=p)}
+    ],
+    "2 — Schema in system prompt": lambda p: [
+        {"role": "system", "content": LEVEL_2_SYSTEM},
+        {"role": "user", "content": USER_PROMPT + p},
+    ],
+}
+
+print(f"\n\n{'=' * 60}")
+print("FORMAT COMPLIANCE BY LEVEL")
+print("=" * 60)
+
+for level, build in levels.items():
+    checks = [check_format(extract_raw(build(p))) for p in JOB_POSTINGS]
+    passed = f"{checks.count('ok')}/{len(checks)}"
+    print(f"\nLevel {level}: {passed} match the schema")
+    for i, check in enumerate(checks, 1):
+        if check != "ok":
+            print(f"  Posting {i}: {check}")
+
+level_4 = f"{len(results)}/{len(JOB_POSTINGS)}"
+print(f"\nLevel 4 — Strict JSON schema mode: {level_4} match the schema")

@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Measure format compliance under Level 4 format control (API-level JSON mode with a strict schema).
+- Compare format compliance rates for Levels 1, 2, and 4 format control.
 - Implement a JSON schema extraction pipeline with Pydantic validation.
 - Build a retry mechanism that automatically corrects format failures.
 
@@ -16,8 +16,9 @@ folder holds the code, the recordings and the output to compare against.
 
 - Python 3.15
 - Chapter 9, read through its Hands-on Lab
-- **No API key required by default.** The lab replays 3 responses recorded from
-  `gpt-6-sol` on 22 October 2026. Estimated API cost: **$0.00**.
+- **No API key required by default.** The lab replays 9 responses recorded from
+  `gpt-6-sol`: the three Level 4 extractions on 22 October 2026 and the six Level 1
+  and 2 replies on 28 October 2026. Estimated API cost: **$0.00**.
 - To run it against the real API instead, see "Running It Against the Real API" below.
 
 ## Setup
@@ -47,7 +48,7 @@ The recordings cover only the prompts as printed, so once you change a prompt, r
 
 The full output is in `expected/output.txt`.
 
-In the recorded run (gpt-6-sol), all three postings were extracted into the `JobPosting` model: success rate 3/3. `is_remote` came out `True` for both remote postings and `False` for the New York office-only one, and the salary fields stayed `null` where no salary was stated. Two details are worth a second look. The lab prints a missing salary as `$None–$None`, so the printing, not the extraction, needs a fix. And the model filled `company` for posting 3 with "Remote-first company", a description rather than a name, which a stricter schema or instruction would catch.
+In the recorded run (gpt-6-sol), all three postings were extracted into the `JobPosting` model: success rate 3/3. `is_remote` came out `True` for both remote postings and `False` for the New York office-only one, and the salary fields stayed `null` where no salary was stated. Two details are worth a second look. The lab prints a missing salary as `$None–$None`, so the printing, not the extraction, needs a fix. And the model filled `company` for posting 3 with "Remote-first company", a description rather than a name, which a stricter schema or instruction would catch. The comparison then sent the same postings at Levels 1 and 2. All six replies were valid JSON, so parsing was not the problem; the schema was. At Level 1 the model chose its own fields, such as `salary_range` as text ("$130,000–$160,000/year") and `remote` instead of `is_remote`, and no reply matched: 0/3. At Level 2 it used the exact field names and types and matched 1/3; the other two returned `company: null` for postings that name no company, which the schema does not allow. Level 4 matched 3/3 only because strict mode had to put a string in that field: an empty one for posting 2 and "Remote-first company" for posting 3. Strict mode guarantees the format, not the content.
 
 ## Verifying Your Work
 
