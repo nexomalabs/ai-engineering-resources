@@ -10,7 +10,7 @@ folder holds the code, the recordings and the output to compare against.
 
 - Implement and compare CoT, self-consistency, and least-to-most on the same problem set.
 - Measure accuracy and cost tradeoffs across strategies.
-- Implement a simple ToT with 2-level branching.
+- Design a least-to-most decomposition for a new multi-step problem.
 
 ## Prerequisites
 

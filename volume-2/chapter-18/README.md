@@ -1,4 +1,4 @@
-# Volume II · Chapter 18 — Lab: Design and Implement a Prompt Library
+# Volume II · Chapter 18 — Lab: Design and Implement a Prompt Library in Python
 
 ## What You Will Build
 

@@ -47,7 +47,7 @@ The recordings cover only the prompts as printed, so once you change a prompt, r
 
 The full output is in `expected/output.txt`.
 
-In the recorded run (gpt-6-sol), all three roles recommended against routine ibuprofen, so the role did not change the answer; it changed its depth and shape. Level 1 already gave a careful, technical reply (189 words, 5 of the tracked medical terms). Level 3 produced the structure its persona asked for: mechanism, risk assessment, management options and a monitoring plan with an INR check within 3–5 days (305 words, 7 tracked terms). None of the three used the hedging phrases the lab looks for.
+In the recorded run (gpt-6-sol), all three roles recommended against routine ibuprofen, so the role did not change the answer; it changed its depth and shape. Level 1 already gave a careful, technical reply (189 words, 5 of the tracked medical terms). Level 3 produced the structure its persona asked for: mechanism, risk assessment, management options and a monitoring plan with an INR check within 3–5 days (305 words, 7 tracked terms). None of the three used the hedging phrases the lab looks for. The drift check found that Level 3 kept three of its persona's four rules: the section order, a quantified risk (roughly a twofold rise in GI bleeding) and a closing decision. It never used the verification sentence its uncertainty rule requires. Levels 1 and 2, never given those rules, broke all four.
 
 ## Verifying Your Work
 

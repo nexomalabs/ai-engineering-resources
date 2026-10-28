@@ -20,7 +20,7 @@ from nexoma_labs import OpenAI  # records and replays responses; see shared/
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # ============================================================
-# THREE PROMPTS WITH EMBEDDED ANTI-PATTERNS
+# TWO PROMPTS WITH EMBEDDED ANTI-PATTERNS
 # ============================================================
 
 PROMPTS_TO_FIX = [

@@ -8,9 +8,9 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Establish a baseline score and run 5 manual optimization iterations.
+- Establish a baseline score for an instruction on a labeled dataset.
 - Implement a simple OPRO-style meta-prompt optimizer.
-- Compare manual and automated optimization results.
+- Compare the optimized instruction with the baseline and explain what improved.
 
 ## Prerequisites
 

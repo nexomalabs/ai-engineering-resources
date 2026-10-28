@@ -8,7 +8,7 @@ folder holds the code, the recordings and the output to compare against.
 
 ## Learning Outcomes
 
-- Implement ROUGE and BERTScore evaluation for a summarization task.
+- Implement ROUGE evaluation for a summarization task.
 - Build an LLM-as-judge pipeline with structured output and calibration.
 - Compare correlation between automatic metrics and LLM judge scores.
 
