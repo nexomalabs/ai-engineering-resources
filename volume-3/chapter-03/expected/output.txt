@@ -1,4 +1,4 @@
-=== MEMORY RECALL FOR QUERY ===
+=== MEMORY RECALL FOR USER 'alex' ===
 'What Python library handles JWT and how do I verify a token?'
 
 --- WORKING MEMORY (recent conversation) ---
@@ -14,5 +14,18 @@ ASSISTANT: Issue a short-lived access token (15 minutes) and a long-lived refres
 
 --- SEMANTIC MEMORY (facts) ---
   [0.272] [user] Alex prefers Python over JavaScript for server-side code
+  [0.258] [kb] JWT tokens consist of three base64-encoded parts separated by dots
+  [0.167] [kb] Python uses indentation to define code blocks
+
+=== MEMORY RECALL FOR USER 'sam' ===
+'What Python library handles JWT and how do I verify a token?'
+
+--- WORKING MEMORY (recent conversation) ---
+  (none)
+
+--- EPISODIC MEMORY (past responses) ---
+  (none)
+
+--- SEMANTIC MEMORY (facts) ---
   [0.258] [kb] JWT tokens consist of three base64-encoded parts separated by dots
   [0.167] [kb] Python uses indentation to define code blocks

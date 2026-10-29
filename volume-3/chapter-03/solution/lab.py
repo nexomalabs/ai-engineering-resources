@@ -2,6 +2,7 @@
 
 Working memory keeps recent turns, episodic memory recalls past responses by
 recency-weighted similarity, and semantic memory recalls facts by cosine similarity.
+Every memory belongs to a user, and recall only ever sees that user's memories.
 
     python solution/lab.py
 """
@@ -65,6 +66,15 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     return dot / (norm_a * norm_b)
 
 
+# Owner of memories that every user may see, such as the product knowledge base.
+SHARED = "*"
+
+
+def visible_to(owner: str, user_id: str) -> bool:
+    """A memory is visible to the user who owns it; shared memories are visible to all."""
+    return owner in (user_id, SHARED)
+
+
 @dataclass
 class WorkingMemory:
     """
@@ -95,6 +105,7 @@ class WorkingMemory:
 @dataclass
 class Episode:
     episode_id: str
+    user_id: str
     content: str
     timestamp: float
     tags: List[str]
@@ -114,13 +125,15 @@ class EpisodicMemory:
     def store(
         self,
         content: str,
+        user_id: str,
         tags: Optional[List[str]] = None,
         outcome: str = "",
         timestamp: Optional[float] = None,
     ) -> Episode:
         ts = time.time() if timestamp is None else timestamp
         ep = Episode(
-            episode_id=hashlib.md5(f"{content}{ts}".encode()).hexdigest()[:8],
+            episode_id=hashlib.md5(f"{user_id}{content}{ts}".encode()).hexdigest()[:8],
+            user_id=user_id,
             content=content,
             timestamp=ts,
             tags=tags or [],
@@ -130,17 +143,19 @@ class EpisodicMemory:
         self.episodes.append(ep)
         return ep
 
-    def retrieve(self, query: str, top_k: int = 3) -> List[Tuple[Episode, float]]:
-        if not self.episodes:
+    def retrieve(self, query: str, user_id: str, top_k: int = 3) -> List[Tuple[Episode, float]]:
+        # Filter before scoring: another user's episodes are never candidates at all.
+        episodes = [ep for ep in self.episodes if visible_to(ep.user_id, user_id)]
+        if not episodes:
             return []
 
         query_emb = mock_embed(query)
         now = time.time()
-        oldest = min(e.timestamp for e in self.episodes)
+        oldest = min(e.timestamp for e in episodes)
         time_range = max(now - oldest, 1.0)
 
         scored = []
-        for ep in self.episodes:
+        for ep in episodes:
             semantic_score = cosine_similarity(query_emb, ep.embedding)
             recency_score = (ep.timestamp - oldest) / time_range
             combined = (
@@ -155,6 +170,7 @@ class EpisodicMemory:
 @dataclass
 class Fact:
     fact_id: str
+    user_id: str
     content: str
     source: str
     created_at: float
@@ -170,15 +186,18 @@ class SemanticMemory:
     def __init__(self):
         self.facts: List[Fact] = []
 
-    def store_fact(self, content: str, source: str = "user") -> Fact:
-        # Deduplication: skip if near-identical fact exists
+    def store_fact(self, content: str, user_id: str, source: str = "user") -> Fact:
+        # Deduplication: skip if this user already holds a near-identical fact
         new_emb = mock_embed(content)
         for existing in self.facts:
+            if existing.user_id != user_id:
+                continue  # never answer one user's write with another user's record
             if cosine_similarity(new_emb, existing.embedding) > 0.98:
                 return existing  # Near-duplicate; skip
 
         fact = Fact(
-            fact_id=hashlib.md5(f"{content}".encode()).hexdigest()[:8],
+            fact_id=hashlib.md5(f"{user_id}{content}".encode()).hexdigest()[:8],
+            user_id=user_id,
             content=content,
             source=source,
             created_at=time.time(),
@@ -188,14 +207,13 @@ class SemanticMemory:
         return fact
 
     def retrieve(
-        self, query: str, top_k: int = 3, threshold: float = 0.1
+        self, query: str, user_id: str, top_k: int = 3, threshold: float = 0.1
     ) -> List[Tuple[Fact, float]]:
-        if not self.facts:
-            return []
-
         query_emb = mock_embed(query)
         scored = []
         for fact in self.facts:
+            if not visible_to(fact.user_id, user_id):
+                continue
             score = cosine_similarity(query_emb, fact.embedding)
             if score >= threshold:
                 scored.append((fact, score))
@@ -207,28 +225,30 @@ class SemanticMemory:
 class MemorySystem:
     """
     Unified memory system combining working, episodic, and semantic memory.
+    Every call names the user, so every memory is stored and recalled per user.
     """
 
     def __init__(self):
-        self.working = WorkingMemory(max_turns=5)
+        self.working: Dict[str, WorkingMemory] = {}  # one conversation per user
         self.episodic = EpisodicMemory(recency_weight=0.3)
         self.semantic = SemanticMemory()
 
-    def record_turn(self, role: str, content: str) -> None:
-        """Record a conversation turn into working and episodic memory."""
-        self.working.add_turn(role, content)
+    def record_turn(self, user_id: str, role: str, content: str) -> None:
+        """Record a turn into the user's working memory, and their episodic memory."""
+        self.working.setdefault(user_id, WorkingMemory(max_turns=5)).add_turn(role, content)
         if role == "assistant":
-            self.episodic.store(content=content, tags=["response"], outcome="delivered")
+            self.episodic.store(content, user_id, tags=["response"], outcome="delivered")
 
-    def learn_fact(self, fact: str, source: str = "user") -> None:
-        """Store a general fact in semantic memory."""
-        self.semantic.store_fact(fact, source)
+    def learn_fact(self, user_id: str, fact: str, source: str = "user") -> None:
+        """Store a fact owned by user_id, or by SHARED for a fact every user may see."""
+        self.semantic.store_fact(fact, user_id, source)
 
-    def recall(self, query: str) -> dict:
-        """Retrieve relevant memories across all three types for a given query."""
-        working_ctx = self.working.get_context()
-        episodic_results = self.episodic.retrieve(query, top_k=2)
-        semantic_results = self.semantic.retrieve(query, top_k=3)
+    def recall(self, user_id: str, query: str) -> dict:
+        """Retrieve one user's relevant memories across all three types."""
+        working = self.working.get(user_id)
+        working_ctx = working.get_context() if working else ""
+        episodic_results = self.episodic.retrieve(query, user_id, top_k=2)
+        semantic_results = self.semantic.retrieve(query, user_id, top_k=3)
 
         return {
             "working_memory": working_ctx,
@@ -248,15 +268,38 @@ class MemorySystem:
         }
 
 
+def show_recall(user_id: str, query: str, memories: dict) -> None:
+    print(f"=== MEMORY RECALL FOR USER '{user_id}' ===")
+    print(f"'{query}'")
+
+    print()
+    print("--- WORKING MEMORY (recent conversation) ---")
+    print(memories["working_memory"] or "  (none)")
+
+    print()
+    print("--- EPISODIC MEMORY (past responses) ---")
+    for m in memories["episodic_memories"]:
+        print(f"  [{m['score']}] {m['content']}...")
+    if not memories["episodic_memories"]:
+        print("  (none)")
+
+    print()
+    print("--- SEMANTIC MEMORY (facts) ---")
+    for m in memories["semantic_memories"]:
+        print(f"  [{m['score']}] [{m['source']}] {m['content']}")
+
+
 def run_demo():
     ms = MemorySystem()
 
-    # Seed semantic memory with domain facts
-    ms.learn_fact("Python uses indentation to define code blocks", source="kb")
-    ms.learn_fact("REST APIs communicate using HTTP methods: GET, POST, PUT, DELETE", source="kb")
-    ms.learn_fact("JWT tokens consist of three base64-encoded parts separated by dots", source="kb")
-    ms.learn_fact("The user's name is Alex and they are a backend developer", source="user")
-    ms.learn_fact("Alex prefers Python over JavaScript for server-side code", source="user")
+    # Seed semantic memory: knowledge-base facts are shared, facts about Alex are Alex's
+    ms.learn_fact(SHARED, "Python uses indentation to define code blocks", "kb")
+    ms.learn_fact(SHARED, "REST APIs communicate using HTTP methods: GET, POST, PUT, DELETE", "kb")
+    ms.learn_fact(
+        SHARED, "JWT tokens consist of three base64-encoded parts separated by dots", "kb"
+    )
+    ms.learn_fact("alex", "The user's name is Alex and they are a backend developer")
+    ms.learn_fact("alex", "Alex prefers Python over JavaScript for server-side code")
 
     # Simulate a conversation being recorded
     turns = [
@@ -278,24 +321,16 @@ def run_demo():
     ]
 
     for role, content in turns:
-        ms.record_turn(role, content)
+        ms.record_turn("alex", role, content)
 
     # New query: retrieve relevant memories
     new_query = "What Python library handles JWT and how do I verify a token?"
-    memories = ms.recall(new_query)
+    show_recall("alex", new_query, ms.recall("alex", new_query))
 
-    print(f"=== MEMORY RECALL FOR QUERY ===\n'{new_query}'\n")
-
-    print("--- WORKING MEMORY (recent conversation) ---")
-    print(memories["working_memory"])
-
-    print("\n--- EPISODIC MEMORY (past responses) ---")
-    for m in memories["episodic_memories"]:
-        print(f"  [{m['score']}] {m['content']}...")
-
-    print("\n--- SEMANTIC MEMORY (facts) ---")
-    for m in memories["semantic_memories"]:
-        print(f"  [{m['score']}] [{m['source']}] {m['content']}")
+    # A second user asks the same question. Nothing of Alex's may reach them: not the
+    # conversation, not the past answers, not the facts about Alex. Shared facts may.
+    print()
+    show_recall("sam", new_query, ms.recall("sam", new_query))
 
 
 if __name__ == "__main__":

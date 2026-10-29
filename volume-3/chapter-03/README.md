@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A memory system with three stores: working memory (the last few conversation turns), episodic memory (past assistant responses, recalled by recency-weighted similarity), and semantic memory (facts, recalled by cosine similarity and deduplicated on write). A single `recall()` call gathers what is relevant to a new query from all three.
+A memory system with three stores: working memory (the last few conversation turns), episodic memory (past assistant responses, recalled by recency-weighted similarity), and semantic memory (facts, recalled by cosine similarity and deduplicated on write). A single `recall()` call gathers what is relevant to a new query from all three. Every memory belongs to a user, and every query names one, so a user recalls only their own memories and the facts marked as shared: the fix for the leak in the chapter's opening story, where one customer was greeted with another's delivery instructions.
 
 ## Learning Outcomes
 
@@ -10,6 +10,7 @@ A memory system with three stores: working memory (the last few conversation tur
 - Score episodic memories by similarity and recency together.
 - Deduplicate semantic memory on write, so a fact is stored once.
 - Retrieve from all three stores with one call, and read the scores.
+- Scope every memory to its user, filtering before scoring, so one user's memories never reach another.
 - Explain what a hashed bag-of-words embedding can and cannot match.
 
 ## Prerequisites
@@ -33,14 +34,14 @@ uv run python src/lab.py          # your work
 uv run python solution/lab.py     # reference
 ```
 
-`src/lab.py` runs as supplied, but working memory keeps every turn (TODO 1), so it prints six turns where the reference prints five. TODO 2 and TODO 3 do not change this demo's output; the tests check them.
+`src/lab.py` runs as supplied, but working memory keeps every turn (TODO 1), so it prints six turns where the reference prints five, and every user can see every memory (TODO 4), so the second user, `sam`, is shown Alex's past answers and the fact that Alex prefers Python. TODO 2 and TODO 3 do not change this demo's output; the tests check them.
 
 ## Expected Result
 
 The reference solution prints the following (also saved in `expected/output.txt`).
 
 ```text
-=== MEMORY RECALL FOR QUERY ===
+=== MEMORY RECALL FOR USER 'alex' ===
 'What Python library handles JWT and how do I verify a token?'
 
 --- WORKING MEMORY (recent conversation) ---
@@ -58,6 +59,19 @@ ASSISTANT: Issue a short-lived access token (15 minutes) and a long-lived refres
   [0.272] [user] Alex prefers Python over JavaScript for server-side code
   [0.258] [kb] JWT tokens consist of three base64-encoded parts separated by dots
   [0.167] [kb] Python uses indentation to define code blocks
+
+=== MEMORY RECALL FOR USER 'sam' ===
+'What Python library handles JWT and how do I verify a token?'
+
+--- WORKING MEMORY (recent conversation) ---
+  (none)
+
+--- EPISODIC MEMORY (past responses) ---
+  (none)
+
+--- SEMANTIC MEMORY (facts) ---
+  [0.258] [kb] JWT tokens consist of three base64-encoded parts separated by dots
+  [0.167] [kb] Python uses indentation to define code blocks
 ```
 
 ## Verifying Your Work
@@ -68,7 +82,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, replace `solution/lab.py` there with your `src/lab.py`, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. With the four TODOs left in place, six of the fourteen tests fail.
 
 ## If It Does Not Work
 
@@ -78,6 +92,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 | `requires-python >=3.12` error | An older Python is active | Install Python 3.12 or later; `uv python install 3.12` does this |
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | A fact you expect is not recalled | The hashed embedding matches shared words only | Reword the query to use the fact's words, or lower `threshold` in `retrieve()` |
+| `sam` is shown Alex's answers or facts | TODO 4: `visible_to()` still returns True | Return True only when the owner is the user or `SHARED` |
 
 ## Going Further
 
@@ -89,7 +104,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 
 | Path | Purpose |
 |---|---|
-| `src/lab.py` | Your starting point: runs, with 3 TODOs |
+| `src/lab.py` | Your starting point: runs, with 4 TODOs |
 | `solution/lab.py` | Reference implementation |
-| `tests/test_lab.py` | 10 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |
