@@ -85,3 +85,57 @@ def test_bundled_csv_finds_the_wrong_planet_and_the_refusal():
     pipeline.add_items(er.load_items_from_csv(str(SOLUTION / "sample_qa.csv")))
     low = {i.item_id for i in pipeline.run().items if i.score.overall() < 0.60}
     assert low == {"c002", "c004"}
+
+
+import quality_gate as qg  # noqa: E402
+
+
+def scored_item(item_id, value, **slices):
+    item = EvaluationItem(item_id, "Q?", "A.", slices=slices)
+    item.score = score(accuracy=value, helpfulness=value, safety=value, conciseness=value)
+    return item
+
+
+def run(version):
+    return qg.score_run(str(SOLUTION / f"refund_{version}.csv"), er.mock_judge)
+
+
+def test_csv_columns_beyond_the_four_become_slices(tmp_path):
+    path = tmp_path / "qa.csv"
+    path.write_text(
+        "item_id,language,tier,question,response,reference\na,pt,business,Q,R,\n",
+        encoding="utf-8",
+    )
+    (item,) = er.load_items_from_csv(str(path))
+    assert item.slices == {"language": "pt", "tier": "business"}
+
+
+def test_a_slice_that_falls_too_far_blocks_a_change_that_raised_the_average():
+    baseline = [scored_item("a", 0.6, language="en"), scored_item("b", 0.6, language="en")]
+    candidate = [scored_item("a", 0.8, language="en"), scored_item("b", 0.8, language="en")]
+    baseline.append(scored_item("c", 0.8, language="pt"))
+    candidate.append(scored_item("c", 0.7, language="pt"))
+    rows, blocked = qg.quality_gate(baseline, candidate, keys=("language",))
+    assert rows[0][3] > rows[0][2]
+    assert blocked == ["language=pt"]
+
+
+def test_the_story_prompt_raises_the_average_and_is_blocked_on_portuguese_alone():
+    rows, blocked = qg.quality_gate(run("v1"), run("v2"))
+    _, _, old, new = rows[0]
+    assert new > old
+    assert blocked == ["language=pt"]
+
+
+def test_the_fixed_prompt_passes_every_language_and_tier():
+    rows, blocked = qg.quality_gate(run("v1"), run("v3"))
+    names = [name for name, *_ in rows]
+    assert names == [
+        "all",
+        "language=en",
+        "language=es",
+        "language=pt",
+        "tier=business",
+        "tier=personal",
+    ]
+    assert blocked == []

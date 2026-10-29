@@ -21,10 +21,9 @@ def mock_judge(item: EvaluationItem) -> EvaluationScore:
     jitter = random.Random(item.item_id)  # a small, repeatable variation per item
 
     # Accuracy: how many of the reference answer's key terms does the response contain?
+    # \w matches accented letters too, so words such as "útil" stay whole.
     if item.reference:
-        terms = [
-            t for t in re.findall(r"[a-z0-9]+", item.reference.lower()) if len(t) > 3 or t.isdigit()
-        ]
+        terms = [t for t in re.findall(r"\w+", item.reference.lower()) if len(t) > 3 or t.isdigit()]
         found = sum(t in response for t in terms) / len(terms) if terms else 1.0
         accuracy = 0.20 + 0.75 * found
     else:
@@ -195,7 +194,11 @@ def detect_regressions(
 
 # ── Exercise 4: load Q&A pairs from a CSV file ───────────────────────────
 def load_items_from_csv(path: str) -> list[EvaluationItem]:
-    """Columns: item_id, question, response, reference (reference may be empty)."""
+    """Columns: item_id, question, response, reference (reference may be empty).
+
+    Any other column, such as language or tier, names a slice the item belongs to.
+    """
+    columns = {"item_id", "question", "response", "reference"}
     with open(path, newline="", encoding="utf-8") as f:
         return [
             EvaluationItem(
@@ -203,6 +206,7 @@ def load_items_from_csv(path: str) -> list[EvaluationItem]:
                 question=row["question"],
                 response=row["response"],
                 reference=row.get("reference") or None,
+                slices={k: v for k, v in row.items() if k not in columns},
             )
             for row in csv.DictReader(f)
         ]

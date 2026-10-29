@@ -1,0 +1,19 @@
+Refund prompt v2 against v1, tolerance 0.05
+  slice           items     v1     v2  change
+  all                12  0.678  0.817  +0.139
+  language=en         6  0.679  0.912  +0.233
+  language=es         3  0.685  0.872  +0.187
+  language=pt         3  0.669  0.572  -0.097  BLOCK
+  tier=business       5  0.717  0.815  +0.099
+  tier=personal       7  0.651  0.819  +0.168
+  Gate: blocked by language=pt
+
+Refund prompt v3 against v1, tolerance 0.05
+  slice           items     v1     v3  change
+  all                12  0.678  0.888  +0.210
+  language=en         6  0.679  0.912  +0.233
+  language=es         3  0.685  0.872  +0.187
+  language=pt         3  0.669  0.855  +0.185
+  tier=business       5  0.717  0.882  +0.165
+  tier=personal       7  0.651  0.892  +0.242
+  Gate: passed
