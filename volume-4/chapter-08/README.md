@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A two-level cache in front of a model. Level one is an exact-match dictionary keyed by a hash of the normalised query; level two embeds each query and serves a stored answer when a new query is similar enough to an old one. A benchmark runs fifty queries through it (originals, paraphrases, exact repeats and unrelated questions), records where each answer came from and how long it took, and reports the hit rate and the latency of each level.
+A two-level cache in front of a model. Level one is an exact-match dictionary keyed by a hash of the normalised query; level two embeds each query and serves a stored answer when a new query is similar enough to an old one. A benchmark runs fifty queries through it (originals, paraphrases, exact repeats and unrelated questions), records where each answer came from and how long it took, and reports the hit rate and the latency of each level. The benchmark ends by replaying the chapter's battery incident: a question about Canada scores as close to a stored question about China as a true paraphrase does, and only a rule that the destination country must match keeps China's answer from reaching it.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A two-level cache in front of a model. Level one is an exact-match dictionary ke
 - Promote a semantic hit to the exact level so the same wording costs nothing next time.
 - Measure each level's latency separately, and explain why a single "cache speedup" figure misleads.
 - Reason about the threshold: too high and paraphrases miss, too low and wrong answers are served.
+- Show that no similarity threshold separates two questions that differ only in a country, and add a rule that does.
 
 ## Prerequisites
 
@@ -55,7 +56,21 @@ Semantic-cache p50 : 91.4 ms  (11x faster than the LLM)
 LLM p50            : 1048.1 ms
 ```
 
-Twenty queries could have hit; sixteen did. All ten repeats hit exactly, including the ones with different case and spacing. Six of the ten paraphrases cleared the 0.93 threshold: those that reuse the original's key words ("Can you explain gradient descent?"). The four that reword it ("Why do gradients vanish in deep networks?") missed and paid for a model call. That is the threshold's trade-off in miniature. An exact hit costs microseconds and a semantic hit costs an embedding, so report the levels separately: a single median over all hits would put the speedup in the hundreds of thousands, which says nothing useful.
+Twenty queries could have hit; sixteen did. All ten repeats hit exactly, including the ones with different case and spacing. Six of the ten paraphrases cleared the 0.93 threshold: those that reuse the original's key words ("Can you explain gradient descent?"). The four that reword it ("Why do gradients vanish in deep networks?") missed and paid for a model call. The run ends with the battery incident:
+
+```text
+=== The battery incident ===
+Canada question vs China question : similarity 0.944
+China paraphrase vs China question: similarity 0.944
+  similarity alone       Canada question gets: [the answer written for China's rules]
+                         China paraphrase gets: [the answer written for China's rules]
+  with the country rule  Canada question gets: miss: the model is asked, about Canada
+                         China paraphrase gets: [the answer written for China's rules]
+```
+
+The Canada question scores 0.944 against the China question, exactly what the genuine paraphrase scores, so no threshold can serve the paraphrase and refuse Canada. The country rule does: an entry's destination countries must equal the question's.
+
+That is the threshold's trade-off in miniature. An exact hit costs microseconds and a semantic hit costs an embedding, so report the levels separately: a single median over all hits would put the speedup in the hundreds of thousands, which says nothing useful.
 
 ## Verifying Your Work
 
@@ -63,7 +78,7 @@ Twenty queries could have hit; sixteen did. All ten repeats hit exactly, includi
 uv run pytest
 ```
 
-Seven tests, with the simulated API sped up a hundredfold: `store()` fills both levels, the exact key ignores case and spaces, a paraphrase with the same key words hits, a reworded one misses at 0.93, a lower threshold accepts a looser match, a promoted hit needs no second embedding, and the full dataset gives 10 exact hits, 6 semantic hits and 34 misses. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. With all three TODOs left in place, five tests fail.
+Eleven tests, with the simulated API sped up a hundredfold: `store()` fills both levels, the exact key ignores case and spaces, a paraphrase with the same key words hits, a reworded one misses at 0.93, a lower threshold accepts a looser match, a promoted hit needs no second embedding, and the full dataset gives 10 exact hits, 6 semantic hits and 34 misses. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. Four more test the battery incident: destinations are read from the question, the Canada and China questions score at least as close as a true paraphrase, similarity alone serves China's answer to Canada while the country rule does not, and the rule still reuses answers for the same country. With all four TODOs left in place, seven of the eleven tests fail.
 
 ## If It Does Not Work
 
@@ -73,6 +88,7 @@ Seven tests, with the simulated API sped up a hundredfold: `store()` fills both 
 | The repeats with different case miss | TODO 1: the key is not normalised | Hash `query.strip().lower()` |
 | No semantic hits at all | TODO 2: the semantic level is never searched | Embed the query and compare it with every stored embedding |
 | A repeated paraphrase embeds again | TODO 3: semantic hits are not promoted | Store the answer under the new query's exact key |
+| The Canada question gets China's answer, with the country rule on | TODO 4: entries are compared whatever country they name | Skip entries whose `must_match` differs from the question's |
 | `ModuleNotFoundError: openai` in live mode | `--group live` was not installed | Run `uv sync --group live` |
 
 ## Going Further
@@ -85,10 +101,10 @@ Seven tests, with the simulated API sped up a hundredfold: `store()` fills both 
 
 | Path | Purpose |
 |---|---|
-| `src/semantic_cache.py` | Your starting point; runs, with 3 TODOs |
+| `src/semantic_cache.py` | Your starting point; runs, with 4 TODOs |
 | `solution/semantic_cache.py` | Section 8.4's cache with its bug fixed, and the mode switch |
 | `solution/lab08_benchmark.py` | Steps 1, 3 and 4: timing and analysis |
 | `solution/queries.py` | Step 2: the fifty queries |
 | `solution/stand_in.py` | The simulated API |
-| `tests/test_lab.py` | 7 tests, run against `solution/` |
+| `tests/test_lab.py` | 11 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

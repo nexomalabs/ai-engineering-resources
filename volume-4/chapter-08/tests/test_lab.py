@@ -77,3 +77,30 @@ def test_full_dataset():
     assert cache.hit_rate() == pytest.approx(0.32)
     sources = [r["source"] for r in results]
     assert sources[:10] == ["llm"] * 10 and sources[20:30] == ["exact_cache"] * 10
+
+
+def test_destinations_are_read_from_the_question():
+    assert semantic_cache.destinations("Can I send batteries to Canada?") == frozenset({"canada"})
+    assert semantic_cache.destinations("What is gradient descent?") == frozenset()
+
+
+def test_a_threshold_cannot_tell_the_countries_apart():
+    cache = SemanticCache()
+    china = cache._embed(bench.QUESTION.format("China"))
+    canada = cache._embed(bench.QUESTION.format("Canada"))
+    paraphrase = cache._embed(bench.CHINA_PARAPHRASE)
+    assert cache._cosine_similarity(china, canada) >= cache.threshold
+    assert cache._cosine_similarity(china, canada) >= cache._cosine_similarity(china, paraphrase)
+
+
+def test_similarity_alone_gives_canada_the_answer_for_china(capsys):
+    answers = bench.battery_incident()
+    assert answers["similarity alone"] == "[the answer written for China's rules]"
+    assert answers["with the country rule"] is None
+
+
+def test_the_country_rule_still_reuses_answers_for_the_same_country():
+    cache = SemanticCache()
+    cache.store(bench.QUESTION.format("China"), "china answer")
+    assert cache.lookup(bench.CHINA_PARAPHRASE) == "china answer"
+    assert cache.lookup(bench.QUESTION.format("Canada")) is None

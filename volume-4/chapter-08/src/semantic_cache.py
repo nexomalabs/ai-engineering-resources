@@ -4,7 +4,8 @@
 
 import hashlib
 import os
-from typing import Optional
+import re
+from typing import Callable, Optional
 
 import numpy as np
 
@@ -18,14 +19,36 @@ else:
     client = StandInClient()
 
 
-class SemanticCache:
-    """Two-level cache: exact match (SHA-256) + semantic (cosine similarity)."""
+# Destinations a shipping question can name. Their rules differ, so an answer about one
+# must never answer a question about another, however similar the two questions look.
+DESTINATIONS = {
+    "australia", "brazil", "canada", "china", "france", "germany", "india", "ireland",
+    "italy", "japan", "mexico", "netherlands", "poland", "spain", "uk", "usa",
+}  # fmt: skip
 
-    def __init__(self, similarity_threshold: float = 0.93):
+
+def destinations(text: str) -> frozenset[str]:
+    """The destination countries a question names."""
+    return frozenset(set(re.findall(r"[a-z]+", text.lower())) & DESTINATIONS)
+
+
+class SemanticCache:
+    """
+    Two-level cache: exact match (SHA-256) + semantic (cosine similarity). A semantic hit
+    must also agree on `must_match(query)`, by default the destination countries the
+    question names; pass must_match=None for a cache that compares similarity alone.
+    """
+
+    def __init__(
+        self,
+        similarity_threshold: float = 0.93,
+        must_match: Optional[Callable[[str], frozenset]] = destinations,
+    ):
         self.threshold = similarity_threshold
+        self.must_match = must_match
         # Level 1: exact match  {key: response_str}
         self._exact: dict[str, str] = {}
-        # Level 2: semantic  list of {"embedding": np.ndarray, "response": str, "query": str}
+        # Level 2: semantic  list of {"embedding", "response", "query", "must_match"}
         self._semantic: list[dict] = []
         self.stats = {"exact_hits": 0, "semantic_hits": 0, "misses": 0}
 
@@ -54,6 +77,9 @@ class SemanticCache:
             return self._exact[key]
 
         # Level 2: semantic match
+        # TODO 4: only compare entries whose stored "must_match" equals
+        # self.must_match(query) (None when must_match is None), so a question naming
+        # Canada can never take an answer stored for China.
         # TODO 2: embed the query, find the stored entry with the highest cosine similarity,
         # and return its response if the score reaches self.threshold (count a semantic hit).
         # TODO 3: on a semantic hit, also store the answer under this query's exact key, so
@@ -69,7 +95,10 @@ class SemanticCache:
         self._exact[key] = response
         # Semantic cache
         embedding = self._embed(query)
-        self._semantic.append({"embedding": embedding, "response": response, "query": query})
+        match_key = self.must_match(query) if self.must_match else None
+        self._semantic.append(
+            {"embedding": embedding, "response": response, "query": query, "must_match": match_key}
+        )
 
     def hit_rate(self) -> float:
         total = sum(self.stats.values())

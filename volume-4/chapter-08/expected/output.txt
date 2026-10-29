@@ -14,6 +14,14 @@ Semantic hits (paraphrase -> answer reused):
   Explain transfer learning in simple terms.
   What do embeddings represent?
 
-Exact-cache p50    : 0.004 ms
-Semantic-cache p50 : 91.4 ms  (11x faster than the LLM)
-LLM p50            : 1048.1 ms
+Exact-cache p50    : 0.008 ms
+Semantic-cache p50 : 92.2 ms  (11x faster than the LLM)
+LLM p50            : 1047.8 ms
+
+=== The battery incident ===
+Canada question vs China question : similarity 0.944
+China paraphrase vs China question: similarity 0.944
+  similarity alone       Canada question gets: [the answer written for China's rules]
+                         China paraphrase gets: [the answer written for China's rules]
+  with the country rule  Canada question gets: miss: the model is asked, about Canada
+                         China paraphrase gets: [the answer written for China's rules]
