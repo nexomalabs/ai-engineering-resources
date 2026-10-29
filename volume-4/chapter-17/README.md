@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A three-year AI adoption roadmap for MediCore Analytics, a hypothetical healthcare analytics company, built from a reusable template. Each initiative records its category, quarters, owner, cost estimate, risk, success metric and dependencies; the report groups them by year and totals the investment from the estimates.
+A three-year AI adoption roadmap for MediCore Analytics, a hypothetical healthcare analytics company, built from a reusable template. Each initiative records its category, quarters, owner, cost estimate, risk, success metric and dependencies; the report groups them by year and totals the investment from the estimates. A foundations check, from the chapter's opening story, then tests whether every initiative that puts AI in front of users starts with Maya's five foundations in place: evaluation sets, cost attribution, canary releases, governance review and model-version logging. MediCore's first draft fails it; the roadmap, with a Production Foundations initiative in Year 1, passes.
 
 ## Learning Outcomes
 
@@ -10,6 +10,7 @@ A three-year AI adoption roadmap for MediCore Analytics, a hypothetical healthca
 - Give every initiative an owner, a measurable success metric and its dependencies.
 - Derive totals from the data, so they stay right when the roadmap changes.
 - Present quarters within each year of a multi-year plan.
+- Check that every AI release starts with its foundations in place: the practices no new model makes obsolete.
 
 ## Prerequisites
 
@@ -32,7 +33,7 @@ uv run python src/lab.py          # your work
 uv run python solution/lab.py     # reference
 ```
 
-`src/lab.py` runs as supplied, but Year 2 shows timelines such as Q5–Q7 (TODO 2), and the total investment is $0.00M because no estimate is converted (TODO 1).
+`src/lab.py` runs as supplied, but Year 2 shows timelines such as Q5–Q7 (TODO 2), and the total investment is $0.00M because no estimate is converted (TODO 1). The foundations check passes the first draft too, because `missing_foundations` never reports anything (TODO 3).
 
 ## Expected Result
 
@@ -52,10 +53,11 @@ Initiative                                  Category    Timeline    Owner       
 AI Governance Framework                     Governance  Q1–Q2       Legal + Engineering  $80K    Low
 AI Literacy Program                         People      Q1–Q4       HR + AI Team         $120K   Low
 Data Foundation Upgrade                     Technology  Q1–Q4       Data Engineering     $350K   Medium
+Production Foundations                      Process     Q1–Q2       AI Team              $150K   Low
 Pilot: AI Clinical Documentation Assistant  Process     Q3–Q4       Product              $200K   High
 
   [AI Governance Framework]
-  Goal: Establish AI policy, risk register, designated AI officer, and incident response procedures. Adopt NIST AI RMF profile.
+  Goal: Establish AI policy, risk register, designated AI officer, incident response procedures, and a governance review before every AI launch. Adopt NIST AI RMF profile.
   Success: AI governance policy approved; AI officer designated; risk register operational
 
   [AI Literacy Program]
@@ -67,10 +69,14 @@ Pilot: AI Clinical Documentation Assistant  Process     Q3–Q4       Product   
   Success: Data catalog covers 100% of clinical datasets; HIPAA audit passed
   Depends on: AI Governance Framework
 
+  [Production Foundations]
+  Goal: Before the first pilot: an evaluation set for each use case, cost attribution by feature and user, canary releases for every model or prompt change, and the model version logged with every response.
+  Success: Pilot evaluation set reviewed by clinicians; every model call attributed and version-logged; canary process rehearsed
+
   [Pilot: AI Clinical Documentation Assistant]
   Goal: Pilot AI-assisted clinical note summarization for 5 hospital clients. Measure time savings and clinician satisfaction.
   Success: 20% reduction in documentation time; NPS > 40
-  Depends on: Data Foundation Upgrade, AI Governance Framework
+  Depends on: Data Foundation Upgrade, AI Governance Framework, Production Foundations
 
 
 ──────────────────────────────────────────────────────────────────────
@@ -117,8 +123,21 @@ Proprietary Clinical AI Model  Technology  Q2–Q4       Data Science + Infrastr
   Depends on: Patient Risk Stratification Model, Evaluation and Quality Program
 
 ──────────────────────────────────────────────────────────────────────
-  Total estimated investment: ~$3.95M over 3 years
+  Total estimated investment: ~$4.10M over 3 years
 ──────────────────────────────────────────────────────────────────────
+
+Foundations check: the first draft, without Production Foundations
+  Pilot: AI Clinical Documentation Assistant starts in Y1 Q3 without:
+    evaluation sets, cost attribution, canary releases, model-version logging
+  Patient Risk Stratification Model starts in Y2 Q2 without:
+    evaluation sets, cost attribution, canary releases, model-version logging
+  Clinical Trial AI Automation starts in Y3 Q1 without:
+    canary releases, model-version logging
+  Proprietary Clinical AI Model starts in Y3 Q2 without:
+    canary releases, model-version logging
+
+Foundations check: this roadmap
+  Every AI release starts with all 5 foundations in place.
 ```
 
 ## Verifying Your Work
@@ -129,7 +148,10 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, replace `solution/lab.py` there with your `src/lab.py`, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. Three of the
+tests check the foundations: the first draft ships AI before its foundations are in place, every
+release in the roadmap starts with all of them, and a foundation counts only once the initiative
+that establishes it has ended. With the three TODOs left in place, nine of the twelve tests fail.
 
 ## If It Does Not Work
 
@@ -139,6 +161,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 | `requires-python >=3.12` error | An older Python is active | Install Python 3.12 or later; `uv python install 3.12` does this |
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | The total is wrong after you add an initiative | Its `estimated_cost` is in a format `parse_cost` does not read | Write estimates as `$80K` or `$1.2M`, or `TBD` |
+| The foundations check passes the first draft | TODO 3: `missing_foundations` returns an empty dict | For each initiative with `ships_ai`, list the `FOUNDATIONS` that no initiative ending before it establishes |
 | `UnicodeEncodeError` printing `─` or `—` on Windows | The console uses a legacy code page | Set `PYTHONUTF8=1`, or run in Windows Terminal |
 
 ## Going Further
@@ -152,7 +175,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 
 | Path | Purpose |
 |---|---|
-| `src/lab.py` | Your starting point: runs, with 2 TODOs |
+| `src/lab.py` | Your starting point: runs, with 3 TODOs |
 | `solution/lab.py` | Reference implementation |
-| `tests/test_lab.py` | 9 tests, run against `solution/` |
+| `tests/test_lab.py` | 12 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

@@ -10,6 +10,16 @@ from dataclasses import dataclass, field
 
 from tabulate import tabulate
 
+# Maya's list in Volume IV, Chapter 17: what carried Wren through its first peak. No better
+# model makes any of them obsolete, so every AI release should start with all of them in place.
+FOUNDATIONS = [
+    "evaluation sets",
+    "cost attribution",
+    "canary releases",
+    "governance review",
+    "model-version logging",
+]
+
 
 @dataclass
 class RoadmapInitiative:
@@ -24,6 +34,8 @@ class RoadmapInitiative:
     owner: str = "AI Team"
     estimated_cost: str = "TBD"
     risk: str = "Medium"
+    establishes: list[str] = field(default_factory=list)  # foundations it puts in place
+    ships_ai: bool = False  # puts an AI system in front of users
 
 
 def build_medicore_roadmap() -> list[RoadmapInitiative]:
@@ -35,10 +47,12 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             phase=1,
             quarter_start=1,
             quarter_end=2,
-            description="Establish AI policy, risk register, designated AI officer, and "
-            "incident response procedures. Adopt NIST AI RMF profile.",
+            description="Establish AI policy, risk register, designated AI officer, incident "
+            "response procedures, and a governance review before every AI launch. Adopt "
+            "NIST AI RMF profile.",
             success_metric="AI governance policy approved; AI officer designated; "
             "risk register operational",
+            establishes=["governance review"],
             owner="Legal + Engineering",
             estimated_cost="$80K",
             risk="Low",
@@ -71,6 +85,27 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             risk="Medium",
         ),
         RoadmapInitiative(
+            name="Production Foundations",
+            category="Process",
+            phase=1,
+            quarter_start=1,
+            quarter_end=2,
+            description="Before the first pilot: an evaluation set for each use case, cost "
+            "attribution by feature and user, canary releases for every model or prompt "
+            "change, and the model version logged with every response.",
+            success_metric="Pilot evaluation set reviewed by clinicians; every model call "
+            "attributed and version-logged; canary process rehearsed",
+            establishes=[
+                "evaluation sets",
+                "cost attribution",
+                "canary releases",
+                "model-version logging",
+            ],
+            owner="AI Team",
+            estimated_cost="$150K",
+            risk="Low",
+        ),
+        RoadmapInitiative(
             name="Pilot: AI Clinical Documentation Assistant",
             category="Process",
             phase=1,
@@ -79,7 +114,12 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             description="Pilot AI-assisted clinical note summarization for 5 hospital clients. "
             "Measure time savings and clinician satisfaction.",
             success_metric="20% reduction in documentation time; NPS > 40",
-            dependencies=["Data Foundation Upgrade", "AI Governance Framework"],
+            dependencies=[
+                "Data Foundation Upgrade",
+                "AI Governance Framework",
+                "Production Foundations",
+            ],
+            ships_ai=True,
             owner="Product",
             estimated_cost="$200K",
             risk="High",
@@ -96,6 +136,7 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             success_metric="Platform serving 3+ products; evaluation running "
             "continuously; cost visibility for all teams",
             dependencies=["Pilot: AI Clinical Documentation Assistant"],
+            establishes=["cost attribution"],
             owner="AI Platform Team",
             estimated_cost="$600K",
             risk="Medium",
@@ -111,6 +152,7 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             success_metric="AUC > 0.82; validated for 3 clinical outcomes; "
             "deployed to 20 hospital clients",
             dependencies=["AI Platform Build", "Data Foundation Upgrade"],
+            ships_ai=True,
             owner="Data Science",
             estimated_cost="$450K",
             risk="High",
@@ -126,6 +168,7 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             success_metric="100% of AI deployments pass quality gate; "
             "weekly quality reports published",
             dependencies=["AI Platform Build"],
+            establishes=["evaluation sets"],
             owner="AI Team",
             estimated_cost="$150K",
             risk="Low",
@@ -142,6 +185,7 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             success_metric="50% reduction in trial data processing time; "
             "FDA submission package generation validated",
             dependencies=["AI Platform Build", "Evaluation and Quality Program"],
+            ships_ai=True,
             owner="Clinical Affairs + AI Team",
             estimated_cost="$800K",
             risk="Very High",
@@ -157,6 +201,7 @@ def build_medicore_roadmap() -> list[RoadmapInitiative]:
             success_metric="Model outperforms GPT-6.1 Sol on MediCore clinical benchmarks; "
             "fully on-premises deployment",
             dependencies=["Patient Risk Stratification Model", "Evaluation and Quality Program"],
+            ships_ai=True,
             owner="Data Science + Infrastructure",
             estimated_cost="$1.2M",
             risk="High",
@@ -222,6 +267,43 @@ def print_roadmap(initiatives: list[RoadmapInitiative]):
     print(f"{'─' * 70}\n")
 
 
+def missing_foundations(initiatives: list[RoadmapInitiative]) -> dict[str, list[str]]:
+    """For each initiative that ships AI, the foundations not yet in place when it starts.
+
+    A foundation is in place once an initiative that establishes it has ended.
+    """
+    missing = {}
+    for release in initiatives:
+        if not release.ships_ai:
+            continue
+        ready = {
+            foundation
+            for i in initiatives
+            if i.quarter_end < release.quarter_start
+            for foundation in i.establishes
+        }
+        lacking = [f for f in FOUNDATIONS if f not in ready]
+        if lacking:
+            missing[release.name] = lacking
+    return missing
+
+
+def print_foundations_check(title: str, initiatives: list[RoadmapInitiative]) -> None:
+    print(f"Foundations check: {title}")
+    missing = missing_foundations(initiatives)
+    for release in initiatives:
+        if release.name in missing:
+            year, quarter = divmod(release.quarter_start - 1, 4)
+            print(f"  {release.name} starts in Y{year + 1} Q{quarter + 1} without:")
+            print(f"    {', '.join(missing[release.name])}")
+    if not missing:
+        print(f"  Every AI release starts with all {len(FOUNDATIONS)} foundations in place.")
+    print()
+
+
 if __name__ == "__main__":
     roadmap = build_medicore_roadmap()
     print_roadmap(roadmap)
+    draft = [i for i in roadmap if i.name != "Production Foundations"]
+    print_foundations_check("the first draft, without Production Foundations", draft)
+    print_foundations_check("this roadmap", roadmap)

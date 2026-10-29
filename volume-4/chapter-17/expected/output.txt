@@ -11,10 +11,11 @@ Initiative                                  Category    Timeline    Owner       
 AI Governance Framework                     Governance  Q1–Q2       Legal + Engineering  $80K    Low
 AI Literacy Program                         People      Q1–Q4       HR + AI Team         $120K   Low
 Data Foundation Upgrade                     Technology  Q1–Q4       Data Engineering     $350K   Medium
+Production Foundations                      Process     Q1–Q2       AI Team              $150K   Low
 Pilot: AI Clinical Documentation Assistant  Process     Q3–Q4       Product              $200K   High
 
   [AI Governance Framework]
-  Goal: Establish AI policy, risk register, designated AI officer, and incident response procedures. Adopt NIST AI RMF profile.
+  Goal: Establish AI policy, risk register, designated AI officer, incident response procedures, and a governance review before every AI launch. Adopt NIST AI RMF profile.
   Success: AI governance policy approved; AI officer designated; risk register operational
 
   [AI Literacy Program]
@@ -26,10 +27,14 @@ Pilot: AI Clinical Documentation Assistant  Process     Q3–Q4       Product   
   Success: Data catalog covers 100% of clinical datasets; HIPAA audit passed
   Depends on: AI Governance Framework
 
+  [Production Foundations]
+  Goal: Before the first pilot: an evaluation set for each use case, cost attribution by feature and user, canary releases for every model or prompt change, and the model version logged with every response.
+  Success: Pilot evaluation set reviewed by clinicians; every model call attributed and version-logged; canary process rehearsed
+
   [Pilot: AI Clinical Documentation Assistant]
   Goal: Pilot AI-assisted clinical note summarization for 5 hospital clients. Measure time savings and clinician satisfaction.
   Success: 20% reduction in documentation time; NPS > 40
-  Depends on: Data Foundation Upgrade, AI Governance Framework
+  Depends on: Data Foundation Upgrade, AI Governance Framework, Production Foundations
 
 
 ──────────────────────────────────────────────────────────────────────
@@ -76,6 +81,18 @@ Proprietary Clinical AI Model  Technology  Q2–Q4       Data Science + Infrastr
   Depends on: Patient Risk Stratification Model, Evaluation and Quality Program
 
 ──────────────────────────────────────────────────────────────────────
-  Total estimated investment: ~$3.95M over 3 years
+  Total estimated investment: ~$4.10M over 3 years
 ──────────────────────────────────────────────────────────────────────
 
+Foundations check: the first draft, without Production Foundations
+  Pilot: AI Clinical Documentation Assistant starts in Y1 Q3 without:
+    evaluation sets, cost attribution, canary releases, model-version logging
+  Patient Risk Stratification Model starts in Y2 Q2 without:
+    evaluation sets, cost attribution, canary releases, model-version logging
+  Clinical Trial AI Automation starts in Y3 Q1 without:
+    canary releases, model-version logging
+  Proprietary Clinical AI Model starts in Y3 Q2 without:
+    canary releases, model-version logging
+
+Foundations check: this roadmap
+  Every AI release starts with all 5 foundations in place.
