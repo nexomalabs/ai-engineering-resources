@@ -1,8 +1,9 @@
 """Lab 12 — Task Planning Agent (starter).
 
 This file RUNS as supplied. Validation finds the plan's error but nothing fixes it, tasks
-never see the results they depend on, and a transient failure triggers a full replan
-instead of a retry. Complete the three TODOs.
+never see the results they depend on, a transient failure triggers a full replan instead
+of a retry, and a plan that refunds a claim before checking its receipt passes validation.
+Complete the four TODOs.
 
     python src/planning_agent.py
 """
@@ -57,12 +58,25 @@ class Task:
 
 AVAILABLE_TOOLS = {"web_search", "read_file", "write_file", "calculator", "get_current_date"}
 
+# The claims agent from the chapter's opening story: its real tools, and the order rule
+# finance insists on. Each pair (earlier, later) means a task using the later tool must
+# depend, directly or through other tasks, on a task using the earlier one.
+CLAIM_TOOLS = {
+    "get_claim",
+    "check_photos",
+    "calculator",
+    "verify_receipt",
+    "issue_refund",
+    "notify_customer",
+}
+CLAIM_ORDER = [("verify_receipt", "issue_refund")]
+
 PLANNING_PROMPT = """
 You are a planning agent. Given a high-level goal, decompose it into a list of concrete subtasks.
 
 Goal: {goal}
 
-Available tools: web_search, read_file, write_file, calculator, get_current_date
+Available tools: {tools}
 
 Return a JSON object with this structure:
 {{
@@ -118,6 +132,88 @@ STUB_PLAN = {
     ],
 }
 
+# The seven-step plan from the chapter's story: it refunds at step 4, verifies the receipt
+# at step 6, and phones the customer with a tool that does not exist.
+STUB_CLAIM_PLAN = {
+    "plan_summary": "Check the claim, refund it, and keep the customer informed.",
+    "tasks": [
+        {"id": "c1", "description": "Load claim C-311 and its order", "tool": "get_claim"},
+        {
+            "id": "c2",
+            "description": "Review the damage photos",
+            "tool": "check_photos",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c3",
+            "description": "Compare the claimed amount with the order total",
+            "tool": "calculator",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c4",
+            "description": "Issue the refund for the claimed amount",
+            "tool": "issue_refund",
+            "depends_on": ["c2", "c3"],
+        },
+        {
+            "id": "c5",
+            "description": "Phone the customer to confirm the refund",
+            "tool": "phone_customer",
+            "depends_on": ["c4"],
+        },
+        {
+            "id": "c6",
+            "description": "Verify the purchase receipt",
+            "tool": "verify_receipt",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c7",
+            "description": "Email the customer a summary of the decision",
+            "tool": "notify_customer",
+            "depends_on": ["c4", "c6"],
+        },
+    ],
+}
+
+STUB_CLAIM_REVISED = {
+    "plan_summary": "Check the claim and the receipt, then refund it and tell the customer.",
+    "tasks": [
+        {"id": "c1", "description": "Load claim C-311 and its order", "tool": "get_claim"},
+        {
+            "id": "c2",
+            "description": "Review the damage photos",
+            "tool": "check_photos",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c3",
+            "description": "Compare the claimed amount with the order total",
+            "tool": "calculator",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c4",
+            "description": "Verify the purchase receipt",
+            "tool": "verify_receipt",
+            "depends_on": ["c1"],
+        },
+        {
+            "id": "c5",
+            "description": "Issue the refund for the claimed amount",
+            "tool": "issue_refund",
+            "depends_on": ["c2", "c3", "c4"],
+        },
+        {
+            "id": "c6",
+            "description": "Email the customer that the refund is on its way",
+            "tool": "notify_customer",
+            "depends_on": ["c5"],
+        },
+    ],
+}
+
 STUB_REPLAN = {
     "plan_summary": "Skip the missing notes and write the summary from the search results.",
     "tasks": [
@@ -139,6 +235,10 @@ def llm_call(prompt: str) -> str:
         return json.dumps(
             {"description": "Read the team's notes from notes/attention.md", "tool": "read_file"}
         )
+    if "failed validation" in prompt:
+        return json.dumps(STUB_CLAIM_REVISED)
+    if "Claim C-311" in prompt:
+        return json.dumps(STUB_CLAIM_PLAN)
     return json.dumps(STUB_PLAN)
 
 
@@ -155,14 +255,20 @@ def parse_plan(raw: str) -> list[Task]:
     ]
 
 
-def plan_goal(goal: str, llm: Callable[[str], str] = llm_call) -> list[Task]:
-    return parse_plan(llm(PLANNING_PROMPT.format(goal=goal)))
+def plan_goal(
+    goal: str, llm: Callable[[str], str] = llm_call, tools: set[str] = AVAILABLE_TOOLS
+) -> list[Task]:
+    return parse_plan(llm(PLANNING_PROMPT.format(goal=goal, tools=", ".join(sorted(tools)))))
 
 
 # ─── Part 3: plan validation (Section 12.6) ───────────────────────────────────
 
 
-def validate_plan(tasks: list[Task], available_tools: set[str]) -> list[str]:
+def validate_plan(
+    tasks: list[Task],
+    available_tools: set[str],
+    must_precede: list[tuple[str, str]] = (),
+) -> list[str]:
     errors = []
     task_ids = {t.id for t in tasks}
 
@@ -204,7 +310,40 @@ def validate_plan(tasks: list[Task], available_tools: set[str]) -> list[str]:
                 errors.append("Circular dependency detected in task graph.")
                 break
 
+    # Check required order: a task using the later tool must depend, directly or
+    # through other tasks, on a task using the earlier one
+    by_id = {t.id: t for t in tasks}
+
+    def ancestors(task: Task) -> set[str]:
+        seen: set[str] = set()
+        stack = list(task.depends_on)
+        while stack:
+            dep = stack.pop()
+            if dep in by_id and dep not in seen:
+                seen.add(dep)
+                stack.extend(by_id[dep].depends_on)
+        return seen
+
+    for earlier, later in must_precede:
+        # TODO 4: For each task that uses the `later` tool, unless one of ancestors(task)
+        #   uses the `earlier` tool, add "Task '<id>' uses '<later>' before any '<earlier>'
+        #   task." As supplied, a plan that refunds before it checks the receipt passes.
+        pass
+
     return errors
+
+
+def revise_plan(
+    goal: str, tasks: list[Task], errors: list[str], llm: Callable[[str], str] = llm_call
+) -> list[Task]:
+    """Send a rejected plan back to the model with the validator's errors."""
+    plan = json.dumps([t.to_dict() for t in tasks])
+    problems = "\n".join(f"- {e}" for e in errors)
+    prompt = (
+        f'This plan for goal "{goal}" failed validation:\n{problems}\n\n'
+        f"Plan: {plan}\n\nReturn a corrected plan in the same JSON format."
+    )
+    return parse_plan(llm(prompt))
 
 
 def fix_unknown_tools(tasks: list[Task], available_tools: set[str], fallback: str) -> list[str]:
@@ -410,6 +549,32 @@ def run(goal: str, failures: Optional[dict[str, list[str]]] = None) -> dict:
     return outcome
 
 
+def run_claim(goal: str) -> dict:
+    """The story's claim: a plan that is rejected before its first step, then revised."""
+    print(f"Goal: {goal}\n")
+    tasks = plan_goal(goal, tools=CLAIM_TOOLS)
+    for t in tasks:
+        print(f"  {t.id} [{t.tool}] {t.description}  depends on {t.depends_on or '-'}")
+
+    errors = validate_plan(tasks, CLAIM_TOOLS, must_precede=CLAIM_ORDER)
+    print("\nValidation:")
+    for error in errors or ["no errors"]:
+        print(f"  {error}")
+    if errors:
+        print("Rejected before the first step; asking the model for a plan within the rules.\n")
+        tasks = revise_plan(goal, tasks, errors)
+        for t in tasks:
+            print(f"  {t.id} [{t.tool}] {t.description}  depends on {t.depends_on or '-'}")
+        errors = validate_plan(tasks, CLAIM_TOOLS, must_precede=CLAIM_ORDER)
+        print(f"\nRevalidation: {errors or 'no errors'}")
+
+    outcome = PlanExecutor(goal).execute_plan(tasks)
+    m = outcome["metrics"]
+    order = [t.id for t in tasks if t.status == TaskStatus.COMPLETED]
+    print(f"\nCompleted {m['completed']}/{m['total_tasks']} tasks, in the order {order}")
+    return outcome
+
+
 if __name__ == "__main__":
     goal = "Write a research summary on transformer architectures."
     # Run 1: t2 times out once (transient, so it is retried), and t3's first description
@@ -419,3 +584,6 @@ if __name__ == "__main__":
     # of the plan is replaced.
     print("\n" + "=" * 60 + "\n")
     run(goal, failures={"t3": ["The notes repository is empty"]})
+    # Run 3: the high-value claim from the chapter's opening story.
+    print("\n" + "=" * 60 + "\n")
+    run_claim("Decide Claim C-311, a high-value claim for a damaged monitor, and settle it.")

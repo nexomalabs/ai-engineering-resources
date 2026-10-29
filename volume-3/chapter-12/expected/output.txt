@@ -45,3 +45,31 @@ Task status:
   r1  completed  Wrote summary.md from 2 source(s)
 
 Completed 3/5 tasks, 0 retries, 1 replan(s)
+
+============================================================
+
+Goal: Decide Claim C-311, a high-value claim for a damaged monitor, and settle it.
+
+  c1 [get_claim] Load claim C-311 and its order  depends on -
+  c2 [check_photos] Review the damage photos  depends on ['c1']
+  c3 [calculator] Compare the claimed amount with the order total  depends on ['c1']
+  c4 [issue_refund] Issue the refund for the claimed amount  depends on ['c2', 'c3']
+  c5 [phone_customer] Phone the customer to confirm the refund  depends on ['c4']
+  c6 [verify_receipt] Verify the purchase receipt  depends on ['c1']
+  c7 [notify_customer] Email the customer a summary of the decision  depends on ['c4', 'c6']
+
+Validation:
+  Task 'c5' references unknown tool 'phone_customer'.
+  Task 'c4' uses 'issue_refund' before any 'verify_receipt' task.
+Rejected before the first step; asking the model for a plan within the rules.
+
+  c1 [get_claim] Load claim C-311 and its order  depends on -
+  c2 [check_photos] Review the damage photos  depends on ['c1']
+  c3 [calculator] Compare the claimed amount with the order total  depends on ['c1']
+  c4 [verify_receipt] Verify the purchase receipt  depends on ['c1']
+  c5 [issue_refund] Issue the refund for the claimed amount  depends on ['c2', 'c3', 'c4']
+  c6 [notify_customer] Email the customer that the refund is on its way  depends on ['c5']
+
+Revalidation: no errors
+
+Completed 6/6 tasks, in the order ['c1', 'c2', 'c3', 'c4', 'c5', 'c6']

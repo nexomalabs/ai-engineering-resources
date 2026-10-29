@@ -2,12 +2,12 @@
 
 ## What You Will Build
 
-A planning agent that turns a goal into a graph of tasks, validates the plan (unique IDs, known dependencies, no cycles, available tools), repairs what it can, and executes the tasks in dependency order with each task's inputs taken from the results it depends on. When a task fails, the agent classifies the failure and retries it, revises it, or replans the rest of the goal. A scripted stub stands in for the model.
+A planning agent that turns a goal into a graph of tasks, validates the plan (unique IDs, known dependencies, no cycles, available tools, and a required order of steps), repairs what it can, and executes the tasks in dependency order with each task's inputs taken from the results it depends on. When a task fails, the agent classifies the failure and retries it, revises it, or replans the rest of the goal. A scripted stub stands in for the model. The third run is the claim from the chapter's opening story: a seven-step plan that refunds before it verifies the receipt and calls a tool that does not exist. Validation rejects it before any step runs, and the agent revises it within the rules.
 
 ## Learning Outcomes
 
 - Represent a plan as tasks with explicit dependencies.
-- Validate a model-generated plan before executing any of it.
+- Validate a model-generated plan before executing any of it, including a domain rule about the order of steps.
 - Execute tasks in dependency order, passing results forward.
 - Match the recovery to the failure: retry, revise, or replan.
 - Measure an execution: completion rate, retries and replans.
@@ -33,7 +33,7 @@ uv run python src/planning_agent.py          # your work
 uv run python solution/planning_agent.py     # reference
 ```
 
-`src/planning_agent.py` runs as supplied, but each TODO shows in its output: the revalidation still reports the unknown tool (TODO 1), the summary is written from 0 sources (TODO 2), and in the first run t2's timeout causes a replan rather than a retry (TODO 3).
+`src/planning_agent.py` runs as supplied, but each TODO shows in its output: the revalidation still reports the unknown tool (TODO 1), the summary is written from 0 sources (TODO 2), in the first run t2's timeout causes a replan rather than a retry (TODO 3), and in the third run validation catches the unknown `phone_customer` tool but not the refund that comes before the receipt check (TODO 4).
 
 ## Expected Result
 
@@ -87,6 +87,34 @@ Task status:
   r1  completed  Wrote summary.md from 2 source(s)
 
 Completed 3/5 tasks, 0 retries, 1 replan(s)
+
+============================================================
+
+Goal: Decide Claim C-311, a high-value claim for a damaged monitor, and settle it.
+
+  c1 [get_claim] Load claim C-311 and its order  depends on -
+  c2 [check_photos] Review the damage photos  depends on ['c1']
+  c3 [calculator] Compare the claimed amount with the order total  depends on ['c1']
+  c4 [issue_refund] Issue the refund for the claimed amount  depends on ['c2', 'c3']
+  c5 [phone_customer] Phone the customer to confirm the refund  depends on ['c4']
+  c6 [verify_receipt] Verify the purchase receipt  depends on ['c1']
+  c7 [notify_customer] Email the customer a summary of the decision  depends on ['c4', 'c6']
+
+Validation:
+  Task 'c5' references unknown tool 'phone_customer'.
+  Task 'c4' uses 'issue_refund' before any 'verify_receipt' task.
+Rejected before the first step; asking the model for a plan within the rules.
+
+  c1 [get_claim] Load claim C-311 and its order  depends on -
+  c2 [check_photos] Review the damage photos  depends on ['c1']
+  c3 [calculator] Compare the claimed amount with the order total  depends on ['c1']
+  c4 [verify_receipt] Verify the purchase receipt  depends on ['c1']
+  c5 [issue_refund] Issue the refund for the claimed amount  depends on ['c2', 'c3', 'c4']
+  c6 [notify_customer] Email the customer that the refund is on its way  depends on ['c5']
+
+Revalidation: no errors
+
+Completed 6/6 tasks, in the order ['c1', 'c2', 'c3', 'c4', 'c5', 'c6']
 ```
 
 ## Verifying Your Work
@@ -97,7 +125,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, replace `solution/planning_agent.py` there with your `src/planning_agent.py`, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. With the four TODOs left in place, seven of the fourteen tests fail.
 
 ## If It Does Not Work
 
@@ -107,6 +135,7 @@ this folder somewhere else, replace `solution/planning_agent.py` there with your
 | `requires-python >=3.12` error | An older Python is active | Install Python 3.12 or later; `uv python install 3.12` does this |
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | Every task is skipped with "dependencies unmet" | A dependency names a task that never completes | Run `validate_plan` first; it reports unknown dependencies and cycles |
+| The claim plan's validation lists only `phone_customer` | TODO 4: the order rule is not checked | For each task using `issue_refund`, look for a `verify_receipt` task among `ancestors(task)` |
 
 ## Going Further
 
@@ -119,7 +148,7 @@ this folder somewhere else, replace `solution/planning_agent.py` there with your
 
 | Path | Purpose |
 |---|---|
-| `src/planning_agent.py` | Your starting point: runs, with 3 TODOs |
+| `src/planning_agent.py` | Your starting point: runs, with 4 TODOs |
 | `solution/planning_agent.py` | Reference implementation |
-| `tests/test_lab.py` | 11 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

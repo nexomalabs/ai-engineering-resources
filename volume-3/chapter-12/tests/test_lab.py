@@ -9,16 +9,21 @@ sys.path.insert(0, str(ROOT / "solution"))
 
 from planning_agent import (  # noqa: E402
     AVAILABLE_TOOLS,
+    CLAIM_ORDER,
+    CLAIM_TOOLS,
     PlanExecutor,
     Task,
     TaskStatus,
     classify_failure,
     fix_unknown_tools,
     plan_goal,
+    revise_plan,
+    run_claim,
     validate_plan,
 )
 
 GOAL = "Write a research summary on transformer architectures."
+CLAIM_GOAL = "Decide Claim C-311, a high-value claim for a damaged monitor, and settle it."
 
 
 def test_task_serializes():
@@ -45,6 +50,48 @@ def test_validation_finds_each_kind_of_error():
     assert "Task 'c' depends on unknown task 'zzz'." in errors
     assert "Task 'b' references unknown tool 'teleport'." in errors
     assert "Circular dependency detected in task graph." in errors
+
+
+def test_order_rule_needs_the_check_somewhere_upstream():
+    rule = [("verify_receipt", "issue_refund")]
+    direct = [
+        Task("r", "d", tool="verify_receipt"),
+        Task("p", "d", tool="issue_refund", depends_on=["r"]),
+    ]
+    through = [
+        Task("r", "d", tool="verify_receipt"),
+        Task("x", "d", tool="calculator", depends_on=["r"]),
+        Task("p", "d", tool="issue_refund", depends_on=["x"]),
+    ]
+    alongside = [
+        Task("r", "d", tool="verify_receipt"),
+        Task("p", "d", tool="issue_refund"),
+    ]
+    assert validate_plan(direct, CLAIM_TOOLS, must_precede=rule) == []
+    assert validate_plan(through, CLAIM_TOOLS, must_precede=rule) == []
+    assert validate_plan(alongside, CLAIM_TOOLS, must_precede=rule) == [
+        "Task 'p' uses 'issue_refund' before any 'verify_receipt' task."
+    ]
+
+
+def test_the_story_plan_is_rejected_for_both_of_its_faults():
+    tasks = plan_goal(CLAIM_GOAL, tools=CLAIM_TOOLS)
+    assert len(tasks) == 7
+    assert validate_plan(tasks, CLAIM_TOOLS, must_precede=CLAIM_ORDER) == [
+        "Task 'c5' references unknown tool 'phone_customer'.",
+        "Task 'c4' uses 'issue_refund' before any 'verify_receipt' task.",
+    ]
+
+
+def test_the_revised_claim_plan_passes_and_checks_the_receipt_before_refunding(capsys):
+    tasks = plan_goal(CLAIM_GOAL, tools=CLAIM_TOOLS)
+    errors = validate_plan(tasks, CLAIM_TOOLS, must_precede=CLAIM_ORDER)
+    revised = revise_plan(CLAIM_GOAL, tasks, errors)
+    assert validate_plan(revised, CLAIM_TOOLS, must_precede=CLAIM_ORDER) == []
+    outcome = run_claim(CLAIM_GOAL)
+    order = list(outcome["results"])
+    assert order.index("c4") < order.index("c5")  # receipt (c4) before refund (c5)
+    assert "Rejected before the first step" in capsys.readouterr().out
 
 
 def test_unknown_tool_is_fixed_programmatically():
