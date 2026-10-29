@@ -103,3 +103,6 @@ class AISystemProfile:
     has_data_provenance_docs: bool = False
     pii_processing: bool = False
     has_data_processing_agreement: bool = False
+
+    # Transparency: a chatbot's opening message; None if the system does not chat
+    greeting: Optional[str] = None

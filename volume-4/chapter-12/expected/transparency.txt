@@ -1,0 +1,6 @@
+EU-50.1 Chatbot tells users it is an AI
+
+  NON_COMPLIANT  before the mapping  Hi, I'm Wren!
+  PARTIAL        a first fix         Hi, I'm Wren, Wrenfield's AI assistant. How can I help?
+  COMPLIANT      after the mapping   Hi, I'm Wren, Wrenfield's AI assistant. To talk to a person instead, type 'agent' at any time.
+  NOT_APPLICABLE customs pipeline    (no chat, so no greeting)

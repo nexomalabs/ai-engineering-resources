@@ -122,3 +122,33 @@ def test_json_export_round_trips():
         "severity": "CRITICAL",
         "status": "COMPLIANT",
     }
+
+
+import transparency  # noqa: E402
+from compliance_runner import AISystemProfile  # noqa: E402
+
+
+def greeting_status(greeting):
+    profile = AISystemProfile("Wren", "4.2.0", "2026-12-01", greeting=greeting)
+    return transparency.CHATBOT_DISCLOSURE.evaluate(profile).status.value
+
+
+def test_the_story_greeting_does_not_disclose_the_ai():
+    assert greeting_status("Hi, I'm Wren!") == "NON_COMPLIANT"
+
+
+def test_disclosing_the_ai_without_a_route_to_a_person_is_partial():
+    assert greeting_status(transparency.GREETINGS["a first fix"]) == "PARTIAL"
+
+
+def test_the_new_greeting_is_compliant():
+    assert greeting_status(transparency.GREETINGS["after the mapping"]) == "COMPLIANT"
+
+
+def test_a_system_that_does_not_chat_is_not_applicable():
+    profile = AISystemProfile("Customs pipeline", "1.3.0", "2026-12-01")
+    assert transparency.CHATBOT_DISCLOSURE.evaluate(profile).status.value == "NOT_APPLICABLE"
+
+
+def test_words_that_merely_contain_ai_are_not_a_disclosure():
+    assert greeting_status("Hi, I'm Wren. Ask me about mail and email.") == "NON_COMPLIANT"

@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A compliance audit runner in three modules: `compliance_runner.py` defines controls, results and the profile of the AI system under audit; `nist_controls.py` holds a catalogue of fifteen controls grouped by the four NIST AI RMF functions; and `audit_runner.py` evaluates the profile, computes a severity-weighted compliance score, prints a gap report, and saves the results as JSON.
+A compliance audit runner in three modules: `compliance_runner.py` defines controls, results and the profile of the AI system under audit; `nist_controls.py` holds a catalogue of fifteen controls grouped by the four NIST AI RMF functions; and `audit_runner.py` evaluates the profile, computes a severity-weighted compliance score, prints a gap report, and saves the results as JSON. A fourth module, `transparency.py`, adds the control from the chapter's opening story: an EU AI Act check, run on every deployment, that a chatbot's greeting says it is an AI and how to reach a person. Wren's original greeting, "Hi, I'm Wren!", fails it.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A compliance audit runner in three modules: `compliance_runner.py` defines contr
 - Report gaps, including partially met controls, for remediation.
 - Treat an evaluator that fails as NOT_EVALUATED, never as compliant.
 - Export audit results as JSON for an evidence trail.
+- Turn one obligation, a chatbot's duty to say it is an AI, into a check that runs on every deployment.
 
 ## Prerequisites
 
@@ -90,6 +91,24 @@ MG-4.5        MANAGE      Data Provenance               HIGH        NON_COMPLIAN
 Report saved to compliance_report.json
 ```
 
+## The Greeting Check
+
+```bash
+uv run python src/transparency.py          # your work
+uv run python solution/transparency.py     # reference
+```
+
+The reference prints (also saved in `expected/transparency.txt`):
+
+```text
+EU-50.1 Chatbot tells users it is an AI
+
+  NON_COMPLIANT  before the mapping  Hi, I'm Wren!
+  PARTIAL        a first fix         Hi, I'm Wren, Wrenfield's AI assistant. How can I help?
+  COMPLIANT      after the mapping   Hi, I'm Wren, Wrenfield's AI assistant. To talk to a person instead, type 'agent' at any time.
+  NOT_APPLICABLE customs pipeline    (no chat, so no greeting)
+```
+
 ## Verifying Your Work
 
 ```bash
@@ -98,7 +117,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, copy your files from `src/` over those in `solution/` there, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. Five of the tests check the transparency control: the story's greeting fails, disclosing the AI without a route to a person is partial, the new greeting passes, a system that does not chat is not applicable, and words that merely contain "ai" are not a disclosure. With the four TODOs left in place, ten of the fourteen tests fail.
 
 ## If It Does Not Work
 
@@ -121,7 +140,9 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `compliance_runner.py`, `nist_controls.py`, `audit_runner.py`; runs, with 3 TODOs |
+| `src/` | Your starting point: `compliance_runner.py`, `nist_controls.py`, `audit_runner.py`; runs, with 3 TODOs; `transparency.py` has TODO 4 |
+| `solution/transparency.py` | The chatbot disclosure control from the chapter's story |
 | `solution/` | Reference implementation of the same files |
-| `tests/test_lab.py` | 9 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
+| `expected/transparency.txt` | Captured output of `transparency.py` |
 | `expected/output.txt` | Captured output of the reference |
