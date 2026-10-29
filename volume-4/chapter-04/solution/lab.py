@@ -1,7 +1,9 @@
 """Lab 4 — Event-Driven Document Automation Pipeline (reference solution).
 
 Watches a directory, classifies each new file with a simulated model call, routes it to a
-handler, logs every action, and retries transient failures with exponential backoff.
+handler, logs every action, and retries transient failures with exponential backoff. The
+governance controls from the chapter's story stand around it: a kill switch, dry-run mode,
+an approval gate for financial actions, and an anomaly monitor that can pull the switch.
 
     python solution/lab.py
 """
@@ -9,6 +11,7 @@ handler, logs every action, and retries transient failures with exponential back
 import asyncio
 import logging
 import random
+import re
 import tempfile
 import uuid
 from datetime import datetime, timezone
@@ -60,6 +63,39 @@ def log_action(file_id, action, details):
     action_log.append(entry)
     logger.info("[AUDIT] %s | %s | %s", file_id[:8], action, details)
 
+
+# ─── Governance Controls (Section 4.9) ────────────────────────────────────────
+
+
+class Governance:
+    """
+    The controls the chapter's story depended on. The kill switch pauses the pipeline
+    without a redeployment; dry-run mode runs every stage without taking its action; the
+    approval gate holds financial actions for a person, whatever the model's confidence.
+    """
+
+    def __init__(self):
+        self.paused = False
+        self.pause_reason = ""
+        self.dry_run = False
+        self.approval_required = {"invoice"}  # an invoice creates a payment record
+        self.held: list[dict] = []  # items that arrived while the kill switch was on
+        self.awaiting_approval: list[dict] = []
+
+    def pull_kill_switch(self, reason: str) -> None:
+        self.paused = True
+        self.pause_reason = reason
+        log_action("pipeline", "kill_switch_engaged", reason)
+
+    def release_kill_switch(self) -> list[dict]:
+        """Resume the pipeline and hand back the items held while it was paused."""
+        self.paused = False
+        log_action("pipeline", "kill_switch_released", f"{len(self.held)} held item(s)")
+        held, self.held = self.held, []
+        return held
+
+
+governance = Governance()
 
 # ─── Simulated LLM Classifier ─────────────────────────────────────────────────
 
@@ -189,6 +225,10 @@ CONFIDENCE_THRESHOLD = 0.75  # below this, a person checks the classification
 
 async def on_route_document(payload: dict):
     file_id = payload["file_id"]
+    if governance.paused and not governance.dry_run:
+        governance.held.append(payload)
+        log_action(file_id, "held_by_kill_switch", governance.pause_reason)
+        return
     filepath = Path(payload["filepath"])
     classification = payload["classification"]
     doc_type = classification["type"]
@@ -197,8 +237,23 @@ async def on_route_document(payload: dict):
     else:
         handler = HANDLERS.get(doc_type, handle_unknown)
     log_action(file_id, "routed", f"→ {doc_type} handler")
-    await handler(file_id, filepath, classification)
+    if governance.dry_run:
+        log_action(file_id, "dry_run", f"would run the {doc_type} handler")
+    elif handler is not handle_unknown and doc_type in governance.approval_required:
+        governance.awaiting_approval.append(payload)
+        log_action(file_id, "awaiting_approval", f"a {doc_type} action needs a person's approval")
+    else:
+        await handler(file_id, filepath, classification)
     log_action(file_id, "pipeline_complete", f"type={doc_type}")
+
+
+async def approve(file_id: str, approver: str) -> None:
+    """A person approves an action held at the gate; only now does it run."""
+    payload = next(p for p in governance.awaiting_approval if p["file_id"] == file_id)
+    governance.awaiting_approval.remove(payload)
+    log_action(file_id, "approved", f"by {approver}")
+    handler = HANDLERS[payload["classification"]["type"]]
+    await handler(file_id, Path(payload["filepath"]), payload["classification"])
 
 
 async def on_routing_failed(payload: dict):
@@ -234,6 +289,97 @@ async def watch_directory(watch_dir: Path, run_for_seconds: float = 5.0):
                     },
                 )
         await asyncio.sleep(0.5)
+
+
+# ─── The Customs Incident (the chapter's story) ──────────────────────────────
+
+
+def extract_declared_value(text: str) -> tuple[float, str]:
+    """The extraction step as first built: it reads the currency code beside the total."""
+    match = re.search(r"Total: ([\d,]+) ?([A-Z]{3})?", text)
+    return float(match.group(1).replace(",", "")), match.group(2) or "USD"
+
+
+def extract_declared_value_fixed(text: str) -> tuple[float, str]:
+    """The fix: when the total has no currency code, use the one the invoice states elsewhere."""
+    amount, code = extract_declared_value(text)
+    if not re.search(r"Total: [\d,]+ ?[A-Z]{3}", text):
+        stated = re.search(r"amounts in ([A-Z]{3})", text)
+        code = stated.group(1) if stated else code
+    return amount, code
+
+
+class CurrencyMonitor:
+    """Anomaly detection: flag a shipper whose declared currency changes from its usual one."""
+
+    def __init__(self):
+        self.usual: dict[str, str] = {}
+
+    def is_anomalous(self, shipper: str, currency: str) -> bool:
+        return currency != self.usual.setdefault(shipper, currency)
+
+
+# One shipper's commercial invoices. From INV-103 on, its new layout moves the currency
+# code from beside the total to the page footer.
+CUSTOMS_INVOICES = [
+    ("INV-101", "Hallbeck GmbH", "Commercial invoice. Shipper: Hallbeck GmbH. Total: 12,400 EUR"),
+    ("INV-102", "Hallbeck GmbH", "Commercial invoice. Shipper: Hallbeck GmbH. Total: 9,850 EUR"),
+    (
+        "INV-103",
+        "Hallbeck GmbH",
+        "Commercial invoice. Shipper: Hallbeck GmbH. Total: 11,200\nAll amounts in EUR",
+    ),
+    (
+        "INV-104",
+        "Hallbeck GmbH",
+        "Commercial invoice. Shipper: Hallbeck GmbH. Total: 7,300\nAll amounts in EUR",
+    ),
+]
+
+
+def prepare_filings(invoices, extract, monitor: CurrencyMonitor) -> None:
+    """Prepare a customs filing for each invoice. A filing waits for a broker's approval."""
+    for invoice_id, shipper, text in invoices:
+        if governance.paused and not governance.dry_run:
+            governance.held.append((invoice_id, shipper, text))
+            log_action(invoice_id, "held_by_kill_switch", governance.pause_reason)
+            continue
+        amount, currency = extract(text)
+        if monitor.is_anomalous(shipper, currency) and not governance.dry_run:
+            governance.pull_kill_switch(
+                f"{shipper} declared in {currency}; its filings are in {monitor.usual[shipper]}"
+            )
+            governance.held.append((invoice_id, shipper, text))
+            log_action(invoice_id, "held_by_kill_switch", governance.pause_reason)
+            continue
+        if governance.dry_run:
+            log_action(invoice_id, "dry_run", f"would file {amount:,.0f} {currency}")
+            continue
+        governance.awaiting_approval.append({"file_id": invoice_id, "amount": amount})
+        log_action(invoice_id, "filing_prepared", f"{amount:,.0f} {currency}, awaiting a broker")
+
+
+def customs_incident() -> list[str]:
+    """Replay the story: detect, stop, find what was affected, test the fix, resume."""
+    start = len(action_log)
+    monitor = CurrencyMonitor()
+    prepare_filings(CUSTOMS_INVOICES, extract_declared_value, monitor)
+    affected = [e["file_id"] for e in action_log[start:] if e["action"] == "held_by_kill_switch"]
+
+    governance.dry_run = True  # test the fix against the same invoices, taking no action
+    held = [i for i in CUSTOMS_INVOICES if i[0] in affected]
+    prepare_filings(held, extract_declared_value_fixed, monitor)
+    governance.dry_run = False
+
+    prepare_filings(governance.release_kill_switch(), extract_declared_value_fixed, monitor)
+
+    print("\n=== THE CUSTOMS INCIDENT ===")
+    for entry in action_log[start:]:
+        print(f"  {entry['file_id']:9s} | {entry['action']:22s} | {entry['details']}")
+    print(f"\nAffected filings, found in the action log: {', '.join(affected)}")
+    waiting = [a["file_id"] for a in governance.awaiting_approval if a["file_id"].startswith("INV")]
+    print(f"Filings awaiting a broker's approval, none yet submitted: {', '.join(waiting)}")
+    return affected
 
 
 # ─── Demo ─────────────────────────────────────────────────────────────────────
@@ -285,3 +431,4 @@ async def demo():
 
 if __name__ == "__main__":
     asyncio.run(demo())
+    customs_incident()

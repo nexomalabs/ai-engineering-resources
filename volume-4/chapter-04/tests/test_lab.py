@@ -17,6 +17,7 @@ REAL_SLEEP = asyncio.sleep
 @pytest.fixture(autouse=True)
 def fresh_state(monkeypatch):
     lab.action_log.clear()
+    monkeypatch.setattr(lab, "governance", lab.Governance())
     published, waits = [], []
 
     async def publish(event_type, payload):
@@ -98,8 +99,50 @@ def route(doc_type, confidence):
 
 
 def test_confident_classification_goes_to_its_handler():
+    route("contract", 0.99)
+    assert actions() == ["routed", "contract_processed", "pipeline_complete"]
+
+
+def test_a_payment_waits_at_the_approval_gate_until_a_person_approves():
     route("invoice", 0.99)
-    assert actions() == ["routed", "invoice_processed", "pipeline_complete"]
+    assert actions() == ["routed", "awaiting_approval", "pipeline_complete"]
+    asyncio.run(lab.approve("f-2", "dana"))
+    assert actions()[-2:] == ["approved", "invoice_processed"]
+
+
+def test_the_kill_switch_holds_documents_until_released():
+    lab.governance.pull_kill_switch("currency anomaly")
+    route("contract", 0.99)
+    assert actions() == ["kill_switch_engaged", "held_by_kill_switch"]
+    held = lab.governance.release_kill_switch()
+    assert [p["file_id"] for p in held] == ["f-2"] and not lab.governance.paused
+
+
+def test_dry_run_takes_no_action():
+    lab.governance.dry_run = True
+    route("contract", 0.99)
+    assert actions() == ["routed", "dry_run", "pipeline_complete"]
+
+
+def test_the_first_extractor_misreads_a_footer_currency_and_the_fix_does_not():
+    text = lab.CUSTOMS_INVOICES[2][2]  # the shipper's new layout
+    assert lab.extract_declared_value(text) == (11200.0, "USD")
+    assert lab.extract_declared_value_fixed(text) == (11200.0, "EUR")
+    assert lab.extract_declared_value_fixed(lab.CUSTOMS_INVOICES[0][2]) == (12400.0, "EUR")
+
+
+def test_the_monitor_flags_a_change_of_currency():
+    monitor = lab.CurrencyMonitor()
+    assert not monitor.is_anomalous("Hallbeck GmbH", "EUR")
+    assert monitor.is_anomalous("Hallbeck GmbH", "USD")
+
+
+def test_the_customs_incident_holds_the_affected_filings_and_files_them_after_the_fix(capsys):
+    assert lab.customs_incident() == ["INV-103", "INV-104"]
+    prepared = [e["details"] for e in lab.action_log if e["action"] == "filing_prepared"]
+    assert len(prepared) == 4 and all("EUR" in d for d in prepared)
+    assert not lab.governance.paused
+    assert "INV-101, INV-102, INV-103, INV-104" in capsys.readouterr().out
 
 
 def test_low_confidence_goes_to_review():

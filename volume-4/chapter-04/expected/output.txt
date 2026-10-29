@@ -1,29 +1,44 @@
 
 === ACTION LOG ===
-  06:41:05 | 6963b4bc | file_received                  | agreement_2024.txt
-  06:41:05 | dfd762e7 | file_received                  | invoice_00123.txt
-  06:41:05 | d4ea3b57 | file_received                  | q3_report.txt
-  06:41:05 | d4ea3b57 | classified                     | type=report confidence=0.99
-  06:41:05 | dfd762e7 | classified                     | type=invoice confidence=0.99
-  06:41:05 | d4ea3b57 | routed                         | → report handler
-  06:41:05 | dfd762e7 | routed                         | → invoice handler
-  06:41:05 | dfd762e7 | invoice_processed              | Created payment record. Confidence: 0.99
-  06:41:05 | dfd762e7 | pipeline_complete              | type=invoice
-  06:41:06 | d4ea3b57 | report_archived                | Archived to reports store. Confidence: 0.99
-  06:41:06 | d4ea3b57 | pipeline_complete              | type=report
-  06:41:06 | 7ebcba0a | file_received                  | email_thread.txt
-  06:41:06 | bca369b9 | file_received                  | unknown_doc.txt
-  06:41:07 | 6963b4bc | classified                     | type=contract confidence=0.9
-  06:41:07 | 6963b4bc | routed                         | → contract handler
-  06:41:07 | 6963b4bc | contract_processed             | Extracted terms. Confidence: 0.9
-  06:41:07 | 6963b4bc | pipeline_complete              | type=contract
-  06:41:09 | bca369b9 | classified                     | type=unknown confidence=0.5
-  06:41:09 | bca369b9 | routed                         | → unknown handler
-  06:41:09 | bca369b9 | routed_to_review               | Low confidence or unknown type: 0.5
-  06:41:09 | bca369b9 | pipeline_complete              | type=unknown
-  06:41:12 | 7ebcba0a | classified                     | type=correspondence confidence=0.9
-  06:41:12 | 7ebcba0a | routed                         | → correspondence handler
-  06:41:12 | 7ebcba0a | routed_to_review               | Low confidence or unknown type: 0.9
-  06:41:12 | 7ebcba0a | pipeline_complete              | type=correspondence
+  12:55:26 | 5e119c5d | file_received                  | agreement_2024.txt
+  12:55:26 | f529189d | file_received                  | invoice_00123.txt
+  12:55:26 | 95f54951 | file_received                  | q3_report.txt
+  12:55:26 | 95f54951 | classified                     | type=report confidence=0.99
+  12:55:26 | 95f54951 | routed                         | → report handler
+  12:55:26 | f529189d | classified                     | type=invoice confidence=0.99
+  12:55:26 | f529189d | routed                         | → invoice handler
+  12:55:26 | f529189d | awaiting_approval              | a invoice action needs a person's approval
+  12:55:26 | f529189d | pipeline_complete              | type=invoice
+  12:55:27 | 95f54951 | report_archived                | Archived to reports store. Confidence: 0.99
+  12:55:27 | 95f54951 | pipeline_complete              | type=report
+  12:55:27 | 319ead2e | file_received                  | email_thread.txt
+  12:55:27 | 42aea04b | file_received                  | unknown_doc.txt
+  12:55:28 | 5e119c5d | classified                     | type=contract confidence=0.9
+  12:55:28 | 5e119c5d | routed                         | → contract handler
+  12:55:28 | 5e119c5d | contract_processed             | Extracted terms. Confidence: 0.9
+  12:55:28 | 5e119c5d | pipeline_complete              | type=contract
+  12:55:30 | 42aea04b | classified                     | type=unknown confidence=0.5
+  12:55:30 | 42aea04b | routed                         | → unknown handler
+  12:55:30 | 42aea04b | routed_to_review               | Low confidence or unknown type: 0.5
+  12:55:30 | 42aea04b | pipeline_complete              | type=unknown
+  12:55:33 | 319ead2e | classified                     | type=correspondence confidence=0.9
+  12:55:33 | 319ead2e | routed                         | → correspondence handler
+  12:55:33 | 319ead2e | routed_to_review               | Low confidence or unknown type: 0.9
+  12:55:33 | 319ead2e | pipeline_complete              | type=correspondence
 
 Total actions logged: 25
+
+=== THE CUSTOMS INCIDENT ===
+  INV-101   | filing_prepared        | 12,400 EUR, awaiting a broker
+  INV-102   | filing_prepared        | 9,850 EUR, awaiting a broker
+  pipeline  | kill_switch_engaged    | Hallbeck GmbH declared in USD; its filings are in EUR
+  INV-103   | held_by_kill_switch    | Hallbeck GmbH declared in USD; its filings are in EUR
+  INV-104   | held_by_kill_switch    | Hallbeck GmbH declared in USD; its filings are in EUR
+  INV-103   | dry_run                | would file 11,200 EUR
+  INV-104   | dry_run                | would file 7,300 EUR
+  pipeline  | kill_switch_released   | 2 held item(s)
+  INV-103   | filing_prepared        | 11,200 EUR, awaiting a broker
+  INV-104   | filing_prepared        | 7,300 EUR, awaiting a broker
+
+Affected filings, found in the action log: INV-103, INV-104
+Filings awaiting a broker's approval, none yet submitted: INV-101, INV-102, INV-103, INV-104
