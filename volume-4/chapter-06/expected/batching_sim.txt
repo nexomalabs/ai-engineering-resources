@@ -1,0 +1,5 @@
+Afternoon rush: 30 minutes at 2.0 documents a second (3655 documents), 2 GPUs with 8 slots each
+
+scheduler            completed      p50      p95  longest queue  slots busy
+fixed batches             1738   448.7s   910.4s           1909         37%
+continuous batching       3634     4.0s    22.0s             35         78%

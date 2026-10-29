@@ -88,3 +88,26 @@ def test_cost_uses_usage_and_both_prices():
 def test_concurrency_limit_is_respected(call_log, concurrency):
     run(lab.run_benchmark([f"p{i}" for i in range(15)], concurrency=concurrency, use_cache=False))
     assert call_log["peak"] == concurrency
+
+
+import batching_sim as sim  # noqa: E402
+
+
+def test_a_fixed_batch_holds_a_freed_slot_until_its_longest_request_finishes(monkeypatch):
+    monkeypatch.setattr(sim, "SLOTS_PER_GPU", 2)
+    arrivals = [sim.Request(0.0, 10), sim.Request(0.0, 100), sim.Request(0.0, 10)]
+    fixed = sim.simulate(arrivals, gpus=1, continuous=False, until=10)
+    continuous = sim.simulate(arrivals, gpus=1, continuous=True, until=10)
+    # The third request waits for the 100-token one under fixed batching, not under continuous
+    assert fixed["completed"] == continuous["completed"] == 3
+    assert round(fixed["p95_s"], 2) == 2.2 and round(continuous["p95_s"], 2) == 2.0
+    assert round(fixed["p50_s"], 2) == 2.0 and round(continuous["p50_s"], 2) == 0.4
+
+
+def test_continuous_batching_keeps_up_with_the_rush_and_fixed_batches_do_not():
+    arrivals = sim.make_arrivals(2.0, minutes=5)
+    fixed = sim.simulate(arrivals, gpus=2, continuous=False)
+    continuous = sim.simulate(arrivals, gpus=2, continuous=True)
+    assert continuous["waiting_at_end"] < 20 and continuous["p95_s"] < 30
+    assert fixed["longest_queue"] > 5 * continuous["longest_queue"]
+    assert fixed["slot_utilization"] < continuous["slot_utilization"]
