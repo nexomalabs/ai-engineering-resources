@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-Governance documentation for a hypothetical enterprise AI assistant: a model card for EnterpriseAssist-7B, a system card for the help desk service built on it, and a Python validator that checks both contain every required section before deployment.
+Governance documentation for a hypothetical enterprise AI assistant: a model card for EnterpriseAssist-7B, a system card for the help desk service built on it, and a Python validator that checks both contain every required section before deployment. The validator also holds the launch review from the chapter's opening story: it asks of a system card who owns the feature, what it may promise and who is called at two in the morning, and approves Wren's late-delivery vouchers only once their card answers all three.
 
 ## Learning Outcomes
 
@@ -10,6 +10,7 @@ Governance documentation for a hypothetical enterprise AI assistant: a model car
 - Write a system card: the deployed service, its safety evaluations, safeguards, usage policy, monitoring, limitations and escalation path.
 - Automate a documentation gate that a deployment pipeline can run.
 - Check structure, not keywords: a word in a paragraph is not a section.
+- Hold a launch to an accountable owner, a written cap on what the system may promise, and a contact at any hour.
 
 ## Prerequisites
 
@@ -39,7 +40,6 @@ uv run python solution/governance_validator.py     # reference
 The reference solution prints the following (also saved in `expected/output.txt`).
 
 ```text
-
 === model_card.md ===
 Pass rate: 100% (8/8 sections)
 All required sections present.
@@ -49,6 +49,18 @@ Pass rate: 100% (7/7 sections)
 All required sections present.
 
 Overall: PASS
+
+=== Launch review: voucher_card_draft.md ===
+  Who owns this if it goes wrong?        NO ANSWER
+  What may the system promise?           NO ANSWER
+  Who is called at two in the morning?   NO ANSWER
+Launch: WAIT: the card does not answer every question
+
+=== Launch review: voucher_system_card.md ===
+  Who owns this if it goes wrong?        Sam Whitlock, product manager
+  What may the system promise?           Wren may offer one voucher per late parcel, worth at most £10; Wren ...
+  Who is called at two in the morning?   Wrenfield AI on-call engineer, 020 7946 0018, at any hour
+Launch: APPROVED
 ```
 
 ## Verifying Your Work
@@ -59,7 +71,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, copy your files from `src/` over those in `solution/` there, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. Four of the tests check the launch review: the draft voucher card answers none of the questions, the finished card names an owner, a £10 cap and a contact at any hour, a card missing only its night contact waits, and the finished card passes the section check too. With the TODOs left in place, three of the eleven tests fail.
 
 ## If It Does Not Work
 
@@ -82,7 +94,8 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `governance_validator.py`, `model_card.md`, `system_card.md`; runs, with 2 TODOs |
+| `src/` | Your starting point: `governance_validator.py`, `model_card.md`, `system_card.md`; runs, with 3 TODOs (TODO 4 is the launch decision) |
+| `solution/voucher_card_draft.md`, `solution/voucher_system_card.md` | The voucher feature's system card, as first proposed and as approved |
 | `solution/` | Reference implementation of the same files |
-| `tests/test_lab.py` | 7 tests, run against `solution/` |
+| `tests/test_lab.py` | 11 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

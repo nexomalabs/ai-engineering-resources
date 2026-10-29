@@ -76,3 +76,40 @@ def test_report_lists_missing_sections(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "=== card.md ===" in out
     assert "MISSING: system overview, safety evaluation" in out
+
+
+import governance_validator as gv  # noqa: E402
+
+
+def test_the_draft_voucher_card_answers_none_of_the_launch_questions(capsys):
+    card = ROOT / "solution" / "voucher_card_draft.md"
+    assert not any(gv.launch_review(card).values())
+    assert gv.review_launch(card) is False
+
+
+def test_the_finished_voucher_card_names_an_owner_a_cap_and_a_night_contact(capsys):
+    answers = gv.launch_review(ROOT / "solution" / "voucher_system_card.md")
+    owner, promise, night = answers.values()
+    assert owner == "Sam Whitlock, product manager"
+    assert "at most £10" in promise
+    assert "at any hour" in night
+    assert gv.review_launch(ROOT / "solution" / "voucher_system_card.md") is True
+
+
+def test_a_card_missing_only_its_night_contact_waits(tmp_path, capsys):
+    card = (ROOT / "solution" / "voucher_system_card.md").read_text(encoding="utf-8")
+    path = tmp_path / "card.md"
+    path.write_text(
+        card.replace('on_call: "Wrenfield AI on-call engineer, 020 7946 0018, at any hour"\n', ""),
+        encoding="utf-8",
+    )
+    assert gv.launch_review(path)["Who is called at two in the morning?"] == ""
+    assert gv.review_launch(path) is False
+
+
+def test_the_finished_voucher_card_also_passes_the_section_check(capsys):
+    result = gv.ValidationResult(
+        str(ROOT / "solution" / "voucher_system_card.md"), gv.SYSTEM_CARD_SECTIONS
+    )
+    result.compute()
+    assert result.missing_sections == []

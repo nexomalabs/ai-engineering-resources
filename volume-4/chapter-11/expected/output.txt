@@ -8,3 +8,15 @@ Pass rate: 100% (7/7 sections)
 All required sections present.
 
 Overall: PASS
+
+=== Launch review: voucher_card_draft.md ===
+  Who owns this if it goes wrong?        NO ANSWER
+  What may the system promise?           NO ANSWER
+  Who is called at two in the morning?   NO ANSWER
+Launch: WAIT: the card does not answer every question
+
+=== Launch review: voucher_system_card.md ===
+  Who owns this if it goes wrong?        Sam Whitlock, product manager
+  What may the system promise?           Wren may offer one voucher per late parcel, worth at most £10; Wren ...
+  Who is called at two in the morning?   Wrenfield AI on-call engineer, 020 7946 0018, at any hour
+Launch: APPROVED

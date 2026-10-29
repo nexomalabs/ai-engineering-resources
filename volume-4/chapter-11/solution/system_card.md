@@ -2,7 +2,7 @@
 system_name: "EnterpriseAssist Help Desk"
 version: "1.0.0"
 date: "2026-07-01"
-organization: "Nexoma Labs LLC"
+organization: "Quillmark Software"
 ---
 
 # System Card: EnterpriseAssist Help Desk v1.0.0

@@ -9,6 +9,7 @@ Run from the lab folder:
 # Validates completeness of governance documentation against required checklists.
 # A section counts only if it is a Markdown heading: a word in the body text does not.
 
+import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -82,6 +83,61 @@ def validate_all(model_card_path: str, system_card_path: str) -> bool:
     return all_pass
 
 
+# ─── The launch review from the chapter's story ──────────────────────────────
+
+# Maya's three questions. A feature launches only when its system card answers all three:
+# an owner and an out-of-hours contact in its front matter, and a Commitments section that
+# says what the system may promise.
+LAUNCH_QUESTIONS = [
+    ("Who owns this if it goes wrong?", "owner"),
+    ("What may the system promise?", "commitments"),
+    ("Who is called at two in the morning?", "on_call"),
+]
+
+
+def read_card(path) -> tuple[dict, dict]:
+    """Return a card's front-matter fields and its sections, {heading: body}."""
+    text = Path(path).read_text(encoding="utf-8")
+    fields, sections, heading = {}, {}, None
+    lines = text.splitlines()
+    if lines and lines[0] == "---":
+        end = lines.index("---", 1)
+        for line in lines[1:end]:
+            key, _, value = line.partition(":")
+            fields[key.strip()] = value.strip().strip('"')
+        lines = lines[end + 1 :]
+    for line in lines:
+        if line.startswith("## "):
+            heading = line[3:].strip().lower()
+            sections[heading] = []
+        elif heading and line.strip():
+            sections[heading].append(line.strip().lstrip("- "))
+    return fields, {h: "; ".join(lines) for h, lines in sections.items()}
+
+
+def launch_review(path) -> dict[str, str]:
+    """Answer each launch question from the card; an empty answer means it has none."""
+    fields, sections = read_card(path)
+    return {
+        question: (fields.get(source) or sections.get(source, "")).strip()
+        for question, source in LAUNCH_QUESTIONS
+    }
+
+
+def review_launch(path) -> bool:
+    answers = launch_review(path)
+    print(f"\n=== Launch review: {Path(path).name} ===")
+    for question, answer in answers.items():
+        print(f"  {question:<38} {textwrap.shorten(answer, 72, placeholder=' ...') or 'NO ANSWER'}")
+    # TODO 4: approve only if every question has an answer. As supplied, every feature
+    #   launches, with or without an owner, a cap, or anyone to call at night.
+    approved = True
+    print(f"Launch: {'APPROVED' if approved else 'WAIT: the card does not answer every question'}")
+    return approved
+
+
 if __name__ == "__main__":
     here = Path(__file__).parent  # the cards sit next to this script
     validate_all(here / "model_card.md", here / "system_card.md")
+    review_launch(here / "voucher_card_draft.md")
+    review_launch(here / "voucher_system_card.md")

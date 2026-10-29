@@ -2,7 +2,7 @@
 model_name: "EnterpriseAssist-7B"
 version: "2.1.0"
 date: "2026-07-01"
-organization: "Nexoma Labs LLC"
+organization: "Quillmark Software"
 license: "Internal use only"
 ---
 
