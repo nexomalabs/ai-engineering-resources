@@ -1,0 +1,27 @@
+A: add an instance when CPU passes 70%, hour by hour
+  hour  req/s in flight  queued  CPU instances  timeouts
+  08:00    15        59       0  12%         2         0
+  09:00    28       100     844  20%         2       486
+  10:00    40       100   1,165  20%         2    31,479
+  11:00    42       100   1,232  20%         2    57,260
+  12:00    38       100   1,115  20%         2    54,012
+  13:00    40       100   1,197  20%         2    51,221
+  14:00    45       100   1,328  20%         2    62,911
+  15:00    44       100   1,292  20%         2    69,756
+  16:00    36       100   1,013  20%         2    54,327
+  17:00    25       100     702  20%         2    20,363
+  18:00    15        48       0  12%         2         0
+  19:00    15        58       0  12%         2         0
+
+Three ways through the day
+  A  scale on CPU above 70%
+  B  scale on requests in flight and queue depth
+  C  B, with rate-limited requests waiting in the queue
+                                  A          B          C
+  requests answered         964,074  1,358,690  1,365,889
+  timed out                 401,815          0          0
+  failed on rate limit            0      7,199          0
+  waited in the queue       760,384         43     10,647
+  longest wait                 29 s        1 s        1 s
+  most instances                  2          6          7
+  highest CPU                   20%        18%        18%

@@ -82,3 +82,35 @@ def test_weighted_routing_counts_complexity():
     assert lb.weighted_least_connections(0.1) == "b"
     assert lb.weighted_least_connections(0.1) == "b"  # b carries 0.1, a carries 0.9
     assert lb.active_load["b"] == 0.2
+
+
+from scaling_signal import MIN_INSTANCES, desired_by_load, simulate  # noqa: E402
+
+A = simulate("cpu", wait_on_rate_limit=False)
+B = simulate("load", wait_on_rate_limit=False)
+C = simulate("load", wait_on_rate_limit=True)
+
+
+def test_cpu_stays_near_twenty_percent_so_the_cpu_policy_never_scales():
+    assert A.max_cpu < 0.25
+    assert A.peak_instances == MIN_INSTANCES
+    assert A.timed_out > 0.25 * A.arrived
+
+
+def test_desired_by_load_holds_everything_at_the_target_utilization():
+    assert desired_by_load(in_flight=35, queued=0) == 1
+    assert desired_by_load(in_flight=35, queued=1) == 2
+    assert desired_by_load(in_flight=100, queued=250) == 10
+
+
+def test_scaling_on_load_ends_the_timeouts_but_meets_the_rate_limit():
+    assert B.peak_instances > MIN_INSTANCES
+    assert B.timed_out == 0
+    assert B.rate_limited > 0
+
+
+def test_rate_limited_requests_that_wait_are_all_answered_a_little_later():
+    assert C.timed_out == C.rate_limited == 0
+    assert C.answered == C.arrived
+    assert C.waited() > 0
+    assert C.longest_wait() <= 5
