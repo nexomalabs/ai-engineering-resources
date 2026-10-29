@@ -28,6 +28,12 @@ CORPUS = [
     "Recall measures the fraction of relevant items that were retrieved.",  # 12
     "Cross-encoders rerank candidate documents with higher accuracy.",  # 13
     "Hybrid search combines sparse and dense retrieval for better results.",  # 14
+    # Wrenfield's route service bulletins, from the chapter's opening story
+    "Route R-471 service bulletin: road repairs are causing delivery delays of up to two "
+    "days until the works finish.",  # 15
+    "Route R-417 service bulletin: the Harbour Street stop moves to the north entrance.",  # 16
+    "Route R-147 service bulletin: the evening collection moves to 18:00.",  # 17
+    "Route R-714 service bulletin: Saturday deliveries resume next week.",  # 18
 ]
 
 # Test queries with ground-truth relevant document indices
@@ -47,6 +53,14 @@ TEST_QUERIES = [
     {
         "query": "language understanding NLP",
         "relevant": {3, 7},
+    },
+    {
+        "query": "is route R-417 delayed",  # the customer's question in the story
+        "relevant": {16},
+    },
+    {
+        "query": "when do route R-471 repairs finish",
+        "relevant": {15},
     },
 ]
 
@@ -97,8 +111,27 @@ def reciprocal_rank_fusion(
 
 
 # ── Evaluation ──────────────────────────────────────────────────────────────
+def mrr(relevant: set, retrieved: list[int]) -> float:
+    """Reciprocal rank of the first relevant document: 1.0 if it comes first."""
+    for rank, doc_id in enumerate(retrieved, start=1):
+        if doc_id in relevant:
+            return 1.0 / rank
+    return 0.0
+
+
 def recall_at_k(relevant: set, retrieved: list[int], k: int) -> float:
     return len(relevant & set(retrieved[:k])) / len(relevant) if relevant else 0.0
+
+
+def verdict(metric: str, scores: dict[str, list[float]]) -> str:
+    """Say what the numbers show, rather than asserting a result in advance."""
+    best_single = max(np.mean(scores["BM25"]), np.mean(scores["Dense"]))
+    hybrid = np.mean(scores["Hybrid"])
+    if np.isclose(hybrid, best_single):
+        return f"By {metric}, hybrid retrieval matches the better single method."
+    if hybrid > best_single:
+        return f"By {metric}, hybrid retrieval beats both single methods."
+    return f"By {metric}, hybrid retrieval trails the better single method."
 
 
 def evaluate(corpus, test_queries, k=K):
@@ -107,10 +140,21 @@ def evaluate(corpus, test_queries, k=K):
     model = SentenceTransformer("all-MiniLM-L6-v2")
     dense_index = build_dense_index(corpus, model)
 
-    bm25_recalls, dense_recalls, hybrid_recalls = [], [], []
+    methods = ("BM25", "Dense", "Hybrid")
+    recalls = {m: [] for m in methods}
+    mrrs = {m: [] for m in methods}
 
-    print(f"\n{'Query':<45} {'BM25':>8} {'Dense':>8} {'Hybrid':>8}")
-    print("-" * 73)
+    def row(label: str, first: list[float], second: list[float]) -> str:
+        cells = (
+            " ".join(f"{v:>6.2f}" for v in first) + "   " + " ".join(f"{v:>6.2f}" for v in second)
+        )
+        return f"{label:<34} {cells}"
+
+    names = " ".join(f"{m:>6}" for m in methods)
+    print()
+    print(f"{'':<34} {'Recall@' + str(k):^20}   {'MRR':^20}")
+    print(f"{'Query':<34} {names}   {names}")
+    print("-" * 78)
 
     for item in test_queries:
         query = item["query"]
@@ -119,33 +163,18 @@ def evaluate(corpus, test_queries, k=K):
         bm25_results = bm25_retrieve(bm25, query, k * 2)
         dense_results = dense_retrieve(query, model, dense_index, k * 2)
         hybrid_results = reciprocal_rank_fusion([bm25_results, dense_results])
+        ranked = {"BM25": bm25_results, "Dense": dense_results, "Hybrid": hybrid_results}
 
-        r_bm25 = recall_at_k(relevant, bm25_results, k)
-        r_dense = recall_at_k(relevant, dense_results, k)
-        r_hybrid = recall_at_k(relevant, hybrid_results, k)
+        for m in methods:
+            recalls[m].append(recall_at_k(relevant, ranked[m], k))
+            mrrs[m].append(mrr(relevant, ranked[m]))
+        print(row(query[:34], [recalls[m][-1] for m in methods], [mrrs[m][-1] for m in methods]))
 
-        bm25_recalls.append(r_bm25)
-        dense_recalls.append(r_dense)
-        hybrid_recalls.append(r_hybrid)
-
-        short_query = query[:43]
-        print(f"{short_query:<45} {r_bm25:>8.2f} {r_dense:>8.2f} {r_hybrid:>8.2f}")
-
-    print("-" * 73)
-    print(
-        f"{'Mean Recall@' + str(k):<45} {np.mean(bm25_recalls):>8.2f} "
-        f"{np.mean(dense_recalls):>8.2f} {np.mean(hybrid_recalls):>8.2f}"
-    )
-
-    # Report what the numbers show, rather than asserting a result in advance
-    best_single = max(np.mean(bm25_recalls), np.mean(dense_recalls))
-    hybrid = np.mean(hybrid_recalls)
-    if np.isclose(hybrid, best_single):
-        print("\nHybrid retrieval matches the better single method.")
-    elif hybrid > best_single:
-        print("\nHybrid retrieval beats both single methods.")
-    else:
-        print("\nHybrid retrieval trails the better single method.")
+    print("-" * 78)
+    print(row("Mean", [np.mean(recalls[m]) for m in methods], [np.mean(mrrs[m]) for m in methods]))
+    print()
+    print(verdict(f"Recall@{k}", recalls))
+    print(verdict("MRR", mrrs))
 
 
 if __name__ == "__main__":

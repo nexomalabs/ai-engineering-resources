@@ -2,13 +2,14 @@
 
 ## What You Will Build
 
-A retrieval benchmark over a 15-document corpus with labelled relevant documents: BM25 keyword retrieval, dense retrieval with sentence embeddings in a FAISS index, and the two fused with reciprocal rank fusion (RRF). It reports Recall@5 per query and on average, and states what the numbers show.
+A retrieval benchmark over a 19-document corpus with labelled relevant documents: BM25 keyword retrieval, dense retrieval with sentence embeddings in a FAISS index, and the two fused with reciprocal rank fusion (RRF). Four of the documents are Wrenfield route bulletins, and one query is the customer's question from the chapter's opening story, "is route R-417 delayed". It reports Recall@5 and mean reciprocal rank (MRR) per query and on average, and states what the numbers show.
 
 ## Learning Outcomes
 
 - Build a BM25 index and a dense FAISS index over the same corpus.
 - Fuse ranked lists with reciprocal rank fusion.
-- Measure retrieval with Recall@K against labelled relevant documents.
+- Measure retrieval with Recall@K and MRR against labelled relevant documents.
+- See an embedding model confuse two identifiers that differ by one transposed digit, and keyword search get them right.
 - Explain why fusion cannot recover a document that neither retriever returns.
 - Report measured results rather than expected ones.
 
@@ -38,7 +39,7 @@ uv run python solution/lab.py     # reference
 
 `src/lab.py` runs as supplied, but its Hybrid column just repeats BM25 (TODO 1), and every recall is divided by 5 instead of by the number of relevant documents (TODO 2), so the figures differ from the reference.
 
-The figures below come from `all-MiniLM-L6-v2`. On this small corpus fusion matches dense retrieval but does not beat it; Lab Question 1 asks why.
+The figures below come from `all-MiniLM-L6-v2`. On the R-417 question dense retrieval ranks the R-471 bulletin first (MRR 0.33), while BM25 and the fused ranking put R-417 first. Recall@5 misses the mistake, because the right bulletin is still in the top five. Neither single method is best on both metrics; fusion matches the better one on each. Lab Question 4 shows a phrasing that fusion cannot rescue.
 
 ## Expected Result
 
@@ -46,16 +47,20 @@ The reference solution prints the following (also saved in `expected/output.txt`
 
 ```text
 
-Query                                             BM25    Dense   Hybrid
--------------------------------------------------------------------------
-how does BM25 work for information retrieva       0.50     0.50     0.50
-semantic search using vector embeddings           1.00     1.00     1.00
-machine learning models trained on data           0.75     1.00     1.00
-language understanding NLP                        0.50     0.50     0.50
--------------------------------------------------------------------------
-Mean Recall@5                                     0.69     0.75     0.75
+                                         Recall@5                 MRR         
+Query                                BM25  Dense Hybrid     BM25  Dense Hybrid
+------------------------------------------------------------------------------
+how does BM25 work for information   0.50   0.50   0.50     1.00   1.00   1.00
+semantic search using vector embed   1.00   1.00   1.00     1.00   1.00   1.00
+machine learning models trained on   0.75   1.00   1.00     1.00   1.00   1.00
+language understanding NLP           0.50   0.50   0.50     1.00   1.00   1.00
+is route R-417 delayed               1.00   1.00   1.00     1.00   0.33   1.00
+when do route R-471 repairs finish   1.00   1.00   1.00     1.00   1.00   1.00
+------------------------------------------------------------------------------
+Mean                                 0.79   0.83   0.83     1.00   0.89   1.00
 
-Hybrid retrieval matches the better single method.
+By Recall@5, hybrid retrieval matches the better single method.
+By MRR, hybrid retrieval matches the better single method.
 ```
 
 ## Verifying Your Work
@@ -83,7 +88,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 ## Going Further
 
 - Change the RRF constant from 60 to 10 and to 120, and compare the rankings (Lab Question 3).
-- Add a query on which BM25 and dense retrieval disagree, and show fusion helping (Lab Questions 1 and 4).
+- Ask "any delays on route R-417" and work out why fusion now ranks the R-471 bulletin first (Lab Question 4).
 - Swap in `all-mpnet-base-v2` and measure dense recall again (Lab Question 5).
 - Tokenize for BM25 with a regular expression instead of `split()`, so punctuation does not hide matches, and check whether recall changes.
 
@@ -93,5 +98,5 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 |---|---|
 | `src/lab.py` | Your starting point: runs, with 2 TODOs |
 | `solution/lab.py` | Reference implementation |
-| `tests/test_lab.py` | 6 tests, run against `solution/` |
+| `tests/test_lab.py` | 8 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |
