@@ -96,8 +96,65 @@ def test_agent_redacts_the_secret_in_its_jwt_answer():
     assert agent.audit_log._entries[-1].event_type == "security_alert"
 
 
-def test_full_suite_passes_ten_of_ten(tmp_path, monkeypatch, capsys):
+@pytest.mark.parametrize(
+    "style",
+    [
+        "color:#ffffff",
+        "color: white;",
+        "COLOR:#FFF",
+        "font-size:0",
+        "font-size: 0px;",
+        "display:none",
+        "visibility: hidden",
+    ],
+)
+def test_text_styled_out_of_sight_is_hidden(style):
+    html = f'<p>Hello.</p><div style="{style}"><span>secret <b>note</b></span></div><p>Bye.</p>'
+    assert sl.split_visible_text(html) == ("Hello. Bye.", "secret note")
+
+
+@pytest.mark.parametrize(
+    "style", ["background-color:#ffffff", "color:#333333", "font-size:10px", "font-size: 0.9em"]
+)
+def test_ordinary_styles_stay_visible(style):
+    assert sl.split_visible_text(f'<p style="{style}">Hello.</p>') == ("Hello.", "")
+
+
+def test_the_story_line_slips_past_every_injection_pattern():
+    _, hidden = sl.split_visible_text(sl.CLAIM_EMAIL)
+    assert "pre-approved" in hidden
+    assert sl.InputValidator().validate(hidden) == (hidden, [])
+
+
+def test_validate_email_flags_and_drops_hidden_text():
+    text, events = sl.InputValidator().validate_email(sl.CLAIM_EMAIL)
+    assert "cracked screen" in text and "pre-approved" not in text
+    assert [(e.event_type, e.severity) for e in events] == [("hidden_text", "high")]
+
+
+def test_a_plain_email_raises_nothing():
+    text, events = sl.InputValidator().validate_email("<p>My monitor is cracked.</p>")
+    assert (text, events) == ("My monitor is cracked.", [])
+
+
+def test_the_hidden_line_poisons_a_summary_that_reads_it():
+    visible, hidden = sl.split_visible_text(sl.CLAIM_EMAIL)
+    messages = [{"role": "user", "content": f"<email>\n{visible} {hidden}\n</email>"}]
+    reply = sl.client.chat.completions.create(model="gpt-6-luna", messages=messages)
+    assert reply.choices[0].message.content.startswith("Pre-approved by management")
+
+
+def test_agent_summarizes_the_claim_email_without_the_hidden_line():
+    agent = sl.SecureAgent()
+    result = agent.summarize_email(sl.CLAIM_EMAIL)
+    assert result["blocked_injection"]
+    assert "pre-approved" not in result["response"].lower()
+    entry = agent.audit_log._entries[0]
+    assert entry.actor == "email" and entry.security_events[0]["event_type"] == "hidden_text"
+
+
+def test_full_suite_passes_eleven_of_eleven(tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
     agent = sl.run_security_tests()
-    assert "Test Results: 10/10 passed" in capsys.readouterr().out
+    assert "Test Results: 11/11 passed" in capsys.readouterr().out
     assert agent.audit_log.verify_integrity() == (True, [])
