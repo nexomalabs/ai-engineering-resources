@@ -96,7 +96,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 |:-------:|------|------:|-------|------|
 | 12.4 | [`12.4-task-trees.py`](chapter-12/12.4-task-trees.py) | 34 | — | on its own |
 | 12.5 | [`12.5-llm-based-planning.py`](chapter-12/12.5-llm-based-planning.py) | 44 | — | after `12.4-task-trees.py` |
-| 12.6 | [`12.6-plan-validation.py`](chapter-12/12.6-plan-validation.py) | 43 | — | after `12.4-task-trees.py` |
+| 12.6 | [`12.6-plan-validation.py`](chapter-12/12.6-plan-validation.py) | 66 | — | after `12.4-task-trees.py` |
 | 12.7 | [`12.7-dynamic-replanning.py`](chapter-12/12.7-dynamic-replanning.py) | 22 | — | sketch: see the text |
 | 12.10 | [`12.10-planning-evaluation.py`](chapter-12/12.10-planning-evaluation.py) | 14 | — | after `12.4-task-trees.py` |
 

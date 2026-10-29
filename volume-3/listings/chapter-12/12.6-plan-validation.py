@@ -2,7 +2,11 @@
 # Section 12.6, Plan Validation
 # Copied from the book by scripts/export_listings.py. Report errors as errata.
 
-def validate_plan(tasks: list[Task], available_tools: set[str]) -> list[str]:
+def validate_plan(
+    tasks: list[Task],
+    available_tools: set[str],
+    must_precede: list[tuple[str, str]] = (),
+) -> list[str]:
     errors = []
     task_ids = {t.id for t in tasks}
 
@@ -43,5 +47,24 @@ def validate_plan(tasks: list[Task], available_tools: set[str]) -> list[str]:
             if has_cycle(task.id):
                 errors.append("Circular dependency detected in task graph.")
                 break
+
+    # Check required order: a task using the later tool must depend, directly or
+    # through other tasks, on a task using the earlier one
+    by_id = {t.id: t for t in tasks}
+
+    def ancestors(task: Task) -> set[str]:
+        seen: set[str] = set()
+        stack = list(task.depends_on)
+        while stack:
+            dep = stack.pop()
+            if dep in by_id and dep not in seen:
+                seen.add(dep)
+                stack.extend(by_id[dep].depends_on)
+        return seen
+
+    for earlier, later in must_precede:
+        for task in tasks:
+            if task.tool == later and not any(by_id[a].tool == earlier for a in ancestors(task)):
+                errors.append(f"Task '{task.id}' uses '{later}' before any '{earlier}' task.")
 
     return errors

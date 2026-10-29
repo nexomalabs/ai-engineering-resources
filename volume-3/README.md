@@ -26,7 +26,7 @@ uv run pytest                # verify the reference solution
 | 6 | [Hybrid Retrieval System](chapter-06/) | `src/lab.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
 | 7 | [Extractive Context Compression](chapter-07/) | `src/lab.py` | embedding model (downloaded on first run) | $0.00 | ✅ |
 | 8 | [Tool-Calling System](chapter-08/) | `src/lab.py` | — | $0.00 | ✅ |
-| 9 | [Multi-Step Function Calling Pipeline](chapter-09/) | `src/lab.py` | — | $0.00 | ✅ |
+| 9 | [Multi-Step Function Calling Pipeline](chapter-09/) | `src/lab.py` | `pydantic` (installed by `uv sync`) | $0.00 | ✅ |
 | 10 | [MCP-Compatible Server](chapter-10/) | `src/lab.py` | — | $0.00 | ✅ |
 | 11 | [Build a ReAct Agent with Three Tools](chapter-11/) | `src/react_agent.py` | — | $0.00 | ✅ |
 | 12 | [Task Planning Agent](chapter-12/) | `src/planning_agent.py` | — | $0.00 | ✅ |
