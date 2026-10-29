@@ -66,3 +66,35 @@ def test_presidio_detects_names_too():
     redacted, entities = redact_pii("This is David Chen; reach me at david.chen@example.org.")
     assert {e["entity"] for e in entities} >= {"PERSON", "EMAIL_ADDRESS"}
     assert "David Chen" not in redacted
+
+
+import chat_store  # noqa: E402
+
+
+def test_passport_numbers_and_dates_are_redacted():
+    text, found = redact_with_regex_fallback(chat_store.MESSAGE)
+    assert chat_store.PASSPORT not in text and "14/03/1987" not in text
+    assert "PASSPORT" in found and "DATE" in found
+
+
+def test_without_redaction_every_chat_store_keeps_the_passport_number():
+    platform = chat_store.ChatPlatform(redact_on_ingest=False)
+    platform.receive("cust-2291", chat_store.MESSAGE)
+    assert len(platform.copies_of(chat_store.PASSPORT)) == len(chat_store.CHAT_STORES)
+    assert platform.erase_from_main_database("cust-2291") == 0  # the old procedure finds nothing
+
+
+def test_redacting_on_ingest_keeps_the_passport_number_out_of_every_store():
+    platform = chat_store.ChatPlatform(redact_on_ingest=True)
+    platform.receive("cust-2291", chat_store.MESSAGE)
+    assert platform.copies_of(chat_store.PASSPORT) == {}
+
+
+def test_erasure_reaches_every_store_and_only_that_customer():
+    platform = chat_store.ChatPlatform(redact_on_ingest=True)
+    platform.receive("cust-2291", chat_store.MESSAGE)
+    platform.receive("cust-4410", "Can you change my delivery slot to Friday?")
+    removed = platform.erase_everywhere("cust-2291")
+    assert removed == {name: 1 for name in chat_store.CHAT_STORES}
+    users = {r["user_id"] for store in platform.stores.values() for r in store.records}
+    assert users == {"cust-4410"}

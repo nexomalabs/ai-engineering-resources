@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A pipeline that keeps personal data away from a model and out of what the model says: it redacts names, email addresses, phone numbers and Social Security numbers from the user's message, sends only the redacted text to the model, then redacts the model's answer too. It runs on ten test messages and compares two detectors: Microsoft Presidio, which uses a language model to find names, and the chapter's regular-expression fallback, which needs nothing installed.
+A pipeline that keeps personal data away from a model and out of what the model says: it redacts names, email addresses, phone numbers and Social Security numbers from the user's message, sends only the redacted text to the model, then redacts the model's answer too. It runs on ten test messages and compares two detectors: Microsoft Presidio, which uses a language model to find names, and the chapter's regular-expression fallback, which needs nothing installed. A second script, `chat_store.py`, replays the chapter's opening story: a passport number typed into the chat is copied into five stores that the erasure procedure never checked, until the platform redacts personal data on ingestion and erases a customer from every store in its register.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A pipeline that keeps personal data away from a model and out of what the model 
 - Explain what regular expressions catch (structured values) and what they cannot (names).
 - Find a detector's gaps by testing it, then cover them with a second method.
 - Use test data that belongs to no one: reserved SSNs, fictional phone numbers, example domains.
+- Redact personal data before anything stores it, and make an erasure reach every store that holds chat text.
 
 ## Prerequisites
 
@@ -55,14 +56,37 @@ Each detector misses what the other finds. The regex fallback catches every stru
 
 Every redacted message reaches the model without its PII, and every reply has the support address replaced with `[EMAIL]`.
 
+## Every Copy of a Passport Number
+
+```bash
+uv run python src/chat_store.py          # your work
+uv run python solution/chat_store.py     # reference
+```
+
+It uses the regex detector, so it needs nothing installed. The reference prints (also saved in `expected/chat_store.txt`):
+
+```text
+=== Before the fix ===
+Stored text   : To prove who I am: my passport number is 123456789 and my date of birth is 14/03/1987. Where is my parcel?
+Passport copies: {'conversation log': 1, 'debugging log': 1, 'semantic cache': 1, 'memory vector store': 1, 'nightly backup': 1}
+Erasure       : removed 0 records from the main database
+Records of cust-2291 left: 5
+
+=== After the fix ===
+Stored text   : To prove who I am: my passport number is [PASSPORT] and my date of birth is [DATE]. Where is my parcel?
+Passport copies: none
+Erasure       : removed 5 records from 5 stores
+Records of cust-2291 left: 0
+```
+
 ## Verifying Your Work
 
 ```bash
-uv run pytest                       # 9 tests; the Presidio test is skipped
-uv run --group presidio pytest      # all 10
+uv run pytest                       # 13 tests; the Presidio test is skipped
+uv run --group presidio pytest      # all 14
 ```
 
-The tests check that the fallback redacts whole values (including numbers that begin with `(` or `+1`), leaves names and plain text alone, maps Presidio's labels before scoring, reaches the chapter's recall on the dataset, sends only redacted input to the model and redacts its output, and, with Presidio, detects a name. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`.
+The tests check that the fallback redacts whole values (including numbers that begin with `(` or `+1`), leaves names and plain text alone, maps Presidio's labels before scoring, reaches the chapter's recall on the dataset, sends only redacted input to the model and redacts its output, and, with Presidio, detects a name. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. Four more test the chat stores: passport numbers and dates are redacted, without redaction every store keeps the passport number and the old erasure finds nothing, redacting on ingestion keeps it out of every store, and erasure reaches every store and only that customer. With all four TODOs left in place, eleven tests fail.
 
 ## If It Does Not Work
 
@@ -70,6 +94,7 @@ The tests check that the fallback redacts whole values (including numbers that b
 |---|---|---|
 | Nothing is redacted | TODO 1: the fallback loop is empty | Substitute each pattern's matches with `[LABEL]` |
 | Presidio scores 0% for email, phone and SSN | TODO 2: `EMAIL_ADDRESS` is compared with `EMAIL` | Map labels through `LABELS` first |
+| After the fix, records of cust-2291 are left | TODO 4: only the conversation log is erased | Erase the user from every store in `self.stores` |
 | A phone number becomes `([PHONE]` or `+[PHONE]` | The pattern starts with `\b`, which never matches before `(` or `+` | Start it with `(?<!\w)`, as the chapter now does |
 | `OSError: [E050] Can't find model 'en_core_web_lg'` | The model was not installed | Run `uv sync --group presidio` |
 | Presidio fails to install on Python 3.15 | spaCy's dependencies have no 3.15 build yet | Keep `.python-version` at 3.14 |
@@ -84,11 +109,13 @@ The tests check that the fallback redacts whole values (including numbers that b
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `pii_regex.py` and `scoring.py` have a TODO each |
+| `src/` | Your starting point: `pii_regex.py` and `scoring.py` have a TODO each, and `chat_store.py` has TODO 4 |
+| `solution/chat_store.py` | The chat stores from the chapter's story, before and after the fix |
 | `solution/lab10_pipeline.py` | Steps 1, 3, 4 and 5 |
 | `solution/pii_presidio.py`, `solution/pii_regex.py` | Section 10.3: Presidio redaction and the regex fallback |
 | `solution/scoring.py` | Step 5: recall on comparable labels |
 | `solution/dataset.py` | Step 2: ten messages and the PII in each |
 | `solution/stand_in.py` | The stand-in for the model |
-| `tests/test_lab.py` | 10 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
+| `expected/chat_store.txt` | Captured output of `chat_store.py` |
 | `expected/output.txt`, `expected/output-presidio.txt` | Captured output, without and with Presidio |

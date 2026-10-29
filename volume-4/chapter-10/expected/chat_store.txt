@@ -1,0 +1,11 @@
+=== Before the fix ===
+Stored text   : To prove who I am: my passport number is 123456789 and my date of birth is 14/03/1987. Where is my parcel?
+Passport copies: {'conversation log': 1, 'debugging log': 1, 'semantic cache': 1, 'memory vector store': 1, 'nightly backup': 1}
+Erasure       : removed 0 records from the main database
+Records of cust-2291 left: 5
+
+=== After the fix ===
+Stored text   : To prove who I am: my passport number is [PASSPORT] and my date of birth is [DATE]. Where is my parcel?
+Passport copies: none
+Erasure       : removed 5 records from 5 stores
+Records of cust-2291 left: 0
