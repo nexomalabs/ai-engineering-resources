@@ -1,0 +1,13 @@
+Where is my parcel? (WF-2291, 300 scan events)
+
+before: 2.36 s in all, a prompt of about 2505 tokens
+  shipment lookup                 0.50 s   21%
+  policy retrieval                0.30 s   13%
+  scan history                    0.74 s   31%
+  model call                      0.81 s   34%
+
+after: 1.33 s in all, a prompt of about 72 tokens
+  shipment lookup and retrieval   0.51 s   38%
+  scan history                    0.01 s    1%
+  model call                      0.80 s   60%
+

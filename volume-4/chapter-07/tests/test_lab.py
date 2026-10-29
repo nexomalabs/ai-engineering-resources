@@ -63,3 +63,32 @@ def test_fast_pipeline_respects_the_in_flight_limit(monkeypatch):
     monkeypatch.setattr(pipeline_fast, "MAX_IN_FLIGHT", 4)
     asyncio.run(pipeline_fast.process_all_documents_async(DOCUMENTS))
     assert state["peak"] == 4
+
+
+import wren_profile as wren  # noqa: E402
+
+
+def wren_profiles(monkeypatch):
+    monkeypatch.setattr(wren, "SPEED", 0.1)
+    return wren.profile(wren.reply_before), wren.profile(wren.reply_after)
+
+
+def test_the_fixed_reply_gives_the_same_answer_from_a_much_shorter_prompt(monkeypatch):
+    (_, _, before_prompt), (_, _, after_prompt) = wren_profiles(monkeypatch)
+    assert "01/00h scanned at Rotterdam hub" in before_prompt
+    assert "01/00h scanned at Rotterdam hub" not in after_prompt
+    assert "30/09h scanned at Leeds van 14" in after_prompt
+    assert len(after_prompt) * 10 < len(before_prompt)
+
+
+def test_the_shipment_lookup_and_retrieval_overlap_after_the_fix(monkeypatch):
+    (before, _, _), (after, _, _) = wren_profiles(monkeypatch)
+    serial = before.stages["shipment lookup"] + before.stages["policy retrieval"]
+    assert after.stages["shipment lookup and retrieval"] < 0.8 * serial
+
+
+def test_the_model_is_well_under_half_of_the_reply_until_the_fix(monkeypatch):
+    (before, before_total, _), (after, after_total, _) = wren_profiles(monkeypatch)
+    assert before.stages["model call"] / before_total < 0.5
+    assert after.stages["model call"] / after_total > 0.5
+    assert after_total < 0.7 * before_total

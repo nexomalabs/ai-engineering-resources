@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A document pipeline in two versions, and the profile that justifies the change. The slow version calls three model functions (classify, summarize, extract keywords) one after another for each of ten documents, builds its report by repeated string concatenation, and writes the report to a temporary file only to read it back. The fast version runs the calls concurrently, within a limit on requests in flight, and builds the report in memory. A profiling script runs both under cProfile and reports where the time went and how much was saved.
+A document pipeline in two versions, and the profile that justifies the change. The slow version calls three model functions (classify, summarize, extract keywords) one after another for each of ten documents, builds its report by repeated string concatenation, and writes the report to a temporary file only to read it back. The fast version runs the calls concurrently, within a limit on requests in flight, and builds the report in memory. A profiling script runs both under cProfile and reports where the time went and how much was saved. A second script, `wren_profile.py`, times each stage of one reply from Wren, as the team did in the chapter's opening story, before and after fixing the two delays that profile found: a shipment lookup that blocks retrieval, and a scan history of 300 events formatted into the prompt.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A document pipeline in two versions, and the profile that justifies the change. 
 - Run independent API calls concurrently with `asyncio.gather`, under a concurrency cap.
 - Read cProfile output for async code, which counts running time but not waiting time.
 - Report an improvement as before-and-after wall time, from the same input.
+- Find the time that is not the model's, and cut it, without changing the model.
 
 ## Prerequisites
 
@@ -67,19 +68,46 @@ Same report: True
 
 The profile ranks the costs clearly: the thirty model calls are 99% of the slow pipeline's time, and the file round trip, though pointless, is a third of a percent. Fixing the calls is what moved the wall time. In the fast version the model calls appear to cost almost nothing, because cProfile counts the time a coroutine runs, not the time it waits; the waiting still happens, but overlapped. Against the real API, the saving depends on its latency and on your rate limit.
 
+## Wren's Reply
+
+```bash
+uv run python src/wren_profile.py          # your work
+uv run python solution/wren_profile.py     # reference
+```
+
+The services and the model are simulated with fixed delays, so the timings are a model of the story rather than a measurement, and they vary by a few hundredths of a second between runs. The reference prints (also saved in `expected/wren_profile.txt`):
+
+```text
+Where is my parcel? (WF-2291, 300 scan events)
+
+before: 2.36 s in all, a prompt of about 2505 tokens
+  shipment lookup                 0.50 s   21%
+  policy retrieval                0.30 s   13%
+  scan history                    0.74 s   31%
+  model call                      0.81 s   34%
+
+after: 1.33 s in all, a prompt of about 72 tokens
+  shipment lookup and retrieval   0.51 s   38%
+  scan history                    0.01 s    1%
+  model call                      0.80 s   60%
+```
+
+Before the fix the model call is about a third of the reply, which is what surprised the team: two thirds of the time went to a lookup that blocked retrieval and to formatting 300 scan events that the answer did not need. After it, the reply takes a little over half as long, the prompt is a thirtieth of the size, and the model call is most of what remains.
+
 ## Verifying Your Work
 
 ```bash
 uv run pytest
 ```
 
-Five tests, with the simulated API sped up twentyfold: both pipelines produce the same report, the report covers every document, the slow pipeline cleans up its temporary file, the fast pipeline takes less than half the slow one's time, and it never has more requests in flight than its cap. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. With the TODOs left in place, the timing and the cap tests fail.
+Five tests, with the simulated API sped up twentyfold: both pipelines produce the same report, the report covers every document, the slow pipeline cleans up its temporary file, the fast pipeline takes less than half the slow one's time, and it never has more requests in flight than its cap. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/` files over those in `solution/` there, and run `uv run pytest`. Three more test `wren_profile.py`: the fixed reply gives the same answer from a prompt a tenth the size, the lookup and retrieval overlap, and the model is well under half of the reply before the fix and most of it after. With the four TODOs left in place, five of the eight tests fail.
 
 ## If It Does Not Work
 
 | Symptom | Cause | Fix |
 |---|---|---|
 | "After" takes as long as "Before" | TODOs 1 and 2: the calls and documents still run one at a time | Use `asyncio.gather` for the three calls, and again over the documents |
+| Wren's "after" profile matches "before" | TODO 4: `reply_after` still calls `reply_before` | Gather the lookup and retrieval, and describe only the last `RECENT_EVENTS` events |
 | `Same report: False` | The fast version's results are in a different order | `asyncio.gather` keeps its arguments' order; build the report from its result |
 | Live mode returns 429 errors | Too many requests at once for your account | Lower `MAX_IN_FLIGHT` |
 | `ModuleNotFoundError: line_profiler` | The optional group was not installed | Run `uv sync --group profile` |
@@ -95,10 +123,12 @@ Five tests, with the simulated API sped up twentyfold: both pipelines produce th
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `pipeline_fast.py` has 3 TODOs; the other files match `solution/` |
+| `src/` | Your starting point: `pipeline_fast.py` has 3 TODOs and `wren_profile.py` has TODO 4; the other files match `solution/` |
+| `solution/wren_profile.py` | The profile of one reply from Wren, before and after the fix |
 | `solution/pipeline_slow.py` | Step 1: the slow, sequential pipeline |
 | `solution/pipeline_fast.py` | Step 3: the fixed, concurrent pipeline |
 | `solution/profile_pipelines.py` | Steps 2 and 4: profiles both and compares them |
 | `solution/documents.py`, `solution/stand_in.py` | The ten documents, and the simulated API |
-| `tests/test_lab.py` | 5 tests, run against `solution/` |
+| `tests/test_lab.py` | 8 tests, run against `solution/` |
+| `expected/wren_profile.txt` | Captured output of `wren_profile.py` |
 | `expected/output.txt` | Captured output of the reference |
