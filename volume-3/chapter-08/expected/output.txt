@@ -102,4 +102,18 @@ SCENARIO: Error Handling — Unknown City
   "error": "City 'Atlantis' not found in weather database."
 }
 
+============================================================
+SCENARIO: The model–tool loop — Where is my parcel?
+============================================================
+
+User: Where is my parcel? The tracking number is WF-2291.
+  → get_shipment_status({"tracking_number": "WF-2291"})
+  ← {"tracking_number": "WF-2291", "status": "in transit", "last_scan": "Leeds depot", "expected": "Thursday"}
+Assistant: Your parcel WF-2291 is in transit, last scanned at the Leeds depot, expected Thursday.
+
+User: Where is my parcel? I live at SW1A 1AA.
+  → get_shipment_status({"tracking_number": "SW1A 1AA"})
+  ← {"error": "Invalid arguments: 'tracking_number' does not match the pattern ^WF-[0-9]{4}$"}
+Assistant: I can look that up with your tracking number: WF- and four digits, such as WF-2291. Could you send it?
+
 ✓ All tool calling scenarios completed successfully.

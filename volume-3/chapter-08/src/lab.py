@@ -1,12 +1,15 @@
 """Lab 8 — Tool-Calling System (starter).
 
 This file RUNS as supplied. Fahrenheit is never converted, an unknown tool name is not
-reported clearly, and a tool that raises crashes the orchestrator. Complete the three TODOs.
+reported clearly, a tool that raises crashes the orchestrator, and argument validation
+ignores the tracking-number pattern, so a postcode reaches the shipment tool. Complete
+the four TODOs.
 
     python src/lab.py
 """
 
 import json
+import re
 from dataclasses import dataclass, field
 from types import SimpleNamespace
 
@@ -70,11 +73,25 @@ def calculate_cost(items: list[dict]) -> dict:
     }
 
 
+SHIPMENTS = {
+    "WF-2291": {"status": "in transit", "last_scan": "Leeds depot", "expected": "Thursday"},
+    "WF-3107": {"status": "delivered", "last_scan": "front door", "expected": "Monday"},
+}
+
+
+def get_shipment_status(tracking_number: str) -> dict:
+    """Mock tracking for Wrenfield parcels: the tool from the chapter's opening story."""
+    if tracking_number not in SHIPMENTS:
+        return {"error": f"No shipment with tracking number '{tracking_number}'."}
+    return {"tracking_number": tracking_number, **SHIPMENTS[tracking_number]}
+
+
 # ── Tool Registry and Schemas ─────────────────────────────────────────────────
 TOOL_REGISTRY = {
     "get_weather": get_weather,
     "search_database": search_database,
     "calculate_cost": calculate_cost,
+    "get_shipment_status": get_shipment_status,
 }
 
 TOOL_SCHEMAS = [
@@ -141,6 +158,76 @@ TOOL_SCHEMAS = [
 ]
 
 
+# The rewritten tool from the story: a name that says what it does, a description that
+# says what it returns and when to use it, and a parameter only a tracking number fits.
+TOOL_SCHEMAS.append(
+    {
+        "type": "function",
+        "function": {
+            "name": "get_shipment_status",
+            "description": (
+                "Return the delivery status, last scan location and expected delivery day of "
+                "one Wrenfield parcel. Use it only with a tracking number the customer gave."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tracking_number": {
+                        "type": "string",
+                        "pattern": "^WF-[0-9]{4}$",
+                        "description": (
+                            "Wrenfield tracking number: WF- and four digits, such as WF-2291. "
+                            "Never an order number or a postcode."
+                        ),
+                    }
+                },
+                "required": ["tracking_number"],
+                "additionalProperties": False,
+            },
+        },
+    }
+)
+
+
+# ── Argument validation (before any tool runs) ────────────────────────────────
+JSON_TYPES = {
+    "string": str,
+    "integer": int,
+    "number": (int, float),
+    "boolean": bool,
+    "array": list,
+    "object": dict,
+}
+
+
+def validate_arguments(parameters: dict, args: dict) -> list[str]:
+    """Check a tool call's arguments against the tool's JSON Schema; return the problems."""
+    errors = []
+    properties = parameters.get("properties", {})
+    for name in parameters.get("required", []):
+        if name not in args:
+            errors.append(f"missing required argument '{name}'")
+    for name, value in args.items():
+        spec = properties.get(name)
+        if spec is None:
+            if parameters.get("additionalProperties") is False:
+                errors.append(f"unexpected argument '{name}'")
+            continue
+        kind = spec.get("type")
+        wrong_type = kind in JSON_TYPES and not isinstance(value, JSON_TYPES[kind])
+        if kind in ("integer", "number") and isinstance(value, bool):
+            wrong_type = True  # bool is a subclass of int in Python, but not in JSON
+        if wrong_type:
+            errors.append(f"'{name}' must be of type {kind}")
+            continue
+        if "enum" in spec and value not in spec["enum"]:
+            errors.append(f"'{name}' must be one of {spec['enum']}")
+        # TODO 4: If the spec has a "pattern" and re.search() finds no match in the value,
+        #   add "'<name>' does not match the pattern <pattern>". This is the check that
+        #   keeps a postcode away from get_shipment_status.
+    return errors
+
+
 # ── Mock LLM (simulates tool calling decisions) ──────────────────────────────
 @dataclass
 class MockToolCall:
@@ -177,11 +264,20 @@ class MockOrchestrator:
     def __init__(self, registry, schemas):
         self.registry = registry
         self.schemas = schemas
+        self.parameters = {s["function"]["name"]: s["function"]["parameters"] for s in schemas}
 
-    def _execute_tool_call(self, tool_call: MockToolCall) -> dict:
-        name = tool_call.function_name
-        args = tool_call.function_args
+    def _execute_tool_call(self, tool_call) -> dict:
+        # Read the call as the API delivers it: a name, and arguments as a JSON string
+        name = tool_call.function.name
+        try:
+            args = json.loads(tool_call.function.arguments)
+        except json.JSONDecodeError:
+            return {"error": "Arguments are not valid JSON."}
         # TODO 2: If `name` is not in the registry, return {"error": "Unknown tool: <name>"}.
+        problems = validate_arguments(self.parameters.get(name, {}), args)
+        if problems:
+            # The tool never runs; the model gets the reason and can correct itself
+            return {"error": "Invalid arguments: " + "; ".join(problems)}
         # TODO 3: If the tool raises, return {"error": <the exception message>} instead
         #   of crashing: the model can then correct its arguments and try again.
         return self.registry[name](**args)
@@ -195,6 +291,77 @@ class MockOrchestrator:
             print(f"\n→ Tool Call: {tc.function_name}({tc.function_args})")
             result = self._execute_tool_call(tc)
             print(f"← Result:    {json.dumps(result, indent=2)}")
+
+
+# ── The model–tool loop ───────────────────────────────────────────────────────
+class ScriptedModel:
+    """
+    A stand-in for the model, returning responses shaped like OpenAI chat completions. Asked
+    about a parcel, it calls the shipment tool with whatever looks like a tracking number in
+    the customer's message or, failing that, with whatever identifier it can find, as the
+    model in the chapter's story did. Given a tool result, it answers from it.
+    """
+
+    POSTCODE = re.compile(r"\b[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}\b")
+
+    def create(self, messages: list[dict], tools: list[dict]) -> MockLLMResponse:
+        last = messages[-1]
+        if last["role"] == "tool":
+            result = json.loads(last["content"])
+            if "error" in result:
+                return MockLLMResponse(
+                    "stop",
+                    content="I can look that up with your tracking number: WF- and four "
+                    "digits, such as WF-2291. Could you send it?",
+                )
+            return MockLLMResponse(
+                "stop",
+                content=f"Your parcel {result['tracking_number']} is {result['status']}, "
+                f"last scanned at the {result['last_scan']}, expected {result['expected']}.",
+            )
+        text = last["content"]
+        found = re.search(r"WF-[0-9]+", text) or self.POSTCODE.search(text)
+        guess = found.group(0) if found else text
+        call = MockToolCall(
+            f"call_{len(messages)}", "get_shipment_status", {"tracking_number": guess}
+        )
+        return MockLLMResponse("tool_calls", tool_calls=[call])
+
+
+def run_conversation(user_message: str, model, orchestrator, max_turns: int = 4) -> str:
+    """The loop: the model asks for tools, the tools run, and their results go back to it."""
+    messages = [{"role": "user", "content": user_message}]
+    print(f"\nUser: {user_message}")
+    for _ in range(max_turns):
+        message = model.create(messages, orchestrator.schemas).choices[0].message
+        if not message.tool_calls:
+            print(f"Assistant: {message.content}")
+            return message.content
+        messages.append(
+            {
+                "role": "assistant",
+                "content": message.content,
+                "tool_calls": [
+                    {
+                        "id": call.id,
+                        "type": "function",
+                        "function": {
+                            "name": call.function.name,
+                            "arguments": call.function.arguments,
+                        },
+                    }
+                    for call in message.tool_calls
+                ],
+            }
+        )
+        for call in message.tool_calls:
+            result = orchestrator._execute_tool_call(call)
+            print(f"  → {call.function.name}({call.function.arguments})")
+            print(f"  ← {json.dumps(result)}")
+            messages.append(
+                {"role": "tool", "tool_call_id": call.id, "content": json.dumps(result)}
+            )
+    return "Stopped: too many tool calls."
 
 
 # ── Main demonstration ────────────────────────────────────────────────────────
@@ -249,6 +416,14 @@ def main():
         "Error Handling — Unknown City",
         [MockToolCall("tc_007", "get_weather", {"city": "Atlantis"})],
     )
+
+    # Scenario 6: the full loop, with the story's tool
+    print(f"\n{'=' * 60}")
+    print("SCENARIO: The model–tool loop — Where is my parcel?")
+    print("=" * 60)
+    model = ScriptedModel()
+    run_conversation("Where is my parcel? The tracking number is WF-2291.", model, orch)
+    run_conversation("Where is my parcel? I live at SW1A 1AA.", model, orch)
 
     print("\n✓ All tool calling scenarios completed successfully.")
 
