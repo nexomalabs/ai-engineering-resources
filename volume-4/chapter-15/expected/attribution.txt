@@ -1,0 +1,22 @@
+A peak day of model calls, by feature
+  feature                calls    day $   month $
+  warehouse_assistant    3,480   109.75  3,292.45
+  wren                  15,000    85.52  2,565.74
+  claims_assistant       1,500    20.23    606.92
+  customs_documents      6,000     2.70     80.97
+  total                 25,980   218.20  6,546.08
+
+Inside warehouse_assistant, by user
+  user          calls    day $  share  00:00-06:00
+  user_0042     2,880   107.18  97.7%          720
+  user_0128        25     0.12   0.1%            0
+  user_0139        21     0.09   0.1%            0
+  38 more users: 554 calls, $2.36
+
+With the script replaced by a database query
+  feature                calls    day $   month $
+  wren                  15,000    85.52  2,565.74
+  claims_assistant       1,500    20.23    606.92
+  customs_documents      6,000     2.70     80.97
+  warehouse_assistant      600     2.57     77.09
+  total                 23,100   111.02  3,330.72

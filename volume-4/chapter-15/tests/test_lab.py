@@ -80,3 +80,36 @@ def test_full_cache_hit_rate_costs_nothing():
     sim = OptimizationSimulator([record(), record()])
     _, cost = sim.simulate_semantic_caching(cache_hit_rate=1.0)
     assert cost == 0.0
+
+
+from attribution import SCRIPT_USER, by_feature, simulate_peak_day, users_of  # noqa: E402
+
+DAY = simulate_peak_day()
+
+
+def test_the_warehouse_assistant_costs_most_although_wren_makes_the_most_calls():
+    features = by_feature(DAY)
+    assert next(iter(features)) == "warehouse_assistant"
+    assert max(features, key=lambda f: features[f][0]) == "wren"
+
+
+def test_one_user_makes_nearly_all_the_warehouse_cost_with_a_call_every_thirty_seconds():
+    users = users_of(DAY, "warehouse_assistant")
+    user, (calls, cost, night) = next(iter(users.items()))
+    assert user == SCRIPT_USER
+    assert calls == 24 * 60 * 2
+    assert night == 6 * 60 * 2
+    assert cost / sum(u[1] for u in users.values()) > 0.9
+
+
+def test_people_do_not_use_the_warehouse_assistant_at_night():
+    users = users_of(DAY, "warehouse_assistant")
+    people = [u for name, u in users.items() if name != SCRIPT_USER]
+    assert len(people) > 30
+    assert all(night == 0 for _, _, night in people)
+
+
+def test_replacing_the_script_with_a_query_roughly_halves_the_bill():
+    after = [r for r in DAY if r.user_id != SCRIPT_USER]
+    assert sum(r.cost_usd for r in after) < 0.55 * sum(r.cost_usd for r in DAY)
+    assert next(iter(by_feature(after))) == "wren"
