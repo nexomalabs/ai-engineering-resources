@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A three-step credit assessment pipeline in which each function call depends on the ones before it: look up a customer, fetch their order history, then generate a credit report from both results. The functions have OpenAI-style schemas, and the pipeline stops cleanly when a step fails.
+A three-step credit assessment pipeline in which each function call depends on the ones before it: look up a customer, fetch their order history, then generate a credit report from both results. The functions have OpenAI-style schemas, and the pipeline stops cleanly when a step fails. Then the claim intake from the chapter's opening story: a strict `record_claim` schema shapes the model's output, and a Pydantic `ClaimRecord` checks the data before anything is imported, so "about two hundred pounds" goes to a person instead of stopping the import job.
 
 ## Learning Outcomes
 
@@ -11,12 +11,13 @@ A three-step credit assessment pipeline in which each function call depends on t
 - Return complete, consistently shaped results, including for empty cases.
 - Bound a computed score, so out-of-range inputs cannot produce nonsense.
 - Stop a pipeline at the first failed step instead of passing bad data on.
+- Write a schema that meets strict mode's rules, and validate the model's arguments with Pydantic, since valid JSON is not the same as valid data.
 
 ## Prerequisites
 
 - Python 3.15
 - Chapter 9, read through its hands-on lab
-- No third-party dependencies: the standard library only
+- Dependencies: `pydantic`, installed by `uv sync`
 - No API key. **Estimated API cost: $0.00** (the pipeline runs the calls a model would make, without a model)
 
 ## Setup
@@ -33,7 +34,7 @@ uv run python src/lab.py          # your work
 uv run python solution/lab.py     # reference
 ```
 
-`src/lab.py` runs as supplied, but step 3 passes a total order value of zero (TODO 3), so every customer shows 0% utilization and is approved. TODO 1 and TODO 2 do not change this demo's output; the tests check them.
+`src/lab.py` runs as supplied, but step 3 passes a total order value of zero (TODO 3), so every customer shows 0% utilization and is approved. The claim intake imports every claim as parsed (TODO 4), "about two hundred pounds" included. TODO 1 and TODO 2 do not change this demo's output; the tests check them.
 
 ## Expected Result
 
@@ -195,6 +196,22 @@ CREDIT ASSESSMENT PIPELINE — Customer: C999
           "error": "Customer 'C999' not found."
 }
   ✗ Customer not found. Aborting.
+
+============================================================
+CLAIM INTAKE — valid JSON is not the same as valid data
+============================================================
+
+[E1] arguments: {"tracking_number": "WF-2291", "damage_description": "Cracked monitor screen", "declared_value": 189.0}
+  ✓ imported: {'tracking_number': 'WF-2291', 'damage_description': 'Cracked monitor screen', 'declared_value': 189.0}
+
+[E2] arguments: {"tracking_number": "WF-3107", "damage_description": "Dented kettle", "declared_value": "about two hundred pounds"}
+  ✗ sent to a person:
+      declared_value: Input should be a valid number, unable to parse string as a number
+
+[E3] arguments: {"tracking_number": "order 5531", "damage_description": "Broken lamp", "declared_value": 0}
+  ✗ sent to a person:
+      tracking_number: String should match pattern '^WF-[0-9]{4}$'
+      declared_value: Input should be greater than 0
 ```
 
 ## Verifying Your Work
@@ -205,7 +222,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, replace `solution/lab.py` there with your `src/lab.py`, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. With the four TODOs left in place, five of the fourteen tests fail.
 
 ## If It Does Not Work
 
@@ -228,7 +245,7 @@ this folder somewhere else, replace `solution/lab.py` there with your `src/lab.p
 
 | Path | Purpose |
 |---|---|
-| `src/lab.py` | Your starting point: runs, with 3 TODOs |
+| `src/lab.py` | Your starting point: runs, with 4 TODOs |
 | `solution/lab.py` | Reference implementation |
-| `tests/test_lab.py` | 10 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |

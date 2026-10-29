@@ -1,12 +1,15 @@
 """Lab 9 — Multi-Step Function Calling Pipeline (starter).
 
 This file RUNS as supplied. Step 3 ignores step 2's result, an empty order history has no
-total, and the score is not bounded. Complete the three TODOs.
+total, the score is not bounded, and the claim intake imports whatever the model
+returns. Complete the four TODOs.
 
     python src/lab.py
 """
 
 import json
+
+from pydantic import BaseModel, Field
 
 # ── Tool Implementations ──────────────────────────────────────────────────────
 CUSTOMER_DB = {
@@ -180,6 +183,81 @@ def simulate_multi_step_pipeline(customer_id: str):
     print(f"  Decision:     {result3['recommendation']}")
 
 
+# ── Claim intake: valid JSON is not the same as valid data ────────────────────
+# A forced call to this function turns a customer's email into a claim record. With
+# "strict": True the API guarantees the arguments match the schema's shape and types,
+# which strict mode requires to forbid extra properties and to list every property.
+CLAIM_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "record_claim",
+        "description": "Record a damage claim from a customer's email.",
+        "strict": True,
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "tracking_number": {
+                    "type": "string",
+                    "description": "Wrenfield tracking number, such as WF-2291",
+                },
+                "damage_description": {"type": "string"},
+                "declared_value": {
+                    "type": "number",
+                    "description": "Value of the damaged item, in pounds",
+                },
+            },
+            "required": ["tracking_number", "damage_description", "declared_value"],
+            "additionalProperties": False,
+        },
+    },
+}
+
+
+class ClaimRecord(BaseModel):
+    """What the claims system accepts. Checked after the call, before the import."""
+
+    tracking_number: str = Field(pattern=r"^WF-[0-9]{4}$")
+    damage_description: str = Field(min_length=1)
+    declared_value: float = Field(gt=0, le=10_000)
+
+
+# The arguments the model returned for three emails. E2 is the response from the story,
+# from a call made without strict mode: valid JSON, with a string where the schema has a
+# number. E3 came from a call with strict mode on: every type matches, and the data is
+# still wrong. Strict mode prevents the first kind of failure; only validation catches both.
+MODEL_ARGUMENTS = {
+    "E1": '{"tracking_number": "WF-2291", "damage_description": "Cracked monitor screen", "declared_value": 189.0}',
+    "E2": '{"tracking_number": "WF-3107", "damage_description": "Dented kettle", "declared_value": "about two hundred pounds"}',
+    "E3": '{"tracking_number": "order 5531", "damage_description": "Broken lamp", "declared_value": 0}',
+}
+
+
+def intake_claim(email_id: str, arguments: str) -> dict:
+    """Validate the model's arguments; import a valid claim, send anything else to a person."""
+    # TODO 4: Validate with ClaimRecord.model_validate_json(arguments). If it raises
+    #   pydantic's ValidationError (import it), return {"email": email_id, "status":
+    #   "sent to a person", "problems": [...]} with one "<field>: <message>" per error.
+    #   Return the imported claim as claim.model_dump(). As supplied, every claim is
+    #   imported as parsed, "about two hundred pounds" included.
+    return {"email": email_id, "status": "imported", "claim": json.loads(arguments)}
+
+
+def run_claim_intake():
+    print(f"\n{'=' * 60}")
+    print("CLAIM INTAKE — valid JSON is not the same as valid data")
+    print("=" * 60)
+    for email_id, arguments in MODEL_ARGUMENTS.items():
+        result = intake_claim(email_id, arguments)
+        print(f"\n[{email_id}] arguments: {arguments}")
+        if result["status"] == "imported":
+            print(f"  ✓ imported: {result['claim']}")
+        else:
+            print("  ✗ sent to a person:")
+            for problem in result["problems"]:
+                print(f"      {problem}")
+
+
 if __name__ == "__main__":
     for cid in ["C001", "C002", "C003", "C999"]:
         simulate_multi_step_pipeline(cid)
+    run_claim_intake()

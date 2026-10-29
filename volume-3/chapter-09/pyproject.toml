@@ -3,7 +3,7 @@ name = "aiae-vol3-lab09"
 version = "1.0.0"
 description = "Applied AI Engineering — Volume III, Lab 9: Multi-Step Function Calling Pipeline"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = ["pydantic>=2.7"]
 
 [dependency-groups]
 dev = ["pytest>=8.0"]

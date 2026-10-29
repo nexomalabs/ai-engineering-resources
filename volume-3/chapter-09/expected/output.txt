@@ -153,3 +153,19 @@ CREDIT ASSESSMENT PIPELINE — Customer: C999
           "error": "Customer 'C999' not found."
 }
   ✗ Customer not found. Aborting.
+
+============================================================
+CLAIM INTAKE — valid JSON is not the same as valid data
+============================================================
+
+[E1] arguments: {"tracking_number": "WF-2291", "damage_description": "Cracked monitor screen", "declared_value": 189.0}
+  ✓ imported: {'tracking_number': 'WF-2291', 'damage_description': 'Cracked monitor screen', 'declared_value': 189.0}
+
+[E2] arguments: {"tracking_number": "WF-3107", "damage_description": "Dented kettle", "declared_value": "about two hundred pounds"}
+  ✗ sent to a person:
+      declared_value: Input should be a valid number, unable to parse string as a number
+
+[E3] arguments: {"tracking_number": "order 5531", "damage_description": "Broken lamp", "declared_value": 0}
+  ✗ sent to a person:
+      tracking_number: String should match pattern '^WF-[0-9]{4}$'
+      declared_value: Input should be greater than 0

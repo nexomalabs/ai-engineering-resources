@@ -85,3 +85,31 @@ def test_pipeline_stops_after_a_failed_lookup(capsys):
     out = capsys.readouterr().out
     assert "Aborting" in out
     assert "[Step 2]" not in out
+
+
+def test_the_claim_schema_meets_strict_mode_requirements():
+    fn = lab.CLAIM_TOOL["function"]
+    params = fn["parameters"]
+    assert fn["strict"] is True
+    assert params["additionalProperties"] is False
+    assert set(params["required"]) == set(params["properties"])
+
+
+def test_a_valid_claim_is_imported():
+    result = lab.intake_claim("E1", lab.MODEL_ARGUMENTS["E1"])
+    assert result["status"] == "imported"
+    assert result["claim"]["declared_value"] == 189.0
+
+
+def test_the_story_claim_is_sent_to_a_person_not_imported():
+    result = lab.intake_claim("E2", lab.MODEL_ARGUMENTS["E2"])
+    assert result["status"] == "sent to a person"
+    assert result["problems"] == [
+        "declared_value: Input should be a valid number, unable to parse string as a number"
+    ]
+
+
+def test_strictly_typed_but_wrong_data_is_caught_too():
+    result = lab.intake_claim("E3", lab.MODEL_ARGUMENTS["E3"])
+    assert result["status"] == "sent to a person"
+    assert [p.split(":")[0] for p in result["problems"]] == ["tracking_number", "declared_value"]
