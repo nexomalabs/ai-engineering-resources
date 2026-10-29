@@ -125,3 +125,31 @@ def test_failing_evaluator_is_skipped():
     ev = AlertEvaluator()
     ev.add_rule(AlertRule("broken", "d", "low", "m", 1.0, "gt", 60, lambda: 1 / 0))
     assert ev.evaluate() == []
+
+
+import quality_drift as drift  # noqa: E402
+
+
+def test_the_drift_is_too_slow_for_any_single_day_to_look_alarming():
+    quality = drift.daily_means(drift.simulate_log(), "quality")
+    drops = [quality[d] - quality[d + 1] for d in range(1, drift.PINNED_FROM - 1)]
+    assert max(drops) < 0.04
+
+
+def test_the_long_window_alert_fires_on_the_sixth_day_of_the_drift():
+    quality = drift.daily_means(drift.simulate_log(), "quality")
+    assert drift.long_window_alert(quality) == drift.ROLLOUT_STARTS + 5
+
+
+def test_grouping_by_model_version_shows_each_version_steady_and_the_new_one_worse():
+    groups = drift.quality_by_version(drift.simulate_log())
+    assert set(groups) == {drift.OLD, drift.NEW}
+    old_quality, old_words, _ = groups[drift.OLD]
+    new_quality, new_words, _ = groups[drift.NEW]
+    assert old_quality - new_quality > 0.1
+    assert new_words > old_words + 40
+
+
+def test_pinning_the_old_version_restores_quality():
+    quality = drift.daily_means(drift.simulate_log(), "quality")
+    assert abs(quality[drift.PINNED_FROM] - quality[1]) < 0.02

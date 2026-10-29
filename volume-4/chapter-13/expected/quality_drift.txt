@@ -1,0 +1,21 @@
+day  quality  words  note
+  1     0.82    118  
+  2     0.82    119  
+  3     0.82    119  
+  4     0.82    118  
+  5     0.82    116  
+  6     0.82    119  
+  7     0.82    119  
+  8     0.80    127  provider starts moving the alias
+  9     0.77    136  
+ 10     0.76    145  
+ 11     0.74    155  
+ 12     0.71    164  
+ 13     0.70    172  long-window alert fires
+ 14     0.70    173  
+ 15     0.82    119  old version pinned
+ 16     0.82    118  
+
+Quality by the model version recorded with each response:
+  gpt-6.1-sol-2026-11-04   quality 0.82, 118 words, 4596 answers
+  gpt-6.1-sol-2026-12-08   quality 0.70, 173 words, 1804 answers

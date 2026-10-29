@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A FastAPI service that simulates model calls and exposes Prometheus metrics at `/metrics`: request counts by status, a latency histogram, in-flight requests, tokens by model, a quality-score histogram, errors by type and safety-filter triggers. A load generator sends it traffic, and an alert evaluator reads the metrics every 30 seconds and reports alerts as they fire and resolve.
+A FastAPI service that simulates model calls and exposes Prometheus metrics at `/metrics`: request counts by status, a latency histogram, in-flight requests, tokens by model, a quality-score histogram, errors by type and safety-filter triggers. A load generator sends it traffic, and an alert evaluator reads the metrics every 30 seconds and reports alerts as they fire and resolve. A fourth script, `quality_drift.py`, replays the chapter's opening story: answer quality drifting down for six days while the provider rolls a new model out behind Wren's alias, a long-window alert that catches it, and the query, quality by model version, that shows why.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A FastAPI service that simulates model calls and exposes Prometheus metrics at `
 - Keep a gauge correct when a request fails, with `try`/`finally`.
 - Evaluate alert rules against scraped metrics, and resolve them when they clear.
 - Explain why cumulative counters need `rate()` over a window in a production alert.
+- Catch a slow quality drift with a long-window alert, and find its cause by grouping quality by model version.
 
 ## Prerequisites
 
@@ -63,13 +64,46 @@ ai_tokens_input_total{model="gpt-6.1-sol"} 13246.0
 ai_active_requests 0.0
 ```
 
+## A Slow Drift
+
+```bash
+uv run python src/quality_drift.py          # your work
+uv run python solution/quality_drift.py     # reference
+```
+
+The log is simulated from a fixed seed, so the output repeats. The reference prints (also saved in `expected/quality_drift.txt`):
+
+```text
+day  quality  words  note
+  1     0.82    118  
+  2     0.82    119  
+  3     0.82    119  
+  4     0.82    118  
+  5     0.82    116  
+  6     0.82    119  
+  7     0.82    119  
+  8     0.80    127  provider starts moving the alias
+  9     0.77    136  
+ 10     0.76    145  
+ 11     0.74    155  
+ 12     0.71    164  
+ 13     0.70    172  long-window alert fires
+ 14     0.70    173  
+ 15     0.82    119  old version pinned
+ 16     0.82    118  
+
+Quality by the model version recorded with each response:
+  gpt-6.1-sol-2026-11-04   quality 0.82, 118 words, 4596 answers
+  gpt-6.1-sol-2026-12-08   quality 0.70, 173 words, 1804 answers
+```
+
 ## Verifying Your Work
 
 ```bash
 uv run pytest
 ```
 
-The tests run against `solution/`, which is what CI checks. To test your own version, copy
+The tests run against `solution/`, which is what CI checks. To test your own version, copy Four more test the drift: no single day falls far enough to look alarming, the long-window alert fires on the sixth day, grouping by version shows each version steady and the new one worse, and pinning the old version restores quality. With the four TODOs left in place, four of the fourteen tests fail.
 this folder somewhere else, copy your files from `src/` over those in `solution/` there, and run
 `uv run pytest`. Every test passing means your TODOs behave like the reference.
 
@@ -82,6 +116,7 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | `httpx.ConnectError` from the load generator or alert evaluator | The service is not running | Start `ai_service_monitored.py` first, in its own terminal |
 | `ai_active_requests` keeps growing | The gauge is not decremented on every path | Complete TODO 2 |
+| Quality by model version shows one group, "all versions" | TODO 4: the records are not grouped by version | Group by `record["model_version"]` |
 
 ## Going Further
 
@@ -93,6 +128,8 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `ai_service_monitored.py`, `load_generator.py`, `alert_evaluator.py`; runs, with 3 TODOs |
+| `src/` | Your starting point: `ai_service_monitored.py`, `load_generator.py`, `alert_evaluator.py`; runs, with 3 TODOs; `quality_drift.py` has TODO 4 |
+| `solution/quality_drift.py` | The quality drift from the chapter's story |
 | `solution/` | Reference implementation of the same files |
-| `tests/test_lab.py` | 10 tests, run against `solution/` |
+| `tests/test_lab.py` | 14 tests, run against `solution/` |
+| `expected/quality_drift.txt` | Captured output of `quality_drift.py` |
