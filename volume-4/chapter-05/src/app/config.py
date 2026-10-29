@@ -14,6 +14,9 @@ class Settings:
     log_level: str
     service_version: str
     lab_mode: str
+    canary_model: str
+    canary_percent: float
+    canary_seed: int | None
 
 
 def get_settings() -> Settings:
@@ -27,4 +30,8 @@ def get_settings() -> Settings:
         log_level=os.environ.get("LOG_LEVEL", "INFO"),
         service_version=os.environ.get("SERVICE_VERSION", "unknown"),
         lab_mode=os.environ.get("NEXOMA_LAB_MODE", "fixture"),
+        # A canary sends this share of traffic to another model version; empty means none.
+        canary_model=os.environ.get("CANARY_MODEL", ""),
+        canary_percent=float(os.environ.get("CANARY_PERCENT", "0")),
+        canary_seed=int(os.environ["CANARY_SEED"]) if os.environ.get("CANARY_SEED") else None,
     )

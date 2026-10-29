@@ -18,6 +18,9 @@ services:
       ENVIRONMENT: ${ENVIRONMENT:-development}
       SERVICE_VERSION: ${SERVICE_VERSION:-dev}
       LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      # A canary: another model version on a share of traffic (none by default)
+      CANARY_MODEL: ${CANARY_MODEL:-}
+      CANARY_PERCENT: ${CANARY_PERCENT:-0}
     healthcheck:
       test:
         - "CMD"

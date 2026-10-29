@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A FastAPI service that analyses text with a model (summarize, classify or extract entities), packaged for production: configuration from environment variables, validated requests, liveness and readiness probes, rate-limit and upstream errors mapped to the right HTTP status codes, a multi-stage Docker image that runs as a non-root user, a Compose file with health checks and resource limits, and a smoke-test script that decides whether a deployment may be promoted.
+A FastAPI service that analyses text with a model (summarize, classify or extract entities), packaged for production: configuration from environment variables, validated requests, liveness and readiness probes, rate-limit and upstream errors mapped to the right HTTP status codes, a multi-stage Docker image that runs as a non-root user, a Compose file with health checks and resource limits, and a smoke-test script that decides whether a deployment may be promoted. The service also runs the canary rule from the chapter's story: a share of traffic goes to a new model version, each version's cost and errors are counted, and the canary is rolled back automatically when its cost per request passes 1.5 times the stable version's.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A FastAPI service that analyses text with a model (summarize, classify or extrac
 - Map a provider's rate limit to 429 with `Retry-After`, and its failures to 502 without leaking details.
 - Build a small, non-root, health-checked image in two stages.
 - Gate a deployment on a smoke test of health, readiness, a real request and two validation cases.
+- Route a share of traffic to a canary, and roll it back automatically on cost or errors.
 
 ## Prerequisites
 
@@ -50,7 +51,26 @@ docker compose down
 
 By default a stand-in answers instead of the model (`app/stand_in.py`), and Compose sets `NEXOMA_LAB_MODE=fixture` unless you set it, so the container needs no key either. The service is the chapter's code with three additions: `config.py` reads the mode, `main.py` uses the stand-in unless the mode is `live`, and the start-up key check applies in live mode only. For live mode, export `OPENAI_API_KEY` and `NEXOMA_LAB_MODE=live` before starting the service or running `docker compose up`.
 
-`src/` runs as supplied, but a rate limit or an upstream error escapes as a 500 (TODOs 1 and 2), and requests are not validated, so empty text or an unknown task reaches the model (TODO 3). Complete all three.
+`src/` runs as supplied, but a rate limit or an upstream error escapes as a 500 (TODOs 1 and 2), requests are not validated, so empty text or an unknown task reaches the model (TODO 3), and the canary is never rolled back, whatever it costs (TODO 4). Complete all four.
+
+To replay the chapter's canary, run the demo script from either folder. It starts the service in-process with a canary on 5% of traffic, played by a stand-in whose answers are longer, and sends 1,000 requests:
+
+```bash
+cd solution                  # or: cd src
+uv run --project .. python scripts/canary_demo.py
+```
+
+The reference prints the following (also saved in `expected/canary_demo.txt`):
+
+```text
+Canary wren-model-next started on 5% of traffic; 1,000 requests sent.
+  stable:  980 requests, $0.000134 each
+  canary:   20 requests, $0.000244 each
+Rolled back at request 380: cost per request is 1.8x the stable version's (limit 1.5x).
+Canary traffic now: 0.0%
+```
+
+The stand-in's longer answers make the canary cost 1.8 times as much per request, as the new model did in the story, and the rule rolls it back after its twentieth request, the minimum it needs to compare. Against `src/`, the canary keeps its 5% to the end.
 
 ## Expected Result
 
@@ -83,7 +103,7 @@ Against `src/`, tests 4 and 5 fail and the script ends `SMOKE TEST FAILED — DO
 uv run pytest
 ```
 
-Ten tests, using FastAPI's test client, so no server or container is needed: health and readiness, two analysis tasks with token usage, three kinds of invalid input, a rate limit mapped to 429 with `Retry-After`, an upstream error mapped to 502 with no details leaked, and the start-up check that refuses to run in live mode without a key. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, replace `solution/` there with your `src/`, and run `uv run pytest`. With all three TODOs left in place, five tests fail.
+Sixteen tests, using FastAPI's test client, so no server or container is needed: health and readiness, two analysis tasks with token usage, three kinds of invalid input, a rate limit mapped to 429 with `Retry-After`, an upstream error mapped to 502 with no details leaked, the start-up check that refuses to run in live mode without a key, and the canary: its share of traffic, rollback on cost and on errors, no rollback within the limits, the service rolling back a canary that writes longer replies, and all traffic stable when there is no canary. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, replace `solution/` there with your `src/`, and run `uv run pytest`. With all four TODOs left in place, eight tests fail.
 
 ## If It Does Not Work
 
@@ -94,6 +114,7 @@ Ten tests, using FastAPI's test client, so no server or container is needed: hea
 | Empty text gets 200 | TODO 3: the request model has no constraints | Add `Field(..., min_length=1, max_length=10000)` and the task pattern |
 | `docker compose ps` never shows "healthy" | The app failed at start-up | Run `docker compose logs ai-api`; in live mode, check that `OPENAI_API_KEY` was exported |
 | `RuntimeError: OPENAI_API_KEY is required` | Live mode without a key | Export the key, or leave `NEXOMA_LAB_MODE` unset |
+| The canary demo never rolls back | TODO 4: `Canary.check()` compares nothing | Compare cost per request and error rate with the stable version after `min_requests` |
 
 ## Going Further
 
@@ -105,8 +126,10 @@ Ten tests, using FastAPI's test client, so no server or container is needed: hea
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: the whole project, runnable, with 3 TODOs |
+| `src/` | Your starting point: the whole project, runnable, with 4 TODOs |
 | `solution/` | Reference: the chapter's project with the mode switch |
 | `solution/app/stand_in.py` | The stand-in for the model, used unless `NEXOMA_LAB_MODE=live` |
-| `tests/test_lab.py` | 10 tests, run against `solution/` |
+| `solution/app/canary.py`, `solution/scripts/canary_demo.py` | The canary rule, and the replay of the chapter's canary |
+| `tests/test_lab.py` | 16 tests, run against `solution/` |
 | `expected/output.txt` | The smoke test's output against the reference |
+| `expected/canary_demo.txt` | The canary demo's output against the reference |

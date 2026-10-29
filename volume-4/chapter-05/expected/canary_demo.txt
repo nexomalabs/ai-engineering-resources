@@ -1,0 +1,5 @@
+Canary wren-model-next started on 5% of traffic; 1,000 requests sent.
+  stable:  980 requests, $0.000134 each
+  canary:   20 requests, $0.000244 each
+Rolled back at request 380: cost per request is 1.8x the stable version's (limit 1.5x).
+Canary traffic now: 0.0%
