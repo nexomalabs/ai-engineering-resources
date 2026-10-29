@@ -1,6 +1,6 @@
 Loading embedding model: all-MiniLM-L6-v2
-Encoding 12 documents...
-Indexed 12 documents.
+Encoding 14 documents...
+Indexed 14 documents.
 
 ============================================================
 QUERY: How does JWT token authentication work?
@@ -55,3 +55,37 @@ SOURCES:
        A Docker image is a read-only template containing an application and its depende...
   [3] Git Guide (score=0.3145)
        Git stash temporarily shelves changes not yet ready to commit. Use `git stash pu...
+
+============================================================
+QUERY: Can I ship a laptop with a lithium battery by air?
+SEARCHING: every indexed document
+============================================================
+
+ANSWER:
+Based on the retrieved context, can i ship a laptop with a lithium
+battery by air is addressed in the knowledge base as follows: The
+relevant technical details are provided in [1], [2]. [Mock response —
+replace mock_llm_call() with a real LLM API call for production.]
+
+SOURCES:
+  [1] Wrenfield Shipping Policy (2023) (score=0.8339)
+       Laptops with lithium batteries may be shipped by air, provided the battery is in...
+  [2] Wrenfield Shipping Policy (2025) (score=0.7529)
+       Devices containing lithium batteries, including laptops, travel by road only and...
+
+============================================================
+QUERY: Can I ship a laptop with a lithium battery by air?
+SEARCHING: only documents in force today
+============================================================
+
+ANSWER:
+Based on the retrieved context, can i ship a laptop with a lithium
+battery by air is addressed in the knowledge base as follows: The
+relevant technical details are provided in [1], [2]. [Mock response —
+replace mock_llm_call() with a real LLM API call for production.]
+
+SOURCES:
+  [1] Wrenfield Shipping Policy (2025) (score=0.7529)
+       Devices containing lithium batteries, including laptops, travel by road only and...
+  [2] Database Guide (score=0.0383)
+       A database transaction groups multiple operations into a single atomic unit. ACI...

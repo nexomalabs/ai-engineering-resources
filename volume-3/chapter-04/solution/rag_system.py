@@ -1,12 +1,13 @@
 # rag_system.py
 import textwrap
 from dataclasses import dataclass, field
-from typing import List, Tuple
+from datetime import date
+from typing import List, Optional, Tuple
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-# ── Knowledge base: 12 technical passages ──────────────────────────────────
+# ── Knowledge base: 12 technical passages and two versions of a shipping policy ──
 KNOWLEDGE_BASE = [
     {
         "id": "kb001",
@@ -92,6 +93,24 @@ KNOWLEDGE_BASE = [
         "Use `git stash push -m 'description'` to save and `git stash pop` to restore. "
         "Stashes are stored as a stack; `git stash list` shows all saved stashes.",
     },
+    # The two battery policies from the chapter's opening story. The 2023 policy was
+    # superseded, but it is still in the index next to its replacement.
+    {
+        "id": "kb013",
+        "source": "Wrenfield Shipping Policy (2023)",
+        "text": "Laptops with lithium batteries may be shipped by air, provided the battery "
+        "is installed in the laptop and the parcel carries a lithium battery label.",
+        "effective_from": "2023-03-01",
+        "superseded_on": "2025-04-01",
+    },
+    {
+        "id": "kb014",
+        "source": "Wrenfield Shipping Policy (2025)",
+        "text": "Devices containing lithium batteries, including laptops, travel by road "
+        "only and are no longer accepted for air shipment. Label every such parcel "
+        "with a lithium battery mark.",
+        "effective_from": "2025-04-01",
+    },
 ]
 
 
@@ -101,6 +120,8 @@ class RAGDocument:
     source: str
     text: str
     embedding: np.ndarray = field(repr=False, default=None)
+    effective_from: Optional[str] = None  # ISO date the document took effect
+    superseded_on: Optional[str] = None  # ISO date a newer version replaced it
 
 
 class RAGIndexer:
@@ -118,13 +139,27 @@ class RAGIndexer:
 
         for item, emb in zip(knowledge_base, embeddings):
             doc = RAGDocument(
-                doc_id=item["id"], source=item["source"], text=item["text"], embedding=emb
+                doc_id=item["id"],
+                source=item["source"],
+                text=item["text"],
+                embedding=emb,
+                effective_from=item.get("effective_from"),
+                superseded_on=item.get("superseded_on"),
             )
             self.documents.append(doc)
         print(f"Indexed {len(self.documents)} documents.")
 
     def get_embeddings_matrix(self) -> np.ndarray:
         return np.stack([d.embedding for d in self.documents])
+
+
+def in_force(doc: RAGDocument, as_of: date) -> bool:
+    """True if the document had taken effect by as_of and had not yet been superseded."""
+    if doc.effective_from and date.fromisoformat(doc.effective_from) > as_of:
+        return False
+    if doc.superseded_on and date.fromisoformat(doc.superseded_on) <= as_of:
+        return False
+    return True
 
 
 class RAGRetriever:
@@ -134,14 +169,28 @@ class RAGRetriever:
         self.indexer = indexer
         self.doc_matrix = indexer.get_embeddings_matrix()
 
-    def retrieve(self, query: str, top_k: int = 3) -> List[Tuple[RAGDocument, float]]:
+    def retrieve(
+        self,
+        query: str,
+        top_k: int = 3,
+        as_of: Optional[date] = None,
+        in_force_only: bool = True,
+    ) -> List[Tuple[RAGDocument, float]]:
         query_emb = self.indexer.model.encode([query], normalize_embeddings=True)[0]
 
         # Cosine similarity: since vectors are normalized, dot product == cosine similarity
         scores = self.doc_matrix @ query_emb
 
-        # Get top-K indices
-        top_indices = np.argsort(scores)[::-1][:top_k]
+        # Filter before ranking: a superseded document is never a candidate at all
+        as_of = as_of or date.today()
+        candidates = [
+            i
+            for i, doc in enumerate(self.indexer.documents)
+            if not in_force_only or in_force(doc, as_of)
+        ]
+
+        # Get top-K indices among the candidates
+        top_indices = sorted(candidates, key=lambda i: scores[i], reverse=True)[:top_k]
 
         results = []
         for idx in top_indices:
@@ -223,6 +272,14 @@ class RAGGenerator:
         }
 
 
+def show(result: dict) -> None:
+    print(f"\nANSWER:\n{textwrap.fill(result['answer'], width=70)}")
+    print("\nSOURCES:")
+    for src in result["sources"]:
+        print(f"  [{src['rank']}] {src['source']} (score={src['score']})")
+        print(f"       {src['text']}")
+
+
 def run_rag_demo():
     # ── Index the knowledge base ──────────────────────────────────────────
     indexer = RAGIndexer(model_name="all-MiniLM-L6-v2")
@@ -244,13 +301,18 @@ def run_rag_demo():
         print("=" * 60)
 
         retrieved = retriever.retrieve(query, top_k=3)
-        result = generator.generate(query, retrieved)
+        show(generator.generate(query, retrieved))
 
-        print(f"\nANSWER:\n{textwrap.fill(result['answer'], width=70)}")
-        print("\nSOURCES:")
-        for src in result["sources"]:
-            print(f"  [{src['rank']}] {src['source']} (score={src['score']})")
-            print(f"       {src['text']}")
+    # ── The story's question, without and with the in-force filter ─────────
+    query = "Can I ship a laptop with a lithium battery by air?"
+    for in_force_only in (False, True):
+        label = "only documents in force today" if in_force_only else "every indexed document"
+        print(f"\n{'=' * 60}")
+        print(f"QUERY: {query}")
+        print(f"SEARCHING: {label}")
+        print("=" * 60)
+        retrieved = retriever.retrieve(query, top_k=2, in_force_only=in_force_only)
+        show(generator.generate(query, retrieved))
 
 
 if __name__ == "__main__":

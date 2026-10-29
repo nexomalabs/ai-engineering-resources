@@ -2,13 +2,14 @@
 
 ## What You Will Build
 
-A complete retrieval-augmented generation loop in one file. Twelve technical passages are embedded with `all-MiniLM-L6-v2` into a NumPy matrix; a query is embedded the same way and scored against every passage by cosine similarity; the top three passages are numbered into a prompt; and a mock model writes an answer that cites them. The mock stands where a real model call would go, so you can see every part of the pipeline without an API key.
+A complete retrieval-augmented generation loop in one file. Twelve technical passages and two versions of Wrenfield's battery shipping policy are embedded with `all-MiniLM-L6-v2` into a NumPy matrix; a query is embedded the same way and scored against every passage by cosine similarity; the top three passages are numbered into a prompt; and a mock model writes an answer that cites them. The mock stands where a real model call would go, so you can see every part of the pipeline without an API key. Each document can carry an effective date and a superseded date, and retrieval keeps only documents currently in force, before ranking: the fix for the chapter's opening story, in which Wren answered from a battery policy that had been replaced a year earlier.
 
 ## Learning Outcomes
 
 - Embed a small knowledge base and hold it as a matrix of normalized vectors.
 - Retrieve the top-k passages for a query with a single matrix product.
 - Assemble numbered context that a model can cite.
+- Keep superseded documents out of retrieval with an effective-date filter applied before ranking.
 - Check retrieval quality by reading which passages each query surfaces, and their scores.
 - See where a real model call replaces the mock, and what the prompt it receives looks like.
 
@@ -35,7 +36,7 @@ uv run python src/rag_system.py          # your work
 uv run python solution/rag_system.py     # reference
 ```
 
-`src/rag_system.py` runs as supplied, but it returns the first three passages for every query with a score of 0.0 (TODO 1), and it puts the passages into the prompt without reference numbers, so the mock answer has only one citation to give (TODO 2). Complete both TODOs.
+`src/rag_system.py` runs as supplied, but it returns the first three passages for every query with a score of 0.0 (TODO 1), and it puts the passages into the prompt without reference numbers, so the mock answer has only one citation to give (TODO 2). It also treats every document as in force (TODO 3), so the superseded 2023 battery policy is still searchable after the filter. Complete all three TODOs.
 
 ## Expected Result
 
@@ -60,7 +61,7 @@ SOURCES:
        HTTP POST requests send data to a server to create a new resource. The request b...
 ```
 
-The GET/POST query retrieves both REST API passages first, and the Docker query ranks the volumes passage first (0.677) ahead of the image passage. Read the third result of each query too: with only twelve passages, the third is often only loosely related, which is why a production system sets a minimum score as well as `top_k`. Scores can differ in the third or fourth decimal place across machines.
+The GET/POST query retrieves both REST API passages first, and the Docker query ranks the volumes passage first (0.677) ahead of the image passage. The battery question is asked twice. Searching every indexed document, the superseded 2023 policy ranks first (0.834) ahead of the 2025 policy that replaced it (0.753): the most similar text is not the current text. Searching only documents in force today, the 2023 policy is not a candidate, and the 2025 policy comes first. Read the third result of each of the first three queries too: with only twelve technical passages, the third is often only loosely related, which is why a production system sets a minimum score as well as `top_k`. Scores can differ in the third or fourth decimal place across machines.
 
 ## Verifying Your Work
 
@@ -68,7 +69,7 @@ The GET/POST query retrieves both REST API passages first, and the Docker query 
 uv run pytest
 ```
 
-Seven tests: twelve unit-length embeddings, the top passages for each of the three queries, descending scores with `top_k` respected, numbered citations in the answer, and the mock's parsing of the prompt. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/rag_system.py` over the one in `solution/` there, and run `uv run pytest`.
+Eleven tests: fourteen unit-length embeddings, the top passages for each of the three technical queries, descending scores with `top_k` respected, the in-force check on both dates, the battery question with and without the filter and as of an earlier date, numbered citations in the answer, and the mock's parsing of the prompt. They run against `solution/`, which is what CI checks. To test your own version, copy this folder somewhere else, copy your `src/rag_system.py` over the one in `solution/` there, and run `uv run pytest`. With the three TODOs left in place, eight tests fail.
 
 ## If It Does Not Work
 
@@ -81,6 +82,7 @@ Seven tests: twelve unit-length embeddings, the top passages for each of the thr
 | A warning that symlinks are not supported, on Windows | Hugging Face caches files without symlinks unless Developer Mode is on | Harmless: the cache just uses more disk; set `HF_HUB_DISABLE_SYMLINKS_WARNING=1` |
 | Every score is 0.0 | TODO 1 still returns zeros | Multiply the document matrix by the query vector |
 | The answer cites only `[1]` | TODO 2 still adds passages without numbers | Prefix each passage with `[i] Source: ...` |
+| The filtered battery search still lists the 2023 policy | TODO 3: `in_force()` still returns True | Compare `effective_from` and `superseded_on` with `as_of` |
 
 ## Going Further
 
@@ -92,7 +94,7 @@ Seven tests: twelve unit-length embeddings, the top passages for each of the thr
 
 | Path | Purpose |
 |---|---|
-| `src/rag_system.py` | Your starting point; runs, with 2 TODOs |
+| `src/rag_system.py` | Your starting point; runs, with 3 TODOs |
 | `solution/rag_system.py` | Reference implementation, as printed in the chapter |
-| `tests/test_lab.py` | 7 tests, run against `solution/` |
+| `tests/test_lab.py` | 11 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |
