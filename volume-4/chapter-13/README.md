@@ -82,7 +82,6 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | `httpx.ConnectError` from the load generator or alert evaluator | The service is not running | Start `ai_service_monitored.py` first, in its own terminal |
 | `ai_active_requests` keeps growing | The gauge is not decremented on every path | Complete TODO 2 |
-| `UnicodeEncodeError` printing `🔴` or `✅` on Windows | The console uses a legacy code page | Set `PYTHONUTF8=1`, or run in Windows Terminal |
 
 ## Going Further
 

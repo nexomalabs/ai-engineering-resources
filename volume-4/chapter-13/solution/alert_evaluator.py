@@ -89,14 +89,14 @@ class AlertEvaluator:
                     )
                     self.fired_alerts[rule.name] = alert
                     print(
-                        f"  🔴 ALERT FIRING [{rule.severity.upper()}]: {rule.name}\n"
+                        f"  ALERT FIRING [{rule.severity.upper()}]: {rule.name}\n"
                         f"     Value: {current_value:.4f} {rule.comparison} {rule.threshold}\n"
                         f"     {rule.description}\n"
                     )
                 firing.append(self.fired_alerts[rule.name])
             else:
                 if rule.name in self.fired_alerts:
-                    print(f"  ✅ ALERT RESOLVED: {rule.name}")
+                    print(f"  ALERT RESOLVED: {rule.name}")
                     del self.fired_alerts[rule.name]
 
         return firing
