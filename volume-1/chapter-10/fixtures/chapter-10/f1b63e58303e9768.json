@@ -7,7 +7,7 @@
         "role": "system"
       },
       {
-        "content": "The Q2 revenue for Nexoma Labs was $4.2M, up 18% year-over-year. Operating expenses were $3.1M, driven primarily by R&D ($1.8M) and sales and marketing ($0.9M). Net income was $1.1M, compared to $0.6M in Q2 of last year. Cash on hand is $6.4M. Headcount grew from 42 to 51.",
+        "content": "The Q2 revenue for Quillmark Software was $4.2M, up 18% year-over-year. Operating expenses were $3.1M, driven primarily by R&D ($1.8M) and sales and marketing ($0.9M). Net income was $1.1M, compared to $0.6M in Q2 of last year. Cash on hand is $6.4M. Headcount grew from 42 to 51.",
         "role": "user"
       }
     ],
@@ -15,7 +15,7 @@
   },
   "response": {
     "completion_tokens": 143,
-    "content": "Nexoma Labs generated Q2 revenue of $4.2 million, up 18% year over year. Net income was $1.1 million, compared with $0.6 million in Q2 last year, while operating expenses were $3.1 million, driven primarily by R&D spending of $1.8 million. Cash on hand was $6.4 million, and headcount increased from 42 to 51.",
+    "content": "Quillmark Software generated Q2 revenue of $4.2 million, up 18% year over year. Net income was $1.1 million, compared with $0.6 million in Q2 last year, while operating expenses were $3.1 million, driven primarily by R&D spending of $1.8 million. Cash on hand was $6.4 million, and headcount increased from 42 to 51.",
     "prompt_tokens": 185,
     "total_tokens": 328
   }

@@ -7,10 +7,10 @@ Model: gpt-6-luna
 ### Exercise 1: Ambiguity — Document Summarization
 ------------------------------------------------------------------------
 [WEAK]
-Nexoma Labs reported Q2 revenue of $4.2M, up 18% year over year, and net income of $1.1M, compared with $0.6M a year ago. Operating expenses totaled $3.1M, led by R&D ($1.8M) and sales and marketing (
+Quillmark Software reported Q2 revenue of $4.2M, up 18% year over year, and net income of $1.1M, compared with $0.6M a year ago. Operating expenses totaled $3.1M, led by R&D ($1.8M) and sales and mark
 
 [STRONG]
-Nexoma Labs generated Q2 revenue of $4.2 million, up 18% year over year. Net income was $1.1 million, compared with $0.6 million in Q2 last year, while operating expenses were $3.1 million, driven pri
+Quillmark Software generated Q2 revenue of $4.2 million, up 18% year over year. Net income was $1.1 million, compared with $0.6 million in Q2 last year, while operating expenses were $3.1 million, dri
 
 Check: {'weak_sentences': 3, 'strong_sentences': 3, 'demonstrates_fix': True}
 Fix demonstrated: yes

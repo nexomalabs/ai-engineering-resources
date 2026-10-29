@@ -61,7 +61,7 @@ Full output is in `expected/output.txt`. Summary: **5/5**.
 | 4 — Product description | Constraint violation | 73 words, with a headline it was never asked for | 26 words, no headline, ends on the call to action |
 | 5 — Meeting notes | Missing structure | A bulleted list of the three action items — not JSON, no attendees or decisions | Valid JSON, all 3 attendees, all 3 decisions, all 3 action items |
 
-**Exercise 3 is the one to read closely.** "Nexoma Cloud Storage" is fictional — invented
+**Exercise 3 is the one to read closely.** "Quillmark Cloud Storage" is fictional — invented
 for this exercise — so there is no real answer for an ungrounded model to recall. Given
 nothing to ground it, gpt-6-luna did not admit it lacked the information. It guessed what
 you probably meant ("If you mean OpenAI...") and answered a question about a different

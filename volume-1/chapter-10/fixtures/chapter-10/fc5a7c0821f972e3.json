@@ -1,0 +1,22 @@
+{
+  "request": {
+    "max_completion_tokens": 2000,
+    "messages": [
+      {
+        "content": "Summarize this.",
+        "role": "system"
+      },
+      {
+        "content": "The Q2 revenue for Quillmark Software was $4.2M, up 18% year-over-year. Operating expenses were $3.1M, driven primarily by R&D ($1.8M) and sales and marketing ($0.9M). Net income was $1.1M, compared to $0.6M in Q2 of last year. Cash on hand is $6.4M. Headcount grew from 42 to 51.",
+        "role": "user"
+      }
+    ],
+    "model": "gpt-6-luna"
+  },
+  "response": {
+    "completion_tokens": 97,
+    "content": "Quillmark Software reported Q2 revenue of $4.2M, up 18% year over year, and net income of $1.1M, compared with $0.6M a year ago. Operating expenses totaled $3.1M, led by R&D ($1.8M) and sales and marketing ($0.9M). The company had $6.4M in cash and increased headcount from 42 to 51.",
+    "prompt_tokens": 111,
+    "total_tokens": 208
+  }
+}

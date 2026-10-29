@@ -56,7 +56,7 @@ def is_valid_json(text: str) -> bool:
 # Exercise 1: Ambiguity — Document Summarization
 # ─────────────────────────────────────────────────────────────────────
 EX1_DOC = (
-    "The Q2 revenue for Nexoma Labs was $4.2M, up 18% year-over-year. "
+    "The Q2 revenue for Quillmark Software was $4.2M, up 18% year-over-year. "
     "Operating expenses were $3.1M, driven primarily by R&D ($1.8M) and "
     "sales and marketing ($0.9M). Net income was $1.1M, compared to $0.6M "
     "in Q2 of last year. Cash on hand is $6.4M. Headcount grew from 42 to 51."
@@ -107,7 +107,7 @@ def check_ex2(weak: str, strong: str) -> dict:
 # Exercise 3: Hallucination — Document-Grounded Q&A
 # ─────────────────────────────────────────────────────────────────────
 EX3_DOC = (
-    "Nexoma Cloud Storage plans:\n"
+    "Quillmark Cloud Storage plans:\n"
     "- Starter: 50 GB, $5/month, no API access\n"
     "- Professional: 500 GB, $20/month, API access included\n"
     "- Enterprise: Unlimited storage, $150/month, dedicated support, SLA 99.99%"
@@ -162,7 +162,7 @@ EX5_TEXT = (
     "Key decisions:\n"
     "- Launch target: October 15, 2026\n"
     "- MVP scope: Authentication, dashboard, and reporting modules only\n"
-    "- Design system: Adopt Nexoma Design System v2\n\n"
+    "- Design system: Adopt Quillmark Design System v2\n\n"
     "Action items:\n"
     "- David to provide technical architecture draft by August 1\n"
     "- Maria to share initial wireframes by July 31\n"
