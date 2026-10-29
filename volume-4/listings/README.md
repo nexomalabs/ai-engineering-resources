@@ -46,8 +46,8 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
 | 3.3 | [`3.3-approval-workflows.py`](chapter-03/3.3-approval-workflows.py) | 60 | — | on its own |
-| 3.4 | [`3.4-escalation-workflows.py`](chapter-03/3.4-escalation-workflows.py) | 59 | — | on its own |
-| 3.5 | [`3.5-batch-processing.py`](chapter-03/3.5-batch-processing.py) | 33 | — | on its own |
+| 3.4 | [`3.4-escalation-workflows.py`](chapter-03/3.4-escalation-workflows.py) | 61 | — | on its own |
+| 3.5 | [`3.5-batch-processing.py`](chapter-03/3.5-batch-processing.py) | 35 | — | on its own |
 | 3.6 | [`3.6-real-time-processing.py`](chapter-03/3.6-real-time-processing.py) | 20 | `openai`, `OPENAI_API_KEY` | on its own |
 | 3.7 | [`3.7-workflow-state-management.py`](chapter-03/3.7-workflow-state-management.py) | 40 | `pydantic` | on its own |
 | 3.9 | [`3.9-sla-management.py`](chapter-03/3.9-sla-management.py) | 30 | — | on its own |
@@ -72,7 +72,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 | 5.4 | [`5.4-kubernetes-for-ai.yaml`](chapter-05/5.4-kubernetes-for-ai.yaml) | 117 | — | — |
 | 5.6 | [`5.6-api-gateway-patterns.py`](chapter-05/5.6-api-gateway-patterns.py) | 35 | `fastapi`, `pyjwt` | on its own |
 | 5.9 | [`5.9-model-versioning.py`](chapter-05/5.9-model-versioning.py) | 39 | — | on its own |
-| 5.10 | [`5.10-rollback-procedures.py`](chapter-05/5.10-rollback-procedures.py) | 56 | — | on its own |
+| 5.10 | [`5.10-rollback-procedures.py`](chapter-05/5.10-rollback-procedures.py) | 66 | — | on its own |
 
 ## Chapter 6 — Inference Optimization
 
@@ -108,7 +108,7 @@ Listings marked `CUDA GPU` need an NVIDIA graphics card.
 
 | Section | File | Lines | Needs | Runs |
 |:-------:|------|------:|-------|------|
-| 10.3 | [`10.3-pii-detection-and-redaction.py`](chapter-10/10.3-pii-detection-and-redaction.py) | 95 | `presidio_analyzer`, `presidio_anonymizer`, `spaCy model en_core_web_lg` | on its own |
+| 10.3 | [`10.3-pii-detection-and-redaction.py`](chapter-10/10.3-pii-detection-and-redaction.py) | 99 | `presidio_analyzer`, `presidio_anonymizer`, `spaCy model en_core_web_lg` | on its own |
 | 10.5 | [`10.5-data-retention.py`](chapter-10/10.5-data-retention.py) | 13 | — | on its own |
 
 ## Chapter 11 — Governance

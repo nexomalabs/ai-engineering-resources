@@ -16,16 +16,20 @@ class CanaryController:
         check_interval: int = 60,
         error_rate_threshold: float = 0.02,
         latency_multiplier_threshold: float = 1.5,
+        cost_multiplier_threshold: float = 1.5,
     ):
         self.get_metrics = get_metrics
         self.execute_rollback = execute_rollback
         self.check_interval = check_interval
         self.error_rate_threshold = error_rate_threshold
         self.latency_multiplier_threshold = latency_multiplier_threshold
+        self.cost_multiplier_threshold = cost_multiplier_threshold
         self._baseline_latency: float | None = None
+        self._baseline_cost: float | None = None
 
-    def set_baseline(self, latency_p95: float) -> None:
+    def set_baseline(self, latency_p95: float, cost_per_request: float) -> None:
         self._baseline_latency = latency_p95
+        self._baseline_cost = cost_per_request
 
     async def monitor(self, duration_minutes: int = 60) -> bool:
         """
@@ -56,5 +60,11 @@ class CanaryController:
                 > self._baseline_latency * self.latency_multiplier_threshold):
             logger.warning("P95 latency %.0fms exceeds %.1f× baseline",
                            metrics["p95_latency_ms"], self.latency_multiplier_threshold)
+            return True
+        if (self._baseline_cost
+                and metrics.get("cost_per_request", 0)
+                > self._baseline_cost * self.cost_multiplier_threshold):
+            logger.warning("Cost per request %.5f exceeds %.1f× the expected cost",
+                           metrics["cost_per_request"], self.cost_multiplier_threshold)
             return True
         return False

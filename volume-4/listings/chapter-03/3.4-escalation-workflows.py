@@ -33,7 +33,9 @@ class EscalationEngine:
 
     def register(self, task: EscalationTask) -> None:
         self.tasks[task.task_id] = task
-        asyncio.create_task(self._schedule_escalation(task))
+        # Keep a reference: the event loop holds tasks only weakly, so an
+        # unreferenced task can be garbage-collected before it finishes.
+        self._timers[task.task_id] = asyncio.create_task(self._schedule_escalation(task))
 
     async def _schedule_escalation(self, task: EscalationTask) -> None:
         while task.current_level < len(task.levels) and not task.resolved:

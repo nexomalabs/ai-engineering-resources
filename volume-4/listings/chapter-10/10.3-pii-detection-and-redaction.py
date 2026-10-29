@@ -57,7 +57,7 @@ def redact_pii(text: str, language: str = "en") -> tuple[str, list[dict]]:
 def redact_with_regex_fallback(text: str) -> tuple[str, list[str]]:
     """
     Regex-only PII redaction for environments without Presidio.
-    Handles email, US phone, SSN, credit card numbers.
+    Handles email, US phone, SSN, credit card and passport numbers, and dates.
     """
     import re
 
@@ -67,6 +67,10 @@ def redact_with_regex_fallback(text: str) -> tuple[str, list[str]]:
         "PHONE": r"(?<!\w)(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b",
         "SSN": r"\b\d{3}-\d{2}-\d{4}\b",
         "CREDIT_CARD": r"\b(?:\d{4}[-\s]?){3}\d{4}\b",
+        # A nine-digit number, the form of UK and US passport numbers
+        "PASSPORT": r"\b\d{9}\b",
+        # A full date, such as a date of birth
+        "DATE": r"\b\d{1,2}[/.-]\d{1,2}[/.-]\d{4}\b",
     }
 
     detected_types = []
