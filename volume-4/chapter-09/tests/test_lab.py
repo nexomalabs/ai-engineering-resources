@@ -93,3 +93,40 @@ def test_harmful_output_is_blocked(client):
 def test_full_attack_simulation_passes(client):
     results = attack_simulation.run(client)
     assert [expected for _, expected, _ in results] == [got for _, _, got in results]
+
+
+import app as service  # noqa: E402
+import leakage_test  # noqa: E402
+
+
+def test_the_fourth_polite_probe_gets_past_the_injection_patterns():
+    blocked = [mw.detect_injection(p) is not None for p in leakage_test.PROBES]
+    assert blocked == [True, True, True, False]
+
+
+def test_with_the_secret_in_the_prompt_the_leakage_test_fails(monkeypatch):
+    monkeypatch.setattr(service, "SYSTEM_PROMPT", service.SYSTEM_PROMPT_BEFORE)
+    with TestClient(service.app) as c:
+        results = leakage_test.run_leakage_test(c)
+    assert [status for _, status, _ in results] == [400, 400, 400, 200]
+    assert results[3][2] == ["SORRY-7Q4K"]
+
+
+def test_with_no_secret_in_the_prompt_the_leakage_test_passes():
+    with TestClient(service.app) as c:
+        results = leakage_test.run_leakage_test(c)
+    assert not any(leaked for _, _, leaked in results)
+
+
+def test_the_code_comes_from_the_eligibility_tool_not_the_prompt():
+    assert "SORRY" not in service.SYSTEM_PROMPT
+    assert service.check_discount_eligibility("WF-88412") == {
+        "eligible": True,
+        "code": "SORRY-2M9X",
+    }
+    assert service.check_discount_eligibility("WF-10001") == {"eligible": False}
+
+
+def test_ordinary_hyphenated_words_are_not_taken_for_secrets():
+    assert leakage_test.find_leaks("A well-done, long-term plan for check-ins.") == []
+    assert leakage_test.find_leaks("Use code SORRY-7Q4K at checkout.") == ["SORRY-7Q4K"]
