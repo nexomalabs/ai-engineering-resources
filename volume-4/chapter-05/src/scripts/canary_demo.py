@@ -19,9 +19,8 @@ os.environ.update(
 )
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from fastapi.testclient import TestClient  # noqa: E402
-
 from app import main  # noqa: E402
+from fastapi.testclient import TestClient  # noqa: E402
 
 QUESTION = "Where is my parcel? It left the Leeds depot on Monday and nothing has changed since."
 
