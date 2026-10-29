@@ -2,7 +2,8 @@
 
 This file RUNS as supplied. A tool that raises crashes the loop, and unparseable model
 output crashes it too. In agent_tools.py, the calculator evaluates any expression it is
-given. Complete the three TODOs. Run from the lab folder:
+given. And an agent that repeats the same action keeps going until the step limit.
+Complete the four TODOs. Run from the lab folder:
 
     python src/react_agent.py
 """
@@ -63,6 +64,15 @@ def llm_call(prompt: str) -> str:
             return step("I will search for who created Python.", "web_search", "python creator")
         return step("The search answered both parts.", "finish", last)
 
+    if "shipment" in lowered:
+        # The chapter's opening story: the parcel shows as in transit, so the model keeps
+        # checking it, with impeccable reasoning, every time.
+        return step(
+            "The parcel shows as in transit. I should confirm delivery before deciding.",
+            "web_search",
+            "shipment WF-2291 status",
+        )
+
     if last is None:
         return step("I will search for this information.", "web_search", goal)
     return step("I will report what I found.", "finish", last)
@@ -122,6 +132,12 @@ def run_agent(goal: str, max_steps: int = 10, model=llm_call) -> str:
             observation = tool_fn(args)
 
         print(f"  Observation: {observation}")
+
+        # TODO 4: If this action, with the same args, already returned this same
+        #   observation earlier in history, print and return
+        #   "Agent stopped: <action>(<args!r>) returned the same result as before."
+        #   Asking again cannot change anything, as the claims agent in the chapter found.
+
         history.append(
             {"thought": thought, "action": action, "args": args, "observation": observation}
         )
@@ -134,5 +150,6 @@ if __name__ == "__main__":
         "What is today's date?",
         "What is the population of Japan multiplied by 0.0001?",
         "Who created Python and in what year?",
+        "Decide whether the damage claim on shipment WF-2291 should be paid.",
     ]:
         run_agent(goal)

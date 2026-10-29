@@ -13,6 +13,7 @@ SEARCH_RESULTS = {
     "python creator": "Python was created by Guido van Rossum, first released in 1991.",
     "eiffel tower height": "The Eiffel Tower is 330 meters tall including the broadcast antenna.",
     "speed of light": "The speed of light in a vacuum is exactly 299,792,458 meters per second.",
+    "shipment wf-2291": "Shipment WF-2291: in transit; last scanned at the depot 3 days ago.",
 }
 
 ALLOWED_CHARACTERS = set("0123456789+-*/().,e E")

@@ -68,7 +68,37 @@ def test_unknown_tool_is_reported():
 
 
 def test_step_limit_stops_a_looping_model():
-    def model(prompt):
-        return json.dumps({"thought": "again", "action": "get_current_date", "args": ""})
+    calls = []
+
+    def model(prompt):  # a new calculation each time, so the repeat guard never fires
+        calls.append(1)
+        return json.dumps({"thought": "again", "action": "calculator", "args": f"{len(calls)} + 1"})
 
     assert run_agent("loop", max_steps=3, model=model) == "Agent stopped: maximum steps reached."
+
+
+def test_repeating_an_unchanged_action_stops_the_agent(capsys):
+    # The chapter's opening story: the shipment stays "in transit", so asking again is pointless
+    answer = run_agent("Decide whether the damage claim on shipment WF-2291 should be paid.")
+    assert answer == (
+        "Agent stopped: web_search('shipment WF-2291 status') returned the same result as before."
+    )
+    assert capsys.readouterr().out.count("Step ") == 2
+
+
+def test_the_same_action_with_a_new_result_is_allowed():
+    results = iter(["in transit", "delivered"])
+    calls = []
+
+    def model(prompt):
+        calls.append(1)
+        if len(calls) == 3:
+            return json.dumps({"thought": "", "action": "finish", "args": "delivered"})
+        return json.dumps({"thought": "", "action": "web_search", "args": "status"})
+
+    original = agent_tools.TOOLS["web_search"]
+    agent_tools.TOOLS["web_search"] = lambda args: next(results)
+    try:
+        assert run_agent("status", model=model) == "delivered"
+    finally:
+        agent_tools.TOOLS["web_search"] = original

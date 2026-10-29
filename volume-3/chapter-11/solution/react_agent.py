@@ -62,6 +62,15 @@ def llm_call(prompt: str) -> str:
             return step("I will search for who created Python.", "web_search", "python creator")
         return step("The search answered both parts.", "finish", last)
 
+    if "shipment" in lowered:
+        # The chapter's opening story: the parcel shows as in transit, so the model keeps
+        # checking it, with impeccable reasoning, every time.
+        return step(
+            "The parcel shows as in transit. I should confirm delivery before deciding.",
+            "web_search",
+            "shipment WF-2291 status",
+        )
+
     if last is None:
         return step("I will search for this information.", "web_search", goal)
     return step("I will report what I found.", "finish", last)
@@ -127,6 +136,17 @@ def run_agent(goal: str, max_steps: int = 10, model=llm_call) -> str:
                 observation = f"Tool error: {e}"
 
         print(f"  Observation: {observation}")
+
+        # An action that returns exactly what it returned before has told the agent
+        # nothing new, so repeating it cannot change the decision: stop instead.
+        if any(
+            (past["action"], past["args"], past["observation"]) == (action, args, observation)
+            for past in history
+        ):
+            message = f"Agent stopped: {action}({args!r}) returned the same result as before."
+            print(f"\n{message}")
+            return message
+
         history.append(
             {"thought": thought, "action": action, "args": args, "observation": observation}
         )
@@ -139,5 +159,6 @@ if __name__ == "__main__":
         "What is today's date?",
         "What is the population of Japan multiplied by 0.0001?",
         "Who created Python and in what year?",
+        "Decide whether the damage claim on shipment WF-2291 should be paid.",
     ]:
         run_agent(goal)

@@ -2,7 +2,7 @@
 
 ## What You Will Build
 
-A ReAct agent: a loop in which the model states a thought, chooses an action, and reads the observation, until it finishes or reaches its step limit. `agent_tools.py` holds a mocked web search, a calculator that validates its input before evaluating it, and a date lookup; `react_agent.py` builds the prompt, parses the model's JSON, runs the loop, and turns tool errors into observations. A scripted stub plays the model.
+A ReAct agent: a loop in which the model states a thought, chooses an action, and reads the observation, until it finishes or reaches its step limit. `agent_tools.py` holds a mocked web search, a calculator that validates its input before evaluating it, and a date lookup; `react_agent.py` builds the prompt, parses the model's JSON, runs the loop, turns tool errors into observations, and stops when an action returns exactly what it returned before. A scripted stub plays the model. Its fourth goal is the claims agent from the chapter's opening story, which keeps re-checking a shipment that stays in transit.
 
 ## Learning Outcomes
 
@@ -11,6 +11,7 @@ A ReAct agent: a loop in which the model states a thought, chooses an action, an
 - Validate model-supplied input before a tool acts on it.
 - Turn a tool failure into an observation the model can respond to.
 - Fall back safely when the model's output is not valid JSON.
+- Stop an agent that repeats an action whose result has not changed.
 
 ## Prerequisites
 
@@ -33,14 +34,13 @@ uv run python src/react_agent.py          # your work
 uv run python solution/react_agent.py     # reference
 ```
 
-`src/react_agent.py` runs as supplied and completes all three goals, because none of them sends the calculator a bad expression, makes a tool raise, or returns broken JSON. Those are the paths the three TODOs cover, and the tests exercise each one (Part 4 of the lab). The first goal prints today's date, so that line will differ from the output below.
+`src/react_agent.py` runs as supplied and completes all three goals, because none of them sends the calculator a bad expression, makes a tool raise, or returns broken JSON. Those are the paths the three TODOs cover, and the tests exercise each one (Part 4 of the lab). The fourth goal shows TODO 4 in the output: the starter checks the shipment ten times and stops only at the step limit, where the reference stops at the second identical result. The first goal prints today's date, so that line will differ from the output below.
 
 ## Expected Result
 
 The reference solution prints the following (also saved in `expected/output.txt`).
 
 ```text
-
 ============================================================
 Agent Goal: What is today's date?
 ============================================================
@@ -48,13 +48,13 @@ Agent Goal: What is today's date?
 Step 1:
   Thought: I can read the date directly.
   Action: get_current_date('')
-  Observation: 2026-10-14
+  Observation: 2026-10-29
 
 Step 2:
   Thought: I have the date.
-  Action: finish("Today's date is 2026-10-14.")
+  Action: finish("Today's date is 2026-10-29.")
 
-Final Answer: Today's date is 2026-10-14.
+Final Answer: Today's date is 2026-10-29.
 
 ============================================================
 Agent Goal: What is the population of Japan multiplied by 0.0001?
@@ -90,6 +90,22 @@ Step 2:
   Action: finish('Python was created by Guido van Rossum, first released in 1991.')
 
 Final Answer: Python was created by Guido van Rossum, first released in 1991.
+
+============================================================
+Agent Goal: Decide whether the damage claim on shipment WF-2291 should be paid.
+============================================================
+
+Step 1:
+  Thought: The parcel shows as in transit. I should confirm delivery before deciding.
+  Action: web_search('shipment WF-2291 status')
+  Observation: Shipment WF-2291: in transit; last scanned at the depot 3 days ago.
+
+Step 2:
+  Thought: The parcel shows as in transit. I should confirm delivery before deciding.
+  Action: web_search('shipment WF-2291 status')
+  Observation: Shipment WF-2291: in transit; last scanned at the depot 3 days ago.
+
+Agent stopped: web_search('shipment WF-2291 status') returned the same result as before.
 ```
 
 ## Verifying Your Work
@@ -100,7 +116,7 @@ uv run pytest
 
 The tests run against `solution/`, which is what CI checks. To test your own version, copy
 this folder somewhere else, copy your files from `src/` over those in `solution/` there, and run
-`uv run pytest`. Every test passing means your TODOs behave like the reference.
+`uv run pytest`. Every test passing means your TODOs behave like the reference. With the four TODOs left in place, four of the eleven tests fail.
 
 ## If It Does Not Work
 
@@ -110,6 +126,7 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 | `requires-python >=3.12` error | An older Python is active | Install Python 3.12 or later; `uv python install 3.12` does this |
 | Install fails with "path not found" on Windows | The folder path is longer than Windows' 260-character limit | Clone the repository to a short path such as `C:\labs` |
 | `Agent stopped: maximum steps reached.` | The model repeated a step instead of finishing | Check that the stub reads only the history; with a real model, tighten the prompt |
+| The shipment goal runs to Step 10 | TODO 4: the loop never notices a repeated, unchanged result | Compare the action, args and observation with each earlier step in `history` |
 | `ModuleNotFoundError: No module named 'agent_tools'` | Python cannot see the tools module | Run the script by its path, `python src/react_agent.py`, so its folder is on the path |
 
 ## Going Further
@@ -123,7 +140,7 @@ this folder somewhere else, copy your files from `src/` over those in `solution/
 
 | Path | Purpose |
 |---|---|
-| `src/` | Your starting point: `agent_tools.py`, `react_agent.py`; runs, with 3 TODOs |
+| `src/` | Your starting point: `agent_tools.py`, `react_agent.py`; runs, with 4 TODOs |
 | `solution/` | Reference implementation of the same files |
-| `tests/test_lab.py` | 9 tests, run against `solution/` |
+| `tests/test_lab.py` | 11 tests, run against `solution/` |
 | `expected/output.txt` | Captured output of the reference |
