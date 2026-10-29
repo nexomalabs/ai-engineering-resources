@@ -62,15 +62,33 @@ def report():
     return ev.generate_report(ev.evaluate_agent(ev.TEST_CASES))
 
 
-def test_report_meets_the_chapter_thresholds(report):
+def test_report_summarizes_all_fourteen_cases(report):
     summary = report["summary"]
-    assert summary["task_completion_rate"] == 90.0
-    assert summary["avg_tool_use_accuracy"] == 90.0
-    assert summary["avg_step_efficiency"] == pytest.approx(96.7)
+    assert summary["total_test_cases"] == 14
+    assert summary["task_completion_rate"] == pytest.approx(78.6)
+    assert summary["avg_tool_use_accuracy"] == pytest.approx(82.1)
+    assert summary["avg_step_efficiency"] == pytest.approx(91.7)
+
+
+def test_the_easy_suite_flatters_the_agent_and_the_claims_suite_does_not(report):
+    easy, claims = report["by_suite"]["easy"], report["by_suite"]["claims"]
+    assert (easy["test_cases"], claims["test_cases"]) == (10, 4)
+    assert easy["task_completion_rate"] == 90.0 and claims["task_completion_rate"] == 50.0
+    assert easy["avg_tool_use_accuracy"] == 90.0 and claims["avg_tool_use_accuracy"] == 62.5
+
+
+def test_traces_show_photos_checked_twice_and_the_handling_log_never(report):
+    assert report["tool_calls_per_case"]["claims"] == {
+        "check_photos": 2.0,
+        "get_receipt": 0.5,
+        "get_handling_log": 0.0,
+    }
 
 
 def test_report_names_the_scripted_failures(report):
-    assert report["failure_analysis"]["incomplete_tasks"] == ["TC09"]
-    assert report["failure_analysis"]["wrong_tools"] == ["TC09"]
+    assert report["failure_analysis"]["incomplete_tasks"] == ["TC09", "TC13", "TC14"]
+    assert report["failure_analysis"]["wrong_tools"] == ["TC09", "TC13", "TC14"]
     tc04 = next(c for c in report["per_case"] if c["id"] == "TC04")
     assert tc04["steps"] == "3/2" and tc04["completed"]
+    tc11 = next(c for c in report["per_case"] if c["id"] == "TC11")
+    assert tc11["steps"] == "4/3" and tc11["completed"]

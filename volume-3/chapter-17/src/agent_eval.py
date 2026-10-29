@@ -1,6 +1,7 @@
 """
 Lab 17: Agent Evaluation Suite
-Evaluates a ReAct agent on 10 test cases across three metrics.
+Evaluates a ReAct agent across three metrics on two suites: ten easy lookups, and four
+claims of the kind that caused trouble in real traffic.
 
     NEXOMA_LAB_MODE=fixture  (default) a scripted stand-in plays the agent's model; no key
     NEXOMA_LAB_MODE=live     calls gpt-6-luna; needs OPENAI_API_KEY and `--group live`
@@ -56,6 +57,36 @@ MOCK_TOOL_REGISTRY = {
         },
         "default": "Weather data unavailable for that city.",
     },
+    "check_photos": {
+        "description": "Describe the damage photos attached to a claim. Args: {claim_id: str}",
+        "responses": {
+            "C-201": "Two photos: the hinge is cracked through; the laptop otherwise looks new.",
+            "C-202": "Two photos: the ear cushions are worn flat and the headband is scuffed.",
+            "C-203": "Three photos: a dent in one corner of the casing.",
+            "C-204": "One photo: a cracked screen.",
+        },
+        "default": "No claim with that ID.",
+    },
+    "get_receipt": {
+        "description": "Look up the purchase receipt for a claim. Args: {claim_id: str}",
+        "responses": {
+            "C-201": "Receipt on file: bought 12 days ago; the price matches the claim.",
+            "C-202": "Receipt on file: bought 9 months ago.",
+            "C-203": "Receipt on file: bought 3 weeks ago.",
+            "C-204": "No receipt on file.",
+        },
+        "default": "No claim with that ID.",
+    },
+    "get_handling_log": {
+        "description": "Get the carrier's delivery handling log for a claim. Args: {claim_id: str}",
+        "responses": {
+            "C-201": "Delivered 10 days ago; the driver noted a damaged box.",
+            "C-202": "Delivered 9 months ago; no issues noted.",
+            "C-203": "Delivered 8 days ago, signed for as undamaged; damage reported 6 days later.",
+            "C-204": "Delivered 2 days ago; no issues noted.",
+        },
+        "default": "No claim with that ID.",
+    },
 }
 
 
@@ -82,6 +113,7 @@ class TestCase:
     expected_answer: str
     expected_tools: list  # list of (tool_name, key_arg) tuples
     optimal_steps: int
+    suite: str = "easy"  # "easy" lookups, or "claims" drawn from real traffic
 
 
 TEST_CASES = [
@@ -119,6 +151,39 @@ TEST_CASES = [
         2,
     ),
     TestCase("TC10", "What is the weather in Tokyo?", "29°C", [("get_weather", "Tokyo")], 2),
+    # Claims like the ones that caused arguments: each needs the right tools, once each
+    TestCase(
+        "TC11",
+        "Claim C-201: a laptop arrived with a cracked hinge. Approve, reject or escalate?",
+        "approve",
+        [("check_photos", "C-201"), ("get_receipt", "C-201")],
+        3,
+        "claims",
+    ),
+    TestCase(
+        "TC12",
+        "Claim C-202: headphones reported faulty. Approve, reject or escalate?",
+        "reject",
+        [("check_photos", "C-202"), ("get_receipt", "C-202")],
+        3,
+        "claims",
+    ),
+    TestCase(
+        "TC13",
+        "Claim C-203: a dented speaker, reported days after delivery. Approve, reject or escalate?",
+        "escalate",
+        [("check_photos", "C-203"), ("get_handling_log", "C-203")],
+        3,
+        "claims",
+    ),
+    TestCase(
+        "TC14",
+        "Claim C-204: a cracked phone screen, no receipt attached. Approve, reject or escalate?",
+        "escalate",
+        [("get_receipt", "C-204")],
+        2,
+        "claims",
+    ),
 ]
 
 
@@ -153,6 +218,9 @@ Available tools:
 - search(query): Search for factual information.
 - calculator(expression): Perform arithmetic calculations.
 - get_weather(city): Get current weather for a city.
+- check_photos(claim_id): Describe the damage photos attached to a claim.
+- get_receipt(claim_id): Look up the purchase receipt for a claim.
+- get_handling_log(claim_id): Get the carrier's handling log for a claim's delivery.
 
 Format your response strictly as:
 Thought: [your reasoning]
@@ -161,6 +229,7 @@ Observation: [you will receive the tool result here]
 ... (repeat Thought/Action/Observation as needed)
 Answer: [your final answer]
 
+For a claim, answer approve, reject or escalate, and say why.
 Use the minimum number of steps necessary."""
 
 
@@ -264,6 +333,9 @@ class TestResult:
     optimal_steps: int
     final_answer: str
     duration: float
+    suite: str = "easy"
+    tools_called: list = field(default_factory=list)
+    tools_expected: list = field(default_factory=list)
 
 
 def evaluate_agent(test_cases: list) -> list:
@@ -284,12 +356,39 @@ def evaluate_agent(test_cases: list) -> list:
             optimal_steps=tc.optimal_steps,
             final_answer=trace.final_answer,
             duration=trace.duration,
+            suite=tc.suite,
+            tools_called=[call.tool for call in trace.tool_calls],
+            tools_expected=[tool for tool, _ in tc.expected_tools],
         )
         results.append(result)
     return results
 
 
 # ── Report Generator ───────────────────────────────────────────────────────────
+
+
+def summarize(results: list) -> dict:
+    """Completion rate and mean tool accuracy and step efficiency, as percentages."""
+    n = len(results)
+    return {
+        "test_cases": n,
+        "task_completion_rate": round(sum(r.completed for r in results) / n * 100, 1),
+        "avg_tool_use_accuracy": round(sum(r.tool_accuracy for r in results) / n * 100, 1),
+        "avg_step_efficiency": round(sum(r.step_efficiency for r in results) / n * 100, 1),
+    }
+
+
+def tool_calls_per_case(results: list) -> dict:
+    """
+    How often, on average, each tool was called per case: what the traces show. Every
+    tool the cases expect is listed, so a tool the agent never calls shows up as 0.
+    """
+    used = {name for r in results for name in r.tools_called + r.tools_expected}
+    counts = {name: 0 for name in MOCK_TOOL_REGISTRY if name in used}
+    for r in results:
+        for name in r.tools_called:
+            counts[name] = counts.get(name, 0) + 1
+    return {name: round(count / len(results), 2) for name, count in counts.items()}
 
 
 def generate_report(results: list) -> dict:
@@ -321,6 +420,14 @@ def generate_report(results: list) -> dict:
             }
             for r in results
         ],
+        "by_suite": {
+            suite: summarize([r for r in results if r.suite == suite])
+            for suite in dict.fromkeys(r.suite for r in results)
+        },
+        "tool_calls_per_case": {
+            suite: tool_calls_per_case([r for r in results if r.suite == suite])
+            for suite in dict.fromkeys(r.suite for r in results)
+        },
         "failure_analysis": {
             "incomplete_tasks": [r.test_case_id for r in results if not r.completed],
             "inefficient_tasks": [r.test_case_id for r in results if r.step_efficiency < 0.5],
@@ -345,6 +452,19 @@ if __name__ == "__main__":
     print("EVALUATION REPORT")
     print("=" * 60)
     print(json.dumps(report["summary"], indent=2))
+
+    print("\nBY SUITE:")
+    for suite, s in report["by_suite"].items():
+        print(
+            f"  {suite:<7} {s['test_cases']:>2} cases | "
+            f"completion {s['task_completion_rate']:5.1f}% | "
+            f"tool accuracy {s['avg_tool_use_accuracy']:5.1f}% | "
+            f"step efficiency {s['avg_step_efficiency']:5.1f}%"
+        )
+
+    print("\nTOOL CALLS PER CASE (from the traces):")
+    for suite, counts in report["tool_calls_per_case"].items():
+        print(f"  {suite:<7} " + " | ".join(f"{name} {n}" for name, n in counts.items()))
 
     print("\nPER-CASE RESULTS:")
     print("-" * 60)
